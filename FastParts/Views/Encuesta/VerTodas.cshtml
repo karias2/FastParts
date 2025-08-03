@@ -1,0 +1,36 @@
+﻿@model List<FastParts.Models.EncuestaResumenViewModel>
+
+@{
+    ViewBag.Title = "Encuestas de Satisfacción";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Encuestas de Satisfacción</h2>
+
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Servicio</th>
+                <th scope="col">Tiempo</th>
+                <th scope="col">Trato</th>
+                <th scope="col">Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var encuesta in Model)
+            {
+                <tr>
+                    <th scope="row">@encuesta.Id</th>
+                    <td>@encuesta.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@encuesta.CalificacionServicio</td>
+                    <td>@encuesta.CalificacionTiempo</td>
+                    <td>@encuesta.CalificacionTrato</td>
+                    <td>@(!string.IsNullOrWhiteSpace(encuesta.ComentariosAdicionales) ? encuesta.ComentariosAdicionales : "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

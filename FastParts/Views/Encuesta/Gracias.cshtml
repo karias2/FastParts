@@ -1,0 +1,14 @@
+﻿@model FastParts.Models.EncuestaViewModel
+
+@{
+    ViewBag.Title = "Gracias";
+}
+
+<div class="container mt-4 text-center">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">¡Gracias por tu opinión!</h4>
+        <p>Tu aporte nos ayuda a mejorar la calidad de nuestro servicio.</p>
+        <hr />
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary mt-2">Volver al inicio</a>
+    </div>
+</div>
