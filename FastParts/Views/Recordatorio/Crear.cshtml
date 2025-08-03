@@ -1,0 +1,36 @@
+﻿@model FastParts.Models.Recordatorio
+
+@{
+    ViewBag.Title = "Nuevo Recordatorio";
+}
+
+<div class="container mt-4">
+    <h2>@(Model.Id == 0 ? "Nuevo Recordatorio" : "Editar Recordatorio")</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha del Servicio</label>
+            @Html.TextBoxFor(m => m.FechaServicio, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FechaServicio, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(m => m.Activo, new { @class = "form-check-input" })
+            <label class="form-check-label">Activo</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="@Url.Action("Lista", "Recordatorio")" class="btn btn-secondary">Cancelar</a>
+    }
+</div>

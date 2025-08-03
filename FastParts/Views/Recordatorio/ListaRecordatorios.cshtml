@@ -1,0 +1,41 @@
+﻿@model List<FastParts.Models.Recordatorio>
+
+@{
+    ViewBag.Title = "Mis Recordatorios";
+}
+<div class="container mt-4">
+    <h2 class="mb-4">Mis Recordatorios de Servicio</h2>
+
+    <a href="@Url.Action("Crear", "Recordatorio")" class="btn btn-success mb-3">+ Nuevo Recordatorio</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Fecha del Servicio</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recordatorio in Model)
+            {
+                <tr>
+                    <td>@recordatorio.Id</td>
+                    <td>@recordatorio.Descripcion</td>
+                    <td>@recordatorio.FechaServicio.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <span class="badge bg-@(recordatorio.Activo ? "success" : "secondary")">
+                            @(recordatorio.Activo ? "Sí" : "No")
+                        </span>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Editar", "Recordatorio", new { id = recordatorio.Id })" class="btn btn-sm btn-primary">Editar</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+

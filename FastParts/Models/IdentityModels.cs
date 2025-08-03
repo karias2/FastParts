@@ -29,5 +29,7 @@ namespace FastParts.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<FastParts.Models.Recordatorio> Recordatorios { get; set; }
     }
 }
