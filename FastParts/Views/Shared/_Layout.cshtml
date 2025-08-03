@@ -3,15 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - FastParts</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <!-- Font Awesome-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("FastParts", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,20 +31,86 @@
                     <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
-                 @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    @RenderBody()
+    <hr />
+    <footer class="text-center mt-4 bg-dark">
+        <div class="row pt-3">
+            <div class="col-md-4 text-white">
+                <h5>Enlaces Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
+                </ul>
+            </div>
+            <div class="col-md-4 text-white">
+                <h5>Redes Sociales</h5>
+                <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/" class="text-white me-2"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg==" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/50612345678?text=¡Hola%20FastParts!"
+                   class="text-white mx-2"
+                   target="_blank"
+                   rel="noopener"
+                   aria-label="WhatsApp FastParts">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+            <div class="col-md-4 text-white">
+                <h5>ProPartes CR</h5>
+                <p>Email: <a href="mailto:propartescr@gmail.com">propartescr@gmail.com</a></p>
+                <p>Teléfono: <a href="tel:+50688888888">8888-8888</a></p>
+            </div>
+        </div>
+        <div class="row pb-4">
+            <p class="m-0 text-white">
+                Copyright &copy; @DateTime.Now.Year FastParts
+            </p>
+        </div>
+    </footer>
+
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="~/Content/js/scripts.js"></script>
+
+    <!-- Chatbot-->
+
+    <div id="chatbot-container">
+        <div id="chatbot-toggle">💬</div>
+        <div id="chatbot-box" class="hidden">
+            <div id="chatbot-header">¿En qué te ayudamos?</div>
+            <div id="chatbot-body">
+                <p class="chatbot-question">🤖 ¿Cuál es el tiempo de entrega?</p>
+                <p class="chatbot-question">🤖 ¿Tienen repuestos originales?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Funcion del chatbot-->
+
+    <script>
+        const toggle = document.getElementById("chatbot-toggle");
+        const box = document.getElementById("chatbot-box");
+
+        toggle.addEventListener("click", () => {
+            box.classList.toggle("hidden");
+        });
+
+        // Mostrar alertas al hacer clic en preguntas
+        document.querySelectorAll('.chatbot-question').forEach(el => {
+            el.addEventListener('click', () => {
+                alert("Funcionalidad en desarrollo. ¡Gracias por tu consulta!");
+            });
+        });
+    </script>
+
 </body>
 </html>
