@@ -19,7 +19,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             @Html.ActionLink("FastParts", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
@@ -40,6 +40,7 @@
                             <li>@Html.ActionLink("Perfil", "Perfil", "Cliente", null, new { @class = "dropdown-item" })</li>
                             <li>@Html.ActionLink("Editar Perfil", "EditarPerfil", "Cliente", null, new { @class = "dropdown-item" })</li>
                             <li>@Html.ActionLink("Crear Encuesta", "Crear", "Encuesta", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Recordatorios", "ListaRecordatorios", "Recordatorio", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
 
@@ -67,12 +68,12 @@
         </div>
     </nav>
 
-    <div class="container body-content">
+    <div class="container body-content flex-grow-1">
         @RenderBody()
         <hr />
     </div>
 
-    <footer class="text-center mt-4 bg-dark">
+    <footer class="mt-auto text-center bg-dark">
         <div class="row pt-3">
             <div class="col-md-4 text-white">
                 <h5>Enlaces Rápidos</h5>
@@ -95,14 +96,29 @@
             </div>
             <div class="col-md-4 text-white">
                 <h5>ProPartes CR</h5>
-                <p>Email: <a href="mailto:propartescr@gmail.com">propartescr@gmail.com</a></p>
-                <p>Teléfono: <a href="tel:+50688888888">8888-8888</a></p>
+                <p>
+                    📍Tibás, 150 mts Este de Epa.
+                    (Frente a Fresh Market)🔧🏎️
+                </p>
+                <p>Email: <a href="mailto:propartescr@hotmail.com">propartescr@hotmail.com</a></p>
+                <p>Teléfono: <a href="tel:+50683737272">+(506)8373-7272</a></p>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <img src="@Url.Content("~/Content/ProPartesLogo-bgTransparente.png")"
+                     alt="Logo FastParts"
+                     class="img-fluid mx-auto d-block mb-2"
+                     style="max-height: 60px;" />
+            </div>
+        </div>
+
         <div class="row pb-4">
-            <p class="m-0 text-white">
-                Copyright &copy; @DateTime.Now.Year FastParts
-            </p>
+            <div class="col">
+                <p class="m-0 text-white">
+                    Copyright &copy; @DateTime.Now.Year FastParts
+                </p>
+            </div>
         </div>
     </footer>
 

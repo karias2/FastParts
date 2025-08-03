@@ -30,7 +30,21 @@
             <label class="form-check-label">Activo</label>
         </div>
 
+        <div class="mb-3">
+            <label class="form-label">Métodos de Contacto</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="MetodosEnvio" value="Correo Electrónico"
+                       @(Model.MetodosEnvio.Contains("Correo Electrónico") ? "checked" : "") />
+                <label class="form-check-label">Correo Electrónico</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="MetodosEnvio" value="WhatsApp"
+                       @(Model.MetodosEnvio.Contains("WhatsApp") ? "checked" : "") />
+                <label class="form-check-label">WhatsApp</label>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="@Url.Action("Lista", "Recordatorio")" class="btn btn-secondary">Cancelar</a>
+        <a href="@Url.Action("ListaRecordatorios", "Recordatorio")" class="btn btn-secondary">Cancelar</a>
     }
 </div>

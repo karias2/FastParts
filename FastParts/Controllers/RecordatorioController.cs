@@ -53,9 +53,32 @@ namespace FastParts.Controllers
                 original.Descripcion = model.Descripcion;
                 original.FechaServicio = model.FechaServicio;
                 original.Activo = model.Activo;
+                original.MetodosEnvio = model.MetodosEnvio ?? new List<string>();
                 return RedirectToAction("ListaRecordatorios");
             }
             return View(model);
         }
+
+        public ActionResult Eliminar(int id)
+        {
+            var recordatorio = _recordatorios.FirstOrDefault(r => r.Id == id);
+            if (recordatorio == null) return HttpNotFound();
+            return View(recordatorio);
+        }
+
+        [HttpPost, ActionName("Eliminar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EliminarConfirmado(int id)
+        {
+            var recordatorio = _recordatorios.FirstOrDefault(r => r.Id == id);
+            if (recordatorio != null)
+            {
+                _recordatorios.Remove(recordatorio);
+            }
+
+            return RedirectToAction("ListaRecordatorios");
+        }
+
+
     }
 }

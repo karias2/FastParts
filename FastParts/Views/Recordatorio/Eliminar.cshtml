@@ -1,0 +1,25 @@
+﻿@model FastParts.Models.Recordatorio
+
+@{
+    ViewBag.Title = "Eliminar Recordatorio";
+}
+
+<div class="container mt-4">
+    <h2>¿Eliminar Recordatorio?</h2>
+    <div class="alert alert-warning">
+        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        <p><strong>Fecha del Servicio:</strong> @Model.FechaServicio.ToString("dd/MM/yyyy")</p>
+        <p><strong>Métodos de Envío:</strong> @string.Join(", ", Model.MetodosEnvio)</p>
+    </div>
+
+    @using (Html.BeginForm("Eliminar", "Recordatorio", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="@Url.Action("ListaRecordatorios", "Recordatorio")" class="btn btn-secondary">Cancelar</a>
+    }
+</div>
+
+

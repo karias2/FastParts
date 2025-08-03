@@ -14,6 +14,7 @@
                 <th>#</th>
                 <th>Descripción</th>
                 <th>Fecha del Servicio</th>
+                <th>Metodo de Contacto</th>
                 <th>Activo</th>
                 <th>Acciones</th>
             </tr>
@@ -25,13 +26,18 @@
                     <td>@recordatorio.Id</td>
                     <td>@recordatorio.Descripcion</td>
                     <td>@recordatorio.FechaServicio.ToString("dd/MM/yyyy")</td>
+                    <td>@string.Join(", ", recordatorio.MetodosEnvio)</td>
                     <td>
                         <span class="badge bg-@(recordatorio.Activo ? "success" : "secondary")">
                             @(recordatorio.Activo ? "Sí" : "No")
                         </span>
                     </td>
                     <td>
-                        <a href="@Url.Action("Editar", "Recordatorio", new { id = recordatorio.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="@Url.Action("Editar", "Recordatorio", new { id = recordatorio.Id })" class="btn btn-sm btn-primary me-2">Editar</a>
+                        <a href="@Url.Action("Eliminar", "Recordatorio", new { id = recordatorio.Id })" class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar este recordatorio?');">
+                            Eliminar
+                        </a>
                     </td>
                 </tr>
                 }

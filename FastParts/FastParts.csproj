@@ -169,11 +169,8 @@
     <Compile Include="Controllers\EncuestaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-<<<<<<< HEAD
     <Compile Include="Controllers\MecanicoController.cs" />
-=======
     <Compile Include="Controllers\RecordatorioController.cs" />
->>>>>>> Feat: Modulo de recordatorio.
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -204,6 +201,8 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\js\scripts.js" />
+    <Content Include="Content\ProPartesLogo-bgTransparente.png" />
+    <Content Include="Content\ProPartesLogo.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -263,16 +262,14 @@
     <Content Include="Views\Encuesta\Crear.cshtml" />
     <Content Include="Views\Encuesta\Gracias.cshtml" />
     <Content Include="Views\Encuesta\VerTodas.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Mecanico\IngresoVehiculo.cshtml" />
     <Content Include="Views\Mecanico\DetallesServicio.cshtml" />
     <Content Include="Views\Cliente\Perfil.cshtml" />
     <Content Include="Views\Cliente\EditarPerfil.cshtml" />
-=======
     <Content Include="Views\Recordatorio\ListaRecordatorios.cshtml" />
     <Content Include="Views\Recordatorio\Crear.cshtml" />
     <Content Include="Views\Recordatorio\Editar.cshtml" />
->>>>>>> Feat: Modulo de recordatorio.
+    <Content Include="Views\Recordatorio\Eliminar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
