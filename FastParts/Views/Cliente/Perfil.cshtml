@@ -1,0 +1,23 @@
+@{
+    ViewBag.Title = "Perfil de Usuario";
+}
+
+<h2>Perfil de Usuario</h2>
+
+<div class="card mt-4" style="max-width: 500px;">
+    <div class="card-body">
+        <h5 class="card-title">Nombre:</h5>
+        <p class="card-text">Juan Pérez</p>
+
+        <h5 class="card-title">Correo electrónico:</h5>
+        <p class="card-text">juanperez@email.com</p>
+
+        <h5 class="card-title">Teléfono:</h5>
+        <p class="card-text">+506 8888 8888</p>
+
+        <h5 class="card-title">Usuario desde:</h5>
+        <p class="card-text">Enero 2023</p>
+
+        <a href="@Url.Action("EditarPerfil", "Cliente")" class="btn btn-primary mt-3">Editar Perfil</a>
+    </div>
+</div>
