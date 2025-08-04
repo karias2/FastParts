@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Filtros de Reporte";
+    string tipo = ViewBag.Tipo as string;
+}
+
+<div class="container mt-4">
+    <h2>Filtrar Reporte: @tipo</h2>
+
+    <form method="get" action="@Url.Action("Resultado", "Reporte")">
+        <input type="hidden" name="tipo" value="@tipo" />
+
+        @* Filtros condicionales *@
+        @if (tipo == "ServiciosPorFecha" || tipo == "Encuestas")
+        {
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="fechaFin" class="form-label">Fecha Fin</label>
+                    <input type="date" id="fechaFin" name="fechaFin" class="form-control" required />
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

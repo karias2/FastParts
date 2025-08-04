@@ -1,0 +1,37 @@
+﻿
+@model List<FastParts.Models.UsuarioViewModel>
+
+<div class="container mt-4">
+    <div class="col">
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+    </div>
+    <h2>Usuarios del Sistema</h2>
+    <a href="@Url.Action("Crear")" class="btn btn-success mb-3">+ Nuevo Usuario</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Roles</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.NombreUsuario</td>
+                    <td>@u.Correo</td>
+                    <td>@string.Join(", ", u.Roles)</td>
+                    <td>
+                        <a href="@Url.Action("Editar", new { id = u.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="@Url.Action("Eliminar", new { id = u.Id })" class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Eliminar este usuario?');">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

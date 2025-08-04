@@ -49,7 +49,7 @@
                             Admin
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <li>@Html.ActionLink("Ver Encuestas", "VerTodas", "Encuesta", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Panel Administrador", "Index", "Admin", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
 
@@ -70,7 +70,7 @@
 
     <div class="container body-content flex-grow-1">
         @RenderBody()
-        <hr />
+        @*<hr />*@
     </div>
 
     <footer class="mt-auto text-center bg-dark">

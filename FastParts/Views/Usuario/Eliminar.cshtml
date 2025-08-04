@@ -1,0 +1,24 @@
+﻿@model FastParts.Models.UsuarioViewModel
+
+@{
+    ViewBag.Title = "Eliminar Usuario";
+}
+
+<div class="container mt-4">
+    <h2>Eliminar Usuario</h2>
+
+    <div class="alert alert-warning">
+        <p><strong>Usuario:</strong> @Model.NombreUsuario</p>
+        <p><strong>Correo:</strong> @Model.Correo</p>
+        <p><strong>Roles:</strong> @string.Join(", ", Model.Roles)</p>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="@Url.Action("Lista")" class="btn btn-secondary">Cancelar</a>
+    }
+</div>
+

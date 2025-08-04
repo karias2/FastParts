@@ -1,0 +1,35 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewBag.Title = "Resultado del Reporte";
+    string tipo = ViewBag.Tipo as string;
+}
+
+<div class="container mt-4">
+    <h2>Resultado del Reporte: @tipo</h2>
+
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary mb-3">← Volver a Reportes</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                @foreach (var col in ViewBag.Columnas as List<string>)
+                {
+                    <th>@col</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fila in Model)
+            {
+                <tr>
+                    @foreach (var valor in fila as IDictionary<string, object>)
+                    {
+                        <td>@valor.Value</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

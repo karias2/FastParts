@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Reportes del Taller";
+}
+
+<div class="container mt-4">
+    <h2>Reportes Disponibles</h2>
+
+    <ul class="list-group mt-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Reporte de Servicios por Fecha
+            <a href="@Url.Action("Filtro", "Reporte", new { tipo = "ServiciosPorFecha" })" class="btn btn-primary btn-sm">Ver</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Reporte de Encuestas de Satisfacción
+            <a href="@Url.Action("Filtro", "Reporte", new { tipo = "Encuestas" })" class="btn btn-primary btn-sm">Ver</a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Reporte de Recordatorios Activos
+            <a href="@Url.Action("Filtro", "Reporte", new { tipo = "Recordatorios" })" class="btn btn-primary btn-sm">Ver</a>
+        </li>
+    </ul>
+</div>
+
