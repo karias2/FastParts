@@ -25,7 +25,7 @@
                 <td>@c.Total</td>
                 <td>@(c.Enviada ? "Enviada" : "Preliminar")</td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="@Url.Action("Detalle", new { id = c.Id })">Ver</a>
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("Details", new { id = c.Id })">Ver</a>
                     @if (!c.Enviada)
                     {
                         <a class="btn btn-warning btn-sm" href="@Url.Action("Editar", new { id = c.Id })">Editar</a>
