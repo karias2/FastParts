@@ -33,5 +33,7 @@ namespace FastParts.Models
         public System.Data.Entity.DbSet<FastParts.Models.Recordatorio> Recordatorios { get; set; }
 
         public System.Data.Entity.DbSet<FastParts.Models.UsuarioViewModel> UsuarioViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<FastParts.Models.Cotizacion> Cotizacions { get; set; }
     }
 }

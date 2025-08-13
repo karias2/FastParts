@@ -1,0 +1,37 @@
+﻿@model IEnumerable<FastParts.Models.Cotizacion>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Listado de Cotizaciones</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Cliente.Nombre @c.Cliente.Apellido</td>
+                <td>@c.Fecha.ToShortDateString()</td>
+                <td>@c.Total</td>
+                <td>@(c.Enviada ? "Enviada" : "Preliminar")</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("Detalle", new { id = c.Id })">Ver</a>
+                    @if (!c.Enviada)
+                    {
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("Editar", new { id = c.Id })">Editar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
