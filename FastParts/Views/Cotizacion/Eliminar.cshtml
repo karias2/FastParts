@@ -1,0 +1,20 @@
+﻿@model FastParts.Models.Cotizacion
+
+<div class="container mt-4">
+    <h2>¿Eliminar Cotización?</h2>
+    <div class="alert alert-warning">
+        <p><strong>Cliente:</strong> @Model.Cliente</p>
+        <p><strong>Servicio:</strong> @Model.ServicioSolicitado</p>
+        <p><strong>Fecha:</strong> @Model.Fecha.ToShortDateString()</p>
+        <p><strong>Monto:</strong> ₡@Model.MontoEstimado.ToString("N2")</p>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="@Url.Action("Lista")" class="btn btn-secondary">Cancelar</a>
+    }
+</div>

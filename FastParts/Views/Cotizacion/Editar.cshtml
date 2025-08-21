@@ -1,0 +1,50 @@
+﻿@model FastParts.Models.Cotizacion
+
+@{
+    ViewBag.Title = Model.Id == 0 ? "Nueva Cotización" : "Editar Cotización";
+}
+
+<div class="container mt-4">
+    <h2>@ViewBag.Title</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="mb-3">
+            <label>Cliente</label>
+            @Html.TextBoxFor(m => m.Cliente, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha</label>
+            @Html.TextBoxFor(m => m.Fecha, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label>Servicio Solicitado</label>
+            @Html.TextBoxFor(m => m.ServicioSolicitado, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label>Observaciones</label>
+            @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control", rows = 3 })
+        </div>
+
+        <div class="mb-3">
+            <label>Monto Estimado</label>
+            @Html.TextBoxFor(m => m.MontoEstimado, new { @class = "form-control", type = "number", step = "0.01", required = "required" })
+        </div>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(m => m.Aprobada, new { @class = "form-check-input", id = "chkAprobada" })
+            <label class="form-check-label" for="chkAprobada">Aprobada</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="@Url.Action("Lista")" class="btn btn-secondary">Cancelar</a>
+    }
+</div>
+
+

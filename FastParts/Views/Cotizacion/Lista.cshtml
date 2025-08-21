@@ -1,0 +1,38 @@
+﻿@model IEnumerable<FastParts.Models.Cotizacion>
+
+<div class="container mt-4">
+    <h2>Listado de Cotizaciones</h2>
+    <a href="@Url.Action("Crear")" class="btn btn-success mb-3">+ Nueva Cotización</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Servicio</th>
+                <th>Monto</th>
+                <th>Aprobada</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Id</td>
+                    <td>@c.Cliente</td>
+                    <td>@c.Fecha.ToShortDateString()</td>
+                    <td>@c.ServicioSolicitado</td>
+                    <td>₡@c.MontoEstimado.ToString("N2")</td>
+                    <td>@(c.Aprobada ? "Sí" : "No")</td>
+                    <td>
+                        <a href="@Url.Action("Editar", new { id = c.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="@Url.Action("Eliminar", new { id = c.Id })" class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Eliminar esta cotización?');">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
