@@ -30,10 +30,8 @@ namespace FastParts.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<FastParts.Models.Recordatorio> Recordatorios { get; set; }
-
-        public System.Data.Entity.DbSet<FastParts.Models.UsuarioViewModel> UsuarioViewModels { get; set; }
-
-        public System.Data.Entity.DbSet<FastParts.Models.Cotizacion> Cotizacions { get; set; }
+        // Modelos a registrar en la base de datos
+        public DbSet<EncuestaModel> Encuestas { get; set; }
     }
 }
+

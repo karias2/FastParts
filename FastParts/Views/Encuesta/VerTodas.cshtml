@@ -1,14 +1,22 @@
-﻿@model List<FastParts.Models.EncuestaResumenViewModel>
+﻿@model List<FastParts.Models.EncuestaViewModel>
 
 @{
     ViewBag.Title = "Encuestas de Satisfacción";
 }
 
 <div class="container mt-4">
+
     <div class="col">
         <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+
+
     </div>
+
     <h2 class="mb-4">Encuestas de Satisfacción</h2>
+
+    <div class="col">
+        <a href="@Url.Action("Crear", "Encuesta")" class="btn btn-outline-primary mb-3">Crear</a>
+    </div>
 
     <table class="table table-striped table-bordered table-hover">
         <thead class="table-dark">
@@ -25,7 +33,6 @@
             @foreach (var encuesta in Model)
             {
                 <tr>
-                    <th scope="row">@encuesta.Id</th>
                     <td>@encuesta.Fecha.ToString("dd/MM/yyyy")</td>
                     <td>@encuesta.CalificacionServicio</td>
                     <td>@encuesta.CalificacionTiempo</td>

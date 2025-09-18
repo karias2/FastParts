@@ -11,6 +11,6 @@ Habilitar migraciones
 
 Crear y actualizar la base de datos
 
-> Add-Migration NOMBRE_DEL_CAMBIO -Verbose
+> Add-Migration CrearBaseDeDatos -Verbose
 
 > Update-Database -Verbose
