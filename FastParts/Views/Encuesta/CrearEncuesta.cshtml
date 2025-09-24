@@ -1,5 +1,5 @@
 ﻿
-@model FastParts.Models.EncuestaModel
+@model FastParts.Models.EncuestaViewModel
 
 @{
     ViewData["Title"] = "Gestión de Encuesta";
@@ -20,21 +20,21 @@
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-sm-4"><strong>ID de Encuesta:</strong></div>
-                <div class="col-sm-8">@Model.ID_Encuesta</div>
+                <div class="col-sm-8">@Model.Encuesta.ID_Encuesta</div>
             </div>
             <div class="row mb-3">
                 <div class="col-sm-4"><strong>Fecha de Creación:</strong></div>
-                <div class="col-sm-8">@Model.FechaCreacion.ToShortDateString()</div>
+                <div class="col-sm-8">@Model.Encuesta.FechaCreacion.ToShortDateString()</div>
             </div>
-            @using (Html.BeginForm("ActualizarEncuesta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta }, FormMethod.Post))
+            @using (Html.BeginForm("ActualizarEncuesta", "Encuesta", new { ID_Encuesta = @Model.Encuesta.ID_Encuesta }, FormMethod.Post))
             {
                 <div class="row mb-3">
-                    <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Nombre, new { @class = "form-label" }):</strong></div>
-                    <div class="col-sm-8">@Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", placeholder = "Nombre" })</div>
+                    <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Encuesta.Nombre, new { @class = "form-label" }):</strong></div>
+                    <div class="col-sm-8">@Html.TextBoxFor(model => model.Encuesta.Nombre, new { @class = "form-control", placeholder = "Nombre" })</div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Descripcion, new { @class = "form-label" })</strong></div>
-                    <div class="col-sm-8">@Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
+                    <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Encuesta.Descripcion, new { @class = "form-label" })</strong></div>
+                    <div class="col-sm-8">@Html.TextBoxFor(model => model.Encuesta.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-4"><button type="submit" class="btn btn-success w-100">Guardar</button></div>
@@ -62,7 +62,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var pregunta in Model.Preguntas)
+                                    @foreach (var pregunta in Model.Encuesta.Preguntas)
                                     {
                                         <tr>
                                             <td>@pregunta.ID_Pregunta</td>
@@ -92,23 +92,24 @@
                 </div>
 
                 <div class="card-body">
-                    @using (Html.BeginForm("ActualizarEncuesta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta }, FormMethod.Post))
+                    @using (Html.BeginForm("CrearPregunta", "Encuesta", new { ID_Encuesta = @Model.Encuesta.ID_Encuesta }, FormMethod.Post))
                     {
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción de la pregunta</label>
-                            <div>@Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
+                            <div>@Html.TextAreaFor(model => model.Pregunta.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
                         </div>
 
                         <div class="mb-3">
                             <label for="tipoPregunta" class="form-label">Tipo de pregunta</label>
-                            
-                            <select class="form-select" id="tipoPregunta" name="Tipo" aria-label="Seleccionar tipo de pregunta">
-                                <option value="">Seleccione un tipo</option>
-                                <option value="@FastParts.Models.TipoPregunta.Texto">Respuesta de Texto</option>
-                                <option value="@FastParts.Models.TipoPregunta.Rango">Rango</option>
-                                <option value="@FastParts.Models.TipoPregunta.OpcionMultiple">Opción Múltiple</option>
-                                <option value="@FastParts.Models.TipoPregunta.CasillasVerificacion">Casillas de Verificación</option>
-                            </select>
+
+                            <div>
+                                @Html.DropDownListFor(
+                                    model => model.Pregunta.Tipo,
+                                    @Model.TiposDePregunta,
+                                    "Seleccione un tipo",
+                                    new { @class = "form-select" }
+                                )
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-success">

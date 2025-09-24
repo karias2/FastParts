@@ -7,48 +7,25 @@
 <div class="container mt-4">
     <h2 class="mb-4">Encuesta de Satisfacción</h2>
 
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
-    {
-        @Html.AntiForgeryToken()
-
         <div class="mb-3">
             <label class="form-label">¿Cómo califica la calidad del servicio?</label>
-            @Html.DropDownListFor(m => m.CalificacionServicio,
-                     new SelectList(Enumerable.Range(1, 5)),
-                     "Del 1 al 5",
-                     new { @class = "form-select" })
-            @Html.ValidationMessageFor(m => m.CalificacionServicio, "", new { @class = "text-danger" })
+           
         </div>
 
         <div class="mb-3">
             <label class="form-label">¿Cómo califica el tiempo de entrega?</label>
-            @Html.DropDownListFor(m => m.CalificacionTiempo,
-                     new SelectList(Enumerable.Range(1, 5)),
-                     "Del 1 al 5",
-                     new { @class = "form-select" })
-            @Html.ValidationMessageFor(m => m.CalificacionTiempo, "", new { @class = "text-danger" })
+
         </div>
 
         <div class="mb-3">
             <label class="form-label">¿Cómo califica el trato recibido?</label>
-            @Html.DropDownListFor(m => m.CalificacionTrato,
-                     new SelectList(Enumerable.Range(1, 5)),
-                     "Del 1 al 5",
-                     new { @class = "form-select" })
-            @Html.ValidationMessageFor(m => m.CalificacionTrato, "", new { @class = "text-danger" })
+
         </div>
 
         <div class="mb-3">
             <label class="form-label">Comentarios adicionales (opcional):</label>
-            @Html.TextAreaFor(m => m.ComentariosAdicionales, new { @class = "form-control", rows = 4 })
         </div>
 
         <button type="submit" class="btn btn-primary">Enviar Encuesta</button>
-    }
+
 </div>
-
-
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

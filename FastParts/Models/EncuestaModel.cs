@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using System.Web.WebPages.Html;
 
 namespace FastParts.Models
 {
@@ -18,40 +17,16 @@ namespace FastParts.Models
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
-        //[Required]
-        //[ForeignKey("Cita")]
-        //public int ID_Cita { get; set; }
-
-        // Propiedades de navegación para las relaciones
-
-        //[ForeignKey("ID_Cita")]
-        //public virtual Cita Cita { get; set; }
-
-        public virtual PreguntaModel Pregunta { get; set; }
-
-        public virtual IEnumerable<SelectListItem> TiposDePregunta { get; set; }
-
         public virtual ICollection<PreguntaModel> Preguntas { get; set; }
     }
 
     public class EncuestaViewModel
     {
+        public int ID_Encuesta { get; set; }
 
-        // borrar
+        public virtual EncuestaModel Encuesta { get; set; }
+        public virtual PreguntaModel Pregunta { get; set; }
 
-        public DateTime Fecha { get; set; }
-        public int IdPedido { get; set; }  // opcional, para asociar al servicio recibido
-
-        [Range(1, 5)]
-        public int CalificacionServicio { get; set; }
-
-
-        [Range(1, 5)]
-        public int CalificacionTiempo { get; set; }
-
-        [Range(1, 5)]
-        public int CalificacionTrato { get; set; }
-
-        public string ComentariosAdicionales { get; set; }
+        public List<System.Web.Mvc.SelectListItem> TiposDePregunta { get; set; }
     }
 }

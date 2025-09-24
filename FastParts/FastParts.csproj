@@ -288,8 +288,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout - Copy.cshtml" />
     <Content Include="Views\Encuesta\Crear.cshtml" />
-    <Content Include="Views\Encuesta\Gracias.cshtml" />
-    <Content Include="Views\Encuesta\VerTodas.cshtml" />
     <Content Include="Views\Mecanico\IngresoVehiculo.cshtml" />
     <Content Include="Views\Mecanico\DetallesServicio.cshtml" />
     <Content Include="Views\Cliente\Perfil.cshtml" />
