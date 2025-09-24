@@ -1,0 +1,48 @@
+﻿@model FastParts.Models.ServicioModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h3>Esta seguro que quiere eliminar este servicio?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PrecioServicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PrecioServicio)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+<div class="form-actions no-color">
+    <input type="submit" value="Eliminar"
+           class="btn btn-danger"
+           onclick="return confirm('¿Está seguro que desea eliminar este servicio?');" /> 
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+</div>
+    }
+</div>

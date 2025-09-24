@@ -1,0 +1,60 @@
+﻿@model IEnumerable<FastParts.Models.ServicioModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container mt-4">
+    <div class="col">
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+    </div>
+    <h2>Servicios</h2>
+
+    <a href="@Url.Action("Create")" class="btn btn-success mb-3">+ Nuevo Servicio</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrecioServicio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activo)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+             {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrecioServicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activo)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new { id = item.IdServicio })" class="bi bi-pencil-square text-primary mx-1" title="Editar"></a>
+                        <a href="@Url.Action("Details", new { id = item.IdServicio })" class="bi bi-info-circle text-info mx-1" title="Detalles"></a>
+                        <a href="@Url.Action("Delete", new { id = item.IdServicio })" class="bi bi-trash text-danger mx-1" title="Eliminar"></a>
+
+                    </td>
+                </tr>
+             }
+        </tbody>
+
+    </table>
+</div>
