@@ -1,9 +1,12 @@
 ﻿using FastParts.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+
 
 namespace FastParts.Controllers
 {
@@ -19,7 +22,7 @@ namespace FastParts.Controllers
         }
  
         [HttpGet]
-        public ActionResult CrearEncuesta(int? id)
+        public async Task<ActionResult> CrearEncuesta(int? id)
         {
             if (id == null)
             {
@@ -34,7 +37,12 @@ namespace FastParts.Controllers
             }
             else
             {
-                var encuesta = db.Encuestas.Find(id);
+                var encuesta = await db.Encuestas.FindAsync(id);
+                encuesta.Preguntas = await db.Preguntas
+                    .Where(p => p.ID_Encuesta == id)
+                    .ToListAsync();
+                //encuesta.TiposDePregunta = ;
+
                 return View(encuesta);
             }
         }
@@ -55,9 +63,25 @@ namespace FastParts.Controllers
                 TempData["ErrorEdicion"] = "No se encontró la Encuesta.";
                 return RedirectToAction("CrearEncuesta");
             }
-
-           
         }
+
+        public ActionResult CrearPregunta(PreguntaModel preguntaModel)
+        {
+            if (preguntaModel != null && preguntaModel.ID_Pregunta != null)
+            {
+                db.Preguntas.Add(preguntaModel);
+                db.SaveChanges();
+                return RedirectToAction("CrearEncuesta", new { id = preguntaModel.ID_Encuesta });
+            }
+            else
+            {
+                return RedirectToAction("AdministrarEncuestas");
+            }
+        }
+
+
+
+        // BORRAR
 
         // GET: Encuesta
         [HttpGet]

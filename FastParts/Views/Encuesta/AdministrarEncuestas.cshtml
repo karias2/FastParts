@@ -32,7 +32,11 @@
                     <td>@encuesta.FechaCreacion.ToString("dd/MM/yyyy")</td>
                     <td>@encuesta.Nombre</td>
                     <td>@encuesta.Descripcion</td>
-                </tr>
+                    <td>
+                        <a href="@Url.Action("CrearEncuesta", "Encuesta", new { id = @encuesta.ID_Encuesta })" class="btn btn-primary mb-3">Editar</a>
+                    </td>
+
+</tr>
             }
         </tbody>
     </table>

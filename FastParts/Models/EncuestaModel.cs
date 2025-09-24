@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages.Html;
 
 namespace FastParts.Models
 {
@@ -26,11 +27,16 @@ namespace FastParts.Models
         //[ForeignKey("ID_Cita")]
         //public virtual Cita Cita { get; set; }
 
+        public virtual PreguntaModel Pregunta { get; set; }
+
+        public virtual IEnumerable<SelectListItem> TiposDePregunta { get; set; }
+
         public virtual ICollection<PreguntaModel> Preguntas { get; set; }
     }
 
     public class EncuestaViewModel
     {
+
         // borrar
 
         public DateTime Fecha { get; set; }

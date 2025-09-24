@@ -18,25 +18,25 @@
             <h5 class="mb-0">Información de la Encuesta</h5>
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-sm-4"><strong>ID de Encuesta:</strong></div>
                 <div class="col-sm-8">@Model.ID_Encuesta</div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-sm-4"><strong>Fecha de Creación:</strong></div>
                 <div class="col-sm-8">@Model.FechaCreacion.ToShortDateString()</div>
             </div>
             @using (Html.BeginForm("ActualizarEncuesta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta }, FormMethod.Post))
             {
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Nombre, new { @class = "form-label" }):</strong></div>
                     <div class="col-sm-8">@Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", placeholder = "Nombre" })</div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-sm-4"><strong>@Html.LabelFor(model => model.Descripcion, new { @class = "form-label" })</strong></div>
                     <div class="col-sm-8">@Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-sm-4"><button type="submit" class="btn btn-success w-100">Guardar</button></div>
                 </div>
             }
@@ -90,21 +90,34 @@
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Agregar Nueva Pregunta</h5>
                 </div>
+
                 <div class="card-body">
-                    <form asp-action="AgregarPregunta" method="post">
-                        <input type="hidden" name="encuestaId" value="@Model.ID_Encuesta" />
+                    @using (Html.BeginForm("ActualizarEncuesta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta }, FormMethod.Post))
+                    {
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción de la pregunta</label>
-                            <textarea name="descripcion" class="form-control" rows="4" required></textarea>
+                            <div>@Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", placeholder = "Descripcion" })</div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">
+
+                        <div class="mb-3">
+                            <label for="tipoPregunta" class="form-label">Tipo de pregunta</label>
+                            
+                            <select class="form-select" id="tipoPregunta" name="Tipo" aria-label="Seleccionar tipo de pregunta">
+                                <option value="">Seleccione un tipo</option>
+                                <option value="@FastParts.Models.TipoPregunta.Texto">Respuesta de Texto</option>
+                                <option value="@FastParts.Models.TipoPregunta.Rango">Rango</option>
+                                <option value="@FastParts.Models.TipoPregunta.OpcionMultiple">Opción Múltiple</option>
+                                <option value="@FastParts.Models.TipoPregunta.CasillasVerificacion">Casillas de Verificación</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
                             <i class="fas fa-paper-plane me-2"></i>Guardar Pregunta
                         </button>
-                    </form>
+                    }
                 </div>
+
             </div>
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

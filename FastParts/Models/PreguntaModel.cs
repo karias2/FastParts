@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -11,12 +12,19 @@ namespace FastParts.Models
         [Key]
         public int ID_Pregunta { get; set; }
 
+        public int ID_Encuesta { get; set; }
+        [ForeignKey("ID_Encuesta")]
+        public virtual EncuestaModel Encuesta { get; set; }
+
         [Required]
         [StringLength(400)]
         public string Descripcion { get; set; }
 
         [Required]
         public TipoPregunta Tipo { get; set; }
+
+        // Separados por ,
+        public string opciones { get; set; }
 
         // Propiedades opcionales para preguntas de tipo Rango
         public int? Minimo { get; set; }
@@ -31,6 +39,12 @@ namespace FastParts.Models
 
         // Pregunta de texto libre, como un comentario.
         // Por ejemplo: Describa su experiencia.
-        Texto
+        Texto,
+
+        //
+        OpcionMultiple,
+
+        //
+        CasillasVerificacion
     }
 }
