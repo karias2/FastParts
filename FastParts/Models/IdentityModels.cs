@@ -33,6 +33,8 @@ namespace FastParts.Models
         // Modelos a registrar en la base de datos
         public DbSet<EncuestaModel> Encuestas { get; set; }
         public DbSet<PreguntaModel> Preguntas { get; set; }
+        public DbSet<RepuestoModel> Repuestos { get; set; }
+
 
         public System.Data.Entity.DbSet<FastParts.Models.ServicioModel> ServicioModels { get; set; }
 

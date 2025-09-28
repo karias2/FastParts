@@ -163,6 +163,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\CotizacionsController.cs" />
     <Compile Include="Controllers\EncuestaController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\PreguntaModel.cs" />
     <Compile Include="Models\Recordatorio.cs" />
+    <Compile Include="Models\RepuestoModel.cs" />
     <Compile Include="Models\RolesDisponibles.cs" />
     <Compile Include="Models\ServicioModel.cs" />
     <Compile Include="Models\UsuarioViewModel.cs" />
@@ -318,6 +320,10 @@
     <Content Include="Views\Servicio\Details.cshtml" />
     <Content Include="Views\Servicio\Edit.cshtml" />
     <Content Include="Views\Servicio\Index.cshtml" />
+    <Content Include="Views\Repuestos\Create.cshtml" />
+    <Content Include="Views\Repuestos\Edit.cshtml" />
+    <Content Include="Views\Repuestos\Index.cshtml" />
+    <Content Include="Views\Repuestos\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,123 @@
+﻿@model IEnumerable<FastParts.Models.RepuestoModel>
+@{
+    var placeholder = Url.Content("~/Content/img/placeholder-part.png");
+}
+<h2>Repuestos</h2>
+
+<div class="repuestos-toolbar">
+    <div>
+        @Html.ActionLink("Crear repuesto", "Create", "Repuestos", null, new { @class = "btn btn-primary" })
+    </div>
+
+    <div class="repuestos-search">
+        <input type="text" id="searchText" class="form-control" placeholder="Buscar repuestos..." />
+        <button type="button" id="searchBtn" class="btn btn-default">Buscar</button>
+    </div>
+</div>
+
+
+<div class="cards">
+    @foreach (var x in Model)
+    {
+        <article class="card">
+            <div class="img-wrap">
+                <img src="@Url.Content(string.IsNullOrWhiteSpace(x.ImagenUrl) ? placeholder : x.ImagenUrl)"
+                     alt="@x.Nombre" />
+            </div>
+            <h4>@x.Nombre</h4>
+            <div class="meta">
+                <span>@x.Marca</span>
+                <strong>@x.Precio.ToString("C")</strong>
+            </div>
+            <div class="actions">
+                @Html.ActionLink("Ver detalles", "Details", new { id = x.Id }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Editar", "Edit", new { id = x.Id }, new { @class = "btn btn-sm btn-warning" })
+                @Html.ActionLink("Eliminar", "Delete", new { id = x.Id }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+        </article>
+    }
+</div>
+
+@if (TempData["OkMsg"] != null)
+{<div class="alert alert-success">@TempData["OkMsg"]</div>}
+@if (TempData["ErrMsg"] != null)
+{<div class="alert alert-danger">@TempData["ErrMsg"]</div>}
+
+
+
+<style>
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+        gap: 18px
+    }
+
+    .card {
+        border: 1px solid #e6e6e6;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff
+    }
+
+    .img-wrap {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fafafa
+    }
+
+        .img-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain
+        }
+
+    .card h4 {
+        margin: 10px 12px 0;
+        font-weight: 700
+    }
+
+    .card .meta {
+        margin: 6px 12px 10px;
+        color: #666;
+        display: flex;
+        justify-content: space-between
+    }
+
+    .card .actions {
+        padding: 10px 12px 14px;
+        display: flex;
+        gap: 8px
+    }
+
+    .repuestos-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 16px 0;
+    }
+
+    .repuestos-search {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        width: 100%;
+        max-width: 420px;
+        margin-left: auto;
+    }
+</style>
+
+<script>
+    (function () {
+        var btn = document.getElementById('searchBtn');
+        if (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                alert('Funcionalidad no implementada aún!');
+            });
+        }
+    })();
+</script>
+

@@ -1,0 +1,97 @@
+﻿@model FastParts.Models.RepuestoModel
+@{
+    ViewBag.Title = "Editar repuesto";
+}
+
+<h2>Editar repuesto</h2>
+
+@using (Html.BeginForm("Edit", "Repuestos", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", maxlength = 120 })
+                @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Marca, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Marca, new { @class = "form-control", maxlength = 80 })
+                @Html.ValidationMessageFor(m => m.Marca, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NumeroParte, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.NumeroParte, new { @class = "form-control", maxlength = 80 })
+                @Html.ValidationMessageFor(m => m.NumeroParte, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Precio, new { @class = "form-control", type = "number", step = "0.01", min = "0" })
+                @Html.ValidationMessageFor(m => m.Precio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Stock, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Stock, new { @class = "form-control", type = "number", min = "0" })
+                @Html.ValidationMessageFor(m => m.Stock, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Proveedor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Proveedor, new { @class = "form-control", maxlength = 200 })
+                @Html.ValidationMessageFor(m => m.Proveedor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Descripcion, new { @class = "form-control", rows = 4, maxlength = 500 })
+                @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Imagen</label>
+            <div class="col-md-10">
+                @if (!string.IsNullOrWhiteSpace(Model.ImagenUrl))
+                {
+                    <div style="margin-bottom:8px">
+                        <img src="@Url.Content(Model.ImagenUrl)" alt="imagen actual" style="max-width:220px;max-height:160px;object-fit:contain;border:1px solid #eee;padding:4px" />
+                    </div>
+                }
+                <input type="file" name="ImagenFile" accept="image/*" class="form-control" />
+                <p class="help-block">Selecciona un archivo para reemplazar la imagen (opcional).</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,40 @@
+﻿@model FastParts.Models.RepuestoModel
+@{
+    ViewBag.Title = "Eliminar repuesto";
+}
+
+<h2>Eliminar repuesto</h2>
+<p class="text-danger">¿Seguro que deseas eliminar este repuesto? Esta acción no se puede deshacer.</p>
+
+<div class="row">
+    <div class="col-md-4">
+        @if (!string.IsNullOrWhiteSpace(Model.ImagenUrl))
+        {
+            <img src="@Url.Content(Model.ImagenUrl)" alt="@Model.Nombre" style="max-width:100%;border:1px solid #eee;padding:4px" />
+        }
+    </div>
+    <div class="col-md-8">
+        <dl class="dl-horizontal">
+            <dt>Nombre</dt>
+            <dd>@Model.Nombre</dd>
+            <dt>Marca</dt>
+            <dd>@Model.Marca</dd>
+            <dt>Número de parte</dt>
+            <dd>@Model.NumeroParte</dd>
+            <dt>Precio</dt>
+            <dd>@Model.Precio.ToString("C")</dd>
+            <dt>Stock</dt>
+            <dd>@Model.Stock</dd>
+            <dt>Proveedor</dt>
+            <dd>@Model.Proveedor</dd>
+        </dl>
+    </div>
+</div>
+
+@using (Html.BeginForm("Delete", "Repuestos", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+}
