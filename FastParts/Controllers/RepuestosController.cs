@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace FastParts.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class RepuestosController : Controller
     {
 
@@ -48,7 +48,7 @@ namespace FastParts.Controllers
         }
 
         // GET: Repuestos/Create
-        [Authorize]
+        //[Authorize]
         public ActionResult Create() => View();
 
         // POST: Repuestos/Create
@@ -83,7 +83,7 @@ namespace FastParts.Controllers
         }
 
         // GET: Repuestos/Edit/5
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             var repuesto = await db.Repuestos.FindAsync(id);
@@ -132,7 +132,7 @@ namespace FastParts.Controllers
             return View(entity);
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             var repuesto = await db.Repuestos.FindAsync(id);
