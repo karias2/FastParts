@@ -90,30 +90,30 @@ namespace FastParts.Controllers
         }
 
         // GET: Servicio/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ServicioModel servicioModel = db.ServicioModels.Find(id);
-            if (servicioModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(servicioModel);
-        }
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    ServicioModel servicioModel = db.ServicioModels.Find(id);
+        //    if (servicioModel == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(servicioModel);
+        //}
 
-        // POST: Servicio/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            ServicioModel servicioModel = db.ServicioModels.Find(id);
-            db.ServicioModels.Remove(servicioModel);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// POST: Servicio/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    ServicioModel servicioModel = db.ServicioModels.Find(id);
+        //    db.ServicioModels.Remove(servicioModel);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

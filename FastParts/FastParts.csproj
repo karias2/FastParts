@@ -186,8 +186,10 @@
     <Compile Include="Models\PreguntaModel.cs" />
     <Compile Include="Models\Recordatorio.cs" />
     <Compile Include="Models\RepuestoModel.cs" />
+    <Compile Include="Controllers\RolesAdminController.cs" />
     <Compile Include="Models\RolesDisponibles.cs" />
     <Compile Include="Models\ServicioModel.cs" />
+    <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Models\UsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -324,9 +326,17 @@
     <Content Include="Views\Repuestos\Edit.cshtml" />
     <Content Include="Views\Repuestos\Index.cshtml" />
     <Content Include="Views\Repuestos\Delete.cshtml" />
+    <Content Include="Views\Account\Usuarios.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Account\UsuariosOld.cshtml" />
+    <Content Include="Views\Account\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\UserRoles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

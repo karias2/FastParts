@@ -1,0 +1,55 @@
+﻿@model FastParts.Models.EditUserRolesViewModel
+@{
+    ViewBag.Title = "Editar roles de usuario";
+}
+
+<div class="container mt-4">
+    <a href="@Url.Action("Usuarios", "Account")" class="btn btn-outline-secondary mb-3"> ← Volver a Usuarios </a>
+
+    <h2>Editar roles</h2>
+    <div class="mb-3">
+        <strong>Usuario:</strong> @Model.NombreCompleto (@Model.Email)
+    </div>
+
+    @using (Html.BeginForm("Editar", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.UserId)
+        @Html.HiddenFor(m => m.Email)
+        @Html.HiddenFor(m => m.NombreCompleto)
+
+        @*<div class="card p-3 mb-3">
+            <h5 class="mb-3">Roles</h5>
+            <div class="d-flex flex-wrap gap-3">
+                @for (int i = 0; i < Model.Roles.Count; i++)
+                {
+                    <div class="form-check me-3">
+                        @Html.HiddenFor(m => m.Roles[i].Name)
+                        @Html.CheckBoxFor(m => m.Roles[i].Assigned, new { @class = "form-check-input", id = $"role_{i}" })
+                        <label class="form-check-label" for="@($"role_{i}")">@Model.Roles[i].Name</label>
+                    </div>
+                }
+            </div>
+        </div>*@
+
+        <div class="mb-3">
+            <label class="form-label">Roles</label>
+            <div class="form-check">
+                @for (int i = 0; i < Model.Roles.Count; i++)
+                {
+                    <div class="form-check me-3">
+                        @Html.HiddenFor(m => m.Roles[i].Name)
+                        @Html.CheckBoxFor(m => m.Roles[i].Assigned, new { @class = "form-check-input", id = $"role_{i}" })
+                        <label class="form-check-label" for="@($"role_{i}")">@Model.Roles[i].Name</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+
+        <a href="@Url.Action("Usuarios", "Account")" class="btn btn-secondary">Cancelar</a>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger mt-2" })
+    }
+</div>

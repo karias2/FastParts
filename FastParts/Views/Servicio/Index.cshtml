@@ -27,7 +27,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Activo)
                 </th>
-                <th></th>
+                <th>
+                    <span>Acciones</span>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -42,16 +44,22 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PrecioServicio)
-                    </td>
+                    </td>         
                     <td>
-                        @Html.DisplayFor(modelItem => item.Activo)
+                        @if (item.Activo)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactivo</span>
+                        }
                     </td>
                     <td>
                         <a href="@Url.Action("Edit", new { id = item.IdServicio })" class="bi bi-pencil-square text-primary mx-1" title="Editar"></a>
                         <a href="@Url.Action("Details", new { id = item.IdServicio })" class="bi bi-info-circle text-info mx-1" title="Detalles"></a>
-                        <a href="@Url.Action("Delete", new { id = item.IdServicio })" class="bi bi-trash text-danger mx-1" title="Eliminar"></a>
-
                     </td>
+
                 </tr>
              }
         </tbody>

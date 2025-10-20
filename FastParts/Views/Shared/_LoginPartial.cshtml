@@ -5,12 +5,42 @@
     {
     @Html.AntiForgeryToken()
 
-    <ul class="navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class="nav-link" })
+<ul class="navbar-nav navbar-right">
+    @*Condicional para mostrar dropdown basado en rol. Habilitar despues de pruebas iniciales.*@
+    @*@if (User.IsInRole("Admin")){
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                <li>
+                    @Html.ActionLink("Panel Administrador", "Index", "Admin", null, new { @class = "dropdown-item" })
+                </li>
+                <li>
+                    @Html.ActionLink("Listado de Cotizaciones", "Index", "Cotizacions", null, new { @class = "dropdown-item" })
+                </li>
+            </ul>
         </li>
-        <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+        }
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Mecanico")) {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="mecanicoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Mecánico
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="mecanicoDropdown">
+                <li>@Html.ActionLink("Ingreso Vehículo", "IngresoVehiculo", "Mecanico", null, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink("Detalles Servicio", "DetallesServicio", "Mecanico", null, new { @class = "dropdown-item" })</li>
+            </ul>
+        </li>
+    }*@
+
+
+    <li>
+        @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
+    </li>
+    <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion  <i class="bi bi-box-arrow-right"></i></a></li>
+</ul>
     }
 }
 else
