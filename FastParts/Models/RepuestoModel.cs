@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
-
 
 namespace FastParts.Models
 {
@@ -48,5 +46,9 @@ namespace FastParts.Models
 
         [NotMapped]
         public HttpPostedFileBase ImagenFile { get; set; }
+
+        // --- Soft delete ---
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
     }
 }

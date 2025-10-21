@@ -27,7 +27,7 @@
             <h4>@x.Nombre</h4>
             <div class="meta">
                 <span>@x.Marca</span>
-                <strong>@x.Precio.ToString("C")</strong>
+                <strong>@x.Precio.ToString("C", new System.Globalization.CultureInfo("es-CR"))</strong>
             </div>
             <div class="actions">
                 @Html.ActionLink("Ver detalles", "Details", new { id = x.Id }, new { @class = "btn btn-sm btn-default" })
