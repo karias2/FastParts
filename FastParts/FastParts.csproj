@@ -177,14 +177,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202510210450078_SyncDatabase.cs" />
-    <Compile Include="Migrations\202510210450078_SyncDatabase.Designer.cs">
-      <DependentUpon>202510210450078_SyncDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202510210539156_AddIsDeletedToRepuestos.cs" />
-    <Compile Include="Migrations\202510210539156_AddIsDeletedToRepuestos.Designer.cs">
-      <DependentUpon>202510210539156_AddIsDeletedToRepuestos.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedEncuentas.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -350,14 +342,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202510210450078_SyncDatabase.resx">
-      <DependentUpon>202510210450078_SyncDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202510210539156_AddIsDeletedToRepuestos.resx">
-      <DependentUpon>202510210539156_AddIsDeletedToRepuestos.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
