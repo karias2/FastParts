@@ -23,11 +23,20 @@ namespace FastParts.Models
         [Required]
         public string Tipo { get; set; }
 
+        public Boolean Requerido { get; set; }
+
         // Separados por ,
-        public string opciones { get; set; }
+        public string Opciones { get; set; }
 
         // Propiedades opcionales para preguntas de tipo Rango
         public int? Minimo { get; set; }
         public int? Maximo { get; set; }
+
+        // Respuestas
+
+        public int? ValorRespuesta { get; set; }
+
+        public string TextoRespuesta { get; set; }
+
     }
 }

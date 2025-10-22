@@ -186,6 +186,7 @@
       <DependentUpon>202510210539156_AddIsDeletedToRepuestos.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\SeedEncuentas.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\cotizacion.cs" />
     <Compile Include="Models\EncuestaModel.cs" />
@@ -301,7 +302,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout - Copy.cshtml" />
-    <Content Include="Views\Encuesta\Crear.cshtml" />
     <Content Include="Views\Mecanico\IngresoVehiculo.cshtml" />
     <Content Include="Views\Mecanico\DetallesServicio.cshtml" />
     <Content Include="Views\Cliente\Perfil.cshtml" />
