@@ -17,23 +17,28 @@ namespace FastParts.Controllers
 
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Repuestos
+        // GET: /Repuesto
         public async Task<ActionResult> Index(string q, string sort = "nombre")
         {
-            var query = db.Repuestos
-                .Where(r => !r.IsDeleted)
-                .AsQueryable();
+            q = (q ?? string.Empty).Trim();
 
-            if (!string.IsNullOrWhiteSpace(q))
+            var query = db.Repuestos
+                .AsNoTracking()
+                .Where(r => !r.IsDeleted
+                            && !r.OcultarClientes
+                            && !r.SinStockForzado
+                            && r.Stock > 0);
+
+            if (q.Length > 0)
             {
                 query = query.Where(r =>
                     r.Nombre.Contains(q) ||
-                    r.Marca.Contains(q) ||
-                    r.NumeroParte.Contains(q) ||
-                    r.Proveedor.Contains(q));
+                    (r.Marca ?? "").Contains(q) ||
+                    (r.NumeroParte ?? "").Contains(q) ||
+                    (r.Proveedor ?? "").Contains(q));
             }
 
-            switch (sort)
+            switch ((sort ?? "nombre").ToLowerInvariant())
             {
                 case "precio":
                     query = query.OrderBy(r => r.Precio);
@@ -49,6 +54,7 @@ namespace FastParts.Controllers
             var list = await query.ToListAsync();
             return View(list);
         }
+
 
         // GET: Repuestos/Create
         //[Authorize]
@@ -174,6 +180,24 @@ namespace FastParts.Controllers
                 return RedirectToAction("Delete", new { id });
             }
 
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ToggleOcultar(int id)
+        {
+            var r = db.Repuestos.Find(id);
+            r.OcultarClientes = !r.OcultarClientes;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ToggleForzarSinStock(int id)
+        {
+            var r = db.Repuestos.Find(id);
+            r.SinStockForzado = !r.SinStockForzado;
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

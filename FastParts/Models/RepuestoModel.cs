@@ -13,6 +13,22 @@ namespace FastParts.Models
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
+        [Range(0, int.MaxValue)]
+        [Display(Name = "Stock mínimo")]
+        public int StockMinimo { get; set; } = 0;
+
+        [Display(Name = "Ocultar a clientes")]
+        public bool OcultarClientes { get; set; } = false;
+
+        [Display(Name = "Forzar sin stock")]
+        public bool SinStockForzado { get; set; } = false;
+
+        [NotMapped]
+        public bool EstaBajoMinimo => Stock <= StockMinimo;
+
+        [NotMapped]
+        public bool MostrarEnCatalogo => !OcultarClientes && !SinStockForzado && Stock > 0;
+
         [StringLength(80)]
         [Display(Name = "Marca")]
         public string Marca { get; set; }

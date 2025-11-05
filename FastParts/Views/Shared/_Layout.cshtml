@@ -41,7 +41,7 @@
                             <li>@Html.ActionLink("Recordatorios", "ListaRecordatorios", "Recordatorio", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
-                                       
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Admin
@@ -60,13 +60,15 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="mecanicoDropdown">
                             <li>@Html.ActionLink("Ingreso Vehículo", "IngresoVehiculo", "Mecanico", null, new { @class = "dropdown-item" })</li>
-                            <li>@Html.ActionLink("Detalles Servicio", "DetallesServicio", "Mecanico", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Servicios", "Index", "Servicio", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
 
                     <li>@Html.ActionLink("Encuestas", "AdministrarEncuestas", "Encuesta", null, new { @class = "nav-link" })</li>
 
                     <li>@Html.ActionLink("Repuestos", "Index", "Repuestos", null, new { @class = "nav-link" })</li>
+
+                    <li>@Html.ActionLink("Alertas", "AlertasInventario", "Admin", null, new { @class = "nav-link" })</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

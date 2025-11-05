@@ -1,0 +1,80 @@
+﻿@model FastParts.Models.AlertasInventarioVM
+@{
+    ViewBag.Title = "Alertas de Inventario";
+}
+<h2>Alertas de Inventario</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Repuestos bajo mínimo</h3>
+        <table class="table table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>Repuesto</th>
+                    <th>Stock</th>
+                    <th>Mínimo</th>
+                    <th>Proveedor</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.BajoMinimo != null && Model.BajoMinimo.Any())
+                {
+                    foreach (var r in Model.BajoMinimo)
+                    {
+                        <tr class="danger">
+                            <td>@r.Nombre</td>
+                            <td>@r.Stock</td>
+                            <td>@r.StockMinimo</td>
+                            <td>@r.Proveedor</td>
+                            <td>
+                                <button class="btn btn-xs btn-default" disabled>Crear pedido</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5" class="text-muted">Sin repuestos bajo mínimo.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-6">
+        <h3>Alertas abiertas</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Mensaje</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Alertas != null && Model.Alertas.Any())
+                {
+                    foreach (var a in Model.Alertas)
+                    {
+                        <tr>
+                            <td>@a.Fecha.ToLocalTime()</td>
+                            <td>@a.Mensaje</td>
+                            <td>
+                                @using (Html.BeginForm("MarcarAlertaAtendida", "Admin", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", a.Id)
+                                    <button type="submit" class="btn btn-xs btn-success">Marcar atendida</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="3" class="text-muted">No hay alertas pendientes.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

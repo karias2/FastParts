@@ -1,68 +1,56 @@
 ﻿@model IEnumerable<FastParts.Models.ServicioModel>
-
+@using System.Globalization
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Servicios";
+    var cr = new CultureInfo("es-CR");
 }
 
 <div class="container mt-4">
     <div class="col">
         <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
     </div>
-    <h2>Servicios</h2>
+
+    <h2 class="mb-3">Servicios</h2>
 
     <a href="@Url.Action("Create")" class="btn btn-success mb-3">+ Nuevo Servicio</a>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark">
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Descripcion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PrecioServicio)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Activo)
-                </th>
-                <th>
-                    <span>Acciones</span>
-                </th>
+                <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                <th>@Html.DisplayNameFor(model => model.PrecioServicio)</th>
+                <th>@Html.DisplayNameFor(model => model.Activo)</th>
+                <th style="width: 280px;"><span>Acciones</span></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
-             {
+            {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Descripcion)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PrecioServicio)
-                    </td>         
+                    <td>@item.Nombre</td>
+                    <td>@(string.IsNullOrWhiteSpace(item.Descripcion) ? "-" : (item.Descripcion.Length > 80 ? item.Descripcion.Substring(0,80) + "…" : item.Descripcion))</td>
+                    <td>@item.PrecioServicio.ToString("C", cr)</td>
                     <td>
                         @if (item.Activo)
-                        {
-                            <span class="badge bg-success">Activo</span>
-                        }
+                        {<span class="badge bg-success">Activo</span> }
                         else
-                        {
-                            <span class="badge bg-secondary">Inactivo</span>
-                        }
+                        { <span class="badge bg-secondary">Inactivo</span>}
                     </td>
                     <td>
-                        <a href="@Url.Action("Edit", new { id = item.IdServicio })" class="bi bi-pencil-square text-primary mx-1" title="Editar"></a>
-                        <a href="@Url.Action("Details", new { id = item.IdServicio })" class="bi bi-info-circle text-info mx-1" title="Detalles"></a>
+                        <a href="@Url.Action("Edit", new { id = item.IdServicio })" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.IdServicio })" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-info-circle"></i> Detalles
+                        </a>
+                        <a href="@Url.Action("DetallesServicio", "Mecanico", new { id = item.IdServicio })"
+                           class="btn btn-sm btn-primary">
+                            <i class="bi bi-tools"></i> Usar repuestos
+                        </a>
                     </td>
-
                 </tr>
-             }
+            }
         </tbody>
-
     </table>
 </div>

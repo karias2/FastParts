@@ -31,6 +31,7 @@ namespace FastParts.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            this.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public static ApplicationDbContext Create()
@@ -49,6 +50,10 @@ namespace FastParts.Models
         public DbSet<EncuestaModel> Encuestas { get; set; }
         public DbSet<PreguntaModel> Preguntas { get; set; }
         public DbSet<RepuestoModel> Repuestos { get; set; }
+        public DbSet<ServicioRepuestoModel> ServicioRepuestos { get; set; }
+        public DbSet<MovimientoInventarioModel> Movimientos { get; set; }
+        public DbSet<AlertaInventarioModel> Alertas { get; set; }
+
 
 
         public System.Data.Entity.DbSet<FastParts.Models.ServicioModel> ServicioModels { get; set; }
