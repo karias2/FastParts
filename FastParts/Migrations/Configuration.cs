@@ -20,6 +20,20 @@
 
         protected override void Seed(FastParts.Models.ApplicationDbContext context)
         {
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            if (!context.Encuestas.Any())
+            {
+                var SeedEncuenta = new SeedEncuestas();
+                SeedEncuenta.Satisfaccion(context);
+            }
+
+            if (!roleManager.RoleExists("Mecanico"))
+            {
+                var SeedUsuarios = new SeedUsuarios();
+                SeedUsuarios.CrearRolesYUsuarios(context);
+            }
+
             // Repuestos (idempotente por clave compuesta Nombre+NumeroParte)
             context.Repuestos.AddOrUpdate(
                 r => new { r.Nombre, r.NumeroParte },
@@ -75,16 +89,15 @@
 
             // Servicio base
             context.ServicioModels.AddOrUpdate(
-    s => s.Nombre,
-    new ServicioModel
-    {
-        Nombre = "Cambio de aceite",
-        Descripcion = "Servicio básico de cambio de aceite y revisión general.",
-        PrecioServicio = 15000,
-        Activo = true
-    }
-);
-
+                s => s.Nombre,
+                new ServicioModel
+                {
+                    Nombre = "Cambio de aceite",
+                    Descripcion = "Servicio básico de cambio de aceite y revisión general.",
+                    PrecioServicio = 15000,
+                    Activo = true
+                }
+            );
 
             try
             {
@@ -102,18 +115,6 @@
 
                 Debug.WriteLine(sb.ToString());        
                 throw new Exception("Errores de validación en Seed:\n" + sb, ex); 
-            }
-
-            if (!context.Encuestas.Any())
-            {
-                var SeedEncuenta = new SeedEncuestas();
-                SeedEncuenta.Satisfaccion(context);
-            }
-
-            if (!roleManager.RoleExists("Mecanico"))
-            {
-                var SeedUsuarios = new SeedUsuarios();
-                SeedUsuarios.CrearRolesYUsuarios(context);
             }
         }
     }

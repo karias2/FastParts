@@ -177,10 +177,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202511050425454_Inventario_MinimoYTablas.cs" />
-    <Compile Include="Migrations\202511050425454_Inventario_MinimoYTablas.Designer.cs">
-      <DependentUpon>202511050425454_Inventario_MinimoYTablas.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
     <Compile Include="Migrations\SeedUsuarios.cs" />
@@ -357,11 +353,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202511050425454_Inventario_MinimoYTablas.resx">
-      <DependentUpon>202511050425454_Inventario_MinimoYTablas.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
