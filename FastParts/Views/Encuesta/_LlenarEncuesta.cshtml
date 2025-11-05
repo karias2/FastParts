@@ -29,14 +29,12 @@
                                             TextoRespuesta = @pregunta.TextoRespuesta
                                         },
                                         FormMethod.Post,
-                                      new
-                                      {
-                                          id = $"formPregunta_{pregunta.ID_Pregunta}",
-                                          data_ajax = "true",
-                                          data_ajax_method = "POST",
-                                          data_ajax_success = "onResponseSaved", // Se ejecuta si es éxito 200 OK
-                                          data_ajax_failure = "onResponseError"  // Se ejecuta si hay error de HTTP
-                                      }
+                                        new
+                                        {
+                                            id = $"formPregunta_{pregunta.ID_Pregunta}",
+                                            data_ajax = "true",
+                                            data_ajax_method = "POST"
+                                        }
                                     )) {
                                         <div class="encuesta-title">
                                             <label class="form-label fw-bold">@pregunta.Descripcion</label>
@@ -62,7 +60,7 @@
                                                            min = pregunta.Minimo,
                                                            max = pregunta.Maximo,
                                                            value = pregunta.ValorRespuesta,
-                                                           onchange = $"document.getElementById('{formId}').submit();"
+                                                           onchange = "(function(event) { event.preventDefault(); event.stopPropagation(); document.getElementById('@formId').submit(); })(event)"
                                                        })
                                                             <small class="text-muted"><span id="valor-@inputName">@pregunta.ValorRespuesta</span></small>
                                                         </div>
@@ -115,7 +113,7 @@
                                                                         name="TextoRespuesta"
                                                                         value="@opcionTrimmed"
                                                                         @(isChecked ? "checked" : "")
-                                                                        onchange="document.getElementById('@formId').submit();"
+                                                                        onchange = "(function(event) { event.preventDefault(); event.stopPropagation(); document.getElementById('@formId').submit(); })(event)"
                                                                     >
                                                                     <label class="form-check-label" for="TextoRespuesta">
                                                                         @opcionTrimmed
@@ -142,26 +140,3 @@
 
         
 </div>
-
-
-<script>
-    // ** Funciones de manejo de respuesta AJAX **
-
-    // Se ejecuta al éxito (Controller devuelve Json({ success: true }))
-    function onResponseSaved(data) {
-        if (data && data.success) {
-            //
-            // Aquí se podría mostrar un pequeño ícono de "Guardado" temporalmente
-            console.log("Respuesta guardada exitosamente (AJAX).");
-        } else if (data && data.message) {
-            console.error("Error lógico:", data.message);
-            // Mostrar mensaje de error al usuario
-        }
-    }
-
-    // Se ejecuta si hay un error de comunicación HTTP (ej: 404, 500)
-    function onResponseError(xhr, status, error) {
-        console.error("Error de comunicación HTTP:", error);
-        // Mostrar error general de conexión al usuario
-    }
-</script>

@@ -36,6 +36,9 @@ namespace FastParts.Models
 
         // Respuestas
 
+        // .Include(p => p.Respuestas)
+        public ICollection<RespuestasModel> Respuestas { get; set; } = new List<RespuestasModel>();
+
         public int? ValorRespuesta { get; set; }
 
         public string TextoRespuesta { get; set; }

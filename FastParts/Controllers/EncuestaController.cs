@@ -75,6 +75,7 @@ namespace FastParts.Controllers
                 var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
                 encuesta.Preguntas = await db.Preguntas
                     .Where(p => p.ID_Encuesta == IdEncuesta)
+                    .Include(p => p.Respuestas)
                     .ToListAsync();
 
                 viewModel.ID_Encuesta = encuesta.ID_Encuesta;
@@ -88,7 +89,6 @@ namespace FastParts.Controllers
                 return RedirectToAction("Index");
             }
         }
-
 
 
         public ActionResult ActualizarEncuesta(EncuestaViewModel viewModel)
@@ -227,7 +227,7 @@ namespace FastParts.Controllers
 
                     db.Respuestas.Add(respuesta);
                     db.SaveChanges();
-                    return Json(new { success = true });
+                    return RedirectToAction("LlenarEncuesta", new { IdEncuesta = viewModel.ID_Encuesta, IdPregunta = viewModel.ID_Pregunta });
                 }
                 else
                 {
