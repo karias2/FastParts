@@ -40,6 +40,15 @@
                     <div class="col-sm-4"><button type="submit" class="btn btn-success w-100">Guardar</button></div>
                 </div>
             }
+            @if (@Model.ID_Pregunta != null)
+            {
+                <div class="row mt-4">
+                    @using (Html.BeginForm("EliminarEncuesta", "Encuesta", new { ID_Pregunta = @Model.ID_Pregunta }, FormMethod.Post))
+                    {
+                        <div class="col-sm-4"><button type="submit" class="btn btn-sm btn-outline-danger me-2"><i class="fas fa-trash-can"></i> Eliminar</button></div>
+                    }
+                </div>
+            }
         </div>
     </div>
 

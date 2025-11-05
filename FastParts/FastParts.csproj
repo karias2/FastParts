@@ -182,7 +182,8 @@
       <DependentUpon>202511050425454_Inventario_MinimoYTablas.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\SeedEncuentas.cs" />
+    <Compile Include="Migrations\SeedEncuestas.cs" />
+    <Compile Include="Migrations\SeedUsuarios.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AlertaInventarioModel.cs" />
     <Compile Include="Models\AlertasInventarioViewModel.cs" />
@@ -343,6 +344,8 @@
     <Content Include="Views\Roles\Edit.cshtml" />
     <Content Include="Views\Account\UsuariosOld.cshtml" />
     <Content Include="Views\Account\Editar.cshtml" />
+    <Content Include="Views\Encuesta\_LlenarEncuesta.cshtml" />
+    <Content Include="Views\Encuesta\Formulario.cshtml" />
     <Content Include="Services\AlertasInventario.cshtml" />
     <Content Include="Views\Admin\AlertasInventario.cshtml" />
   </ItemGroup>

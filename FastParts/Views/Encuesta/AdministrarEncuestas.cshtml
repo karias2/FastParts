@@ -35,9 +35,10 @@
                     <td>@encuesta.Descripcion</td>
                     <td>
                         <a href="@Url.Action("CrearEncuesta", "Encuesta", new { IdEncuesta = @encuesta.ID_Encuesta })" class="btn btn-primary mb-3">Editar</a>
+                        <a href="@Url.Action("LlenarEncuesta", "Encuesta", new { IdEncuesta = @encuesta.ID_Encuesta })" class="btn btn-secondary mb-3">Ver</a>
                     </td>
 
-</tr>
+                </tr>
             }
         </tbody>
     </table>

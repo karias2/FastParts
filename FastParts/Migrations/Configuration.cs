@@ -1,6 +1,8 @@
 ﻿namespace FastParts.Migrations
 {
     using FastParts.Models;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
@@ -104,8 +106,14 @@
 
             if (!context.Encuestas.Any())
             {
-                var se = new SeedEncuentas();
-                se.Satisfaccion(context);
+                var SeedEncuenta = new SeedEncuestas();
+                SeedEncuenta.Satisfaccion(context);
+            }
+
+            if (!roleManager.RoleExists("Mecanico"))
+            {
+                var SeedUsuarios = new SeedUsuarios();
+                SeedUsuarios.CrearRolesYUsuarios(context);
             }
         }
     }

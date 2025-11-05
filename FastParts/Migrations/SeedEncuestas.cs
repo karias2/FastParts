@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace FastParts.Migrations
 {
-    public class SeedEncuentas
+    public class SeedEncuestas
     {
         public void Satisfaccion(FastParts.Models.ApplicationDbContext context)
         {

@@ -65,6 +65,32 @@ namespace FastParts.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta)
+        {
+            if (IdEncuesta != null)
+            {
+                var viewModel = new EncuestaViewModel();
+                var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
+                encuesta.Preguntas = await db.Preguntas
+                    .Where(p => p.ID_Encuesta == IdEncuesta)
+                    .ToListAsync();
+
+                viewModel.ID_Encuesta = encuesta.ID_Encuesta;
+                viewModel.Encuesta = encuesta;
+                viewModel.Pregunta = new PreguntaModel();
+
+                //return PartialView("_LlenarEncuesta", viewModel);
+                return View("Formulario", viewModel);
+            } else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+
+
         public ActionResult ActualizarEncuesta(EncuestaViewModel viewModel)
         {
             var encuestaModel = viewModel.Encuesta;
@@ -81,6 +107,24 @@ namespace FastParts.Controllers
             {
                 TempData["Error"] = "No se encontró la Encuesta.";
                 return RedirectToAction("CrearEncuesta");
+            }
+        }
+
+        public ActionResult EliminarEncuesta(EncuestaViewModel viewModel)
+        {
+            var encuesta = db.Encuestas.Find(viewModel.ID_Encuesta);
+            if (encuesta != null)
+            {
+                //db.Preguntas.Remove(pregunta);
+                encuesta.Activa = false;
+                db.SaveChanges();
+                TempData["Ok"] = "Se ha eliminado la Encuesta correctamente.";
+                return RedirectToAction("AdministrarEncuestas");
+            }
+            else
+            {
+                TempData["Error"] = "No se encontró la Pregunta a eliminar.";
+                return RedirectToAction("AdministrarEncuestas", new { IdEncuesta = viewModel.ID_Encuesta });
             }
         }
 
@@ -129,13 +173,13 @@ namespace FastParts.Controllers
             }
         }
 
-
         public ActionResult EliminarPregunta(EncuestaViewModel viewModel)
         {
             var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
             if (pregunta != null)
             {
-                db.Preguntas.Remove(pregunta);
+                //db.Preguntas.Remove(pregunta);
+                pregunta.Activa = false;
                 db.SaveChanges();
                 TempData["Ok"] = "Se ha eliminado la pregunta correctamente.";
                 return RedirectToAction("CrearEncuesta", new { IdEncuesta = pregunta.ID_Encuesta, IdPregunta = pregunta.ID_Pregunta });
@@ -146,5 +190,56 @@ namespace FastParts.Controllers
                 return RedirectToAction("CrearEncuesta");
             }
         }
+
+        [HttpPost]
+        public ActionResult RespoderPregunta(EncuestaViewModel viewModel)
+        {
+            try
+            {
+                var encuestaModel = viewModel.Encuesta;
+                if (viewModel.ID_Encuesta != null && viewModel.ID_Pregunta != null)
+                {
+                    var respuesta = new RespuestasModel();
+                    respuesta.ID_Encuesta = viewModel.ID_Encuesta;
+                    respuesta.ID_Pregunta = viewModel.ID_Pregunta;
+                    respuesta.Tipo = viewModel.Tipo;
+                    respuesta.ValorRespuesta = viewModel.ValorRespuesta;
+
+                    if (viewModel.ValorRespuesta != null)
+                    {
+                        respuesta.ValorRespuesta = viewModel.ValorRespuesta;
+                    }
+
+                    if (viewModel.Pregunta != null && viewModel.Pregunta.ValorRespuesta != null)
+                    {
+                        respuesta.ValorRespuesta = viewModel.Pregunta.ValorRespuesta;
+                    }
+
+                    if (viewModel.TextoRespuesta != null)
+                    {
+                        respuesta.TextoRespuesta = viewModel.TextoRespuesta;
+                    }
+
+                    if (viewModel.Pregunta != null && viewModel.Pregunta.TextoRespuesta != null)
+                    {
+                        respuesta.TextoRespuesta = viewModel.Pregunta.TextoRespuesta;
+                    }
+
+                    db.Respuestas.Add(respuesta);
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    TempData["Error"] = "No se encontró la Encuesta.";
+                    return Json(new { success = false, message = $"error: No se encontró Encuesta." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"error: {ex.Message}" });
+            }
+        }
+
     }
 }

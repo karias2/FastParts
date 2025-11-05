@@ -1,0 +1,167 @@
+﻿
+@model FastParts.Models.EncuestaViewModel
+
+
+<div class="container mt-4">
+
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-3">@Model.Encuesta.Nombre</h5>
+                <div class="col-sm-8">@Model.Encuesta.Descripcion</div>
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <tbody>
+                            @foreach (var pregunta in Model.Encuesta.Preguntas)
+                            {
+                                <tr>
+                                    @using (Html.BeginForm(
+                                        "RespoderPregunta",
+                                        "Encuesta",
+                                        new {
+                                            ID_Encuesta = @Model.Encuesta.ID_Encuesta,
+                                            ID_Pregunta = @pregunta.ID_Pregunta,
+                                            Tipo = @pregunta.Tipo,
+                                            ValorRespuesta = @pregunta.ValorRespuesta,
+                                            TextoRespuesta = @pregunta.TextoRespuesta
+                                        },
+                                        FormMethod.Post,
+                                      new
+                                      {
+                                          id = $"formPregunta_{pregunta.ID_Pregunta}",
+                                          data_ajax = "true",
+                                          data_ajax_method = "POST",
+                                          data_ajax_success = "onResponseSaved", // Se ejecuta si es éxito 200 OK
+                                          data_ajax_failure = "onResponseError"  // Se ejecuta si hay error de HTTP
+                                      }
+                                    )) {
+                                        <div class="encuesta-title">
+                                            <label class="form-label fw-bold">@pregunta.Descripcion</label>
+                                        </div>
+
+                                        <div class="encuesta-body">
+                                            <div class="mb-4 p-3 border rounded shadow-sm">
+                                                @{
+                                                    string inputName = $"Respuesta_{pregunta.ID_Pregunta}";
+                                                    string formId = $"formPregunta_{pregunta.ID_Pregunta}";
+                                                }
+
+                                                @switch (pregunta.Tipo)
+                                                {
+                                                    case "Rango":
+                                                        // Tipo: Rango (Input Type Range)
+                                                        <div class="mt-2">
+                                                            @Html.TextBoxFor(model => pregunta.ValorRespuesta, new
+                                                       {
+                                                           @type = "range",
+                                                           @name = inputName,
+                                                           @class = "form-range",
+                                                           min = pregunta.Minimo,
+                                                           max = pregunta.Maximo,
+                                                           value = pregunta.ValorRespuesta,
+                                                           onchange = $"document.getElementById('{formId}').submit();"
+                                                       })
+                                                            <small class="text-muted"><span id="valor-@inputName">@pregunta.ValorRespuesta</span></small>
+                                                        </div>
+                                                        break;
+
+                                                    case "Texto":
+                                                        // Tipo: Texto (Textarea para respuestas largas)
+                                                        <div class="mt-2">
+                                                            @Html.TextAreaFor(model => model.Pregunta.TextoRespuesta, new { @class = "form-control", rows = "3" })
+                                                        </div>
+                                                        break;
+
+                                                    case "OpcionMultiple":
+                                                        // Tipo: Opción Múltiple (Dropdown/Select con múltiples opciones)
+                                                        <div class="mt-2">                                                            
+                                                            <select 
+                                                                name="TextoRespuesta"
+                                                                class="form-select"
+                                                                multiple
+                                                                onchange="document.getElementById('@formId').submit();"
+                                                            >
+                                                                @foreach (var opcion in (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                                                {
+                                                                    var opcionTrimmed = opcion.Trim();
+                                                                    var isSelected = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
+
+                                                                    <option 
+                                                                        value="@opcionTrimmed"
+                                                                        @(isSelected ? "selected" : "")
+                                                                    >
+                                                                        @opcionTrimmed
+                                                                    </option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                        break;
+
+                                                    case "CasillasVerificacion":
+                                                        // Tipo: Casillas de Verificación (Checkboxes)
+                                                        <div class="mt-2">
+                                                            @foreach (var opcion in (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                                            {
+                                                                var opcionTrimmed = opcion.Trim();
+                                                                var isChecked = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
+
+                                                                <div class="form-check">
+                                                                    <input 
+                                                                        class="form-check-input"
+                                                                        type="checkbox"
+                                                                        name="TextoRespuesta"
+                                                                        value="@opcionTrimmed"
+                                                                        @(isChecked ? "checked" : "")
+                                                                        onchange="document.getElementById('@formId').submit();"
+                                                                    >
+                                                                    <label class="form-check-label" for="TextoRespuesta">
+                                                                        @opcionTrimmed
+                                                                    </label>
+                                                                </div>
+                                                            }
+                                                        </div>
+
+                                                        break;
+
+                                                    default: break;
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        
+</div>
+
+
+<script>
+    // ** Funciones de manejo de respuesta AJAX **
+
+    // Se ejecuta al éxito (Controller devuelve Json({ success: true }))
+    function onResponseSaved(data) {
+        if (data && data.success) {
+            //
+            // Aquí se podría mostrar un pequeño ícono de "Guardado" temporalmente
+            console.log("Respuesta guardada exitosamente (AJAX).");
+        } else if (data && data.message) {
+            console.error("Error lógico:", data.message);
+            // Mostrar mensaje de error al usuario
+        }
+    }
+
+    // Se ejecuta si hay un error de comunicación HTTP (ej: 404, 500)
+    function onResponseError(xhr, status, error) {
+        console.error("Error de comunicación HTTP:", error);
+        // Mostrar error general de conexión al usuario
+    }
+</script>
