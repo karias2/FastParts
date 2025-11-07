@@ -28,6 +28,8 @@ namespace FastParts.Models
 
         public int ID_Pregunta { get; set; }
 
+        public string Session_Id { get; set; }
+
         public virtual EncuestaModel Encuesta { get; set; }
         public virtual PreguntaModel Pregunta { get; set; }
 

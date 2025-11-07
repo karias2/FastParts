@@ -31,8 +31,8 @@ namespace FastParts.Models
         public string Opciones { get; set; }
 
         // Propiedades opcionales para preguntas de tipo Rango
-        public int? Minimo { get; set; }
-        public int? Maximo { get; set; }
+        public int? Minimo { get; set; } = 0;
+        public int? Maximo { get; set; } = 10;
 
         // Respuestas
 
@@ -49,11 +49,11 @@ namespace FastParts.Models
     {
         [Key]
         public int ID_Respuesta { get; set; }
+        public int ID_Encuesta { get; set; }
         public int ID_Pregunta { get; set; }
         [ForeignKey("ID_Pregunta")]
         public virtual PreguntaModel Pregunta { get; set; }
-
-        public int ID_Encuesta { get; set; }
+        public string Session_Id { get; set; }
 
         [Required]
         public string Tipo { get; set; }

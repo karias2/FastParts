@@ -23,6 +23,7 @@
                                         "Encuesta",
                                         new {
                                             ID_Encuesta = @Model.Encuesta.ID_Encuesta,
+                                            Session_Id = @Model.Session_Id,
                                             ID_Pregunta = @pregunta.ID_Pregunta,
                                             Tipo = @pregunta.Tipo,
                                             ValorRespuesta = @pregunta.ValorRespuesta,
@@ -52,16 +53,15 @@
                                                     case "Rango":
                                                         // Tipo: Rango (Input Type Range)
                                                         <div class="mt-2">
-                                                            @Html.TextBoxFor(model => pregunta.ValorRespuesta, new
-                                                       {
-                                                           @type = "range",
-                                                           @name = inputName,
-                                                           @class = "form-range",
-                                                           min = pregunta.Minimo,
-                                                           max = pregunta.Maximo,
-                                                           value = pregunta.ValorRespuesta,
-                                                           onchange = "(function(event) { event.preventDefault(); event.stopPropagation(); document.getElementById('@formId').submit(); })(event)"
-                                                       })
+                                                            @Html.TextBoxFor(model => pregunta.ValorRespuesta, new {
+                                                               @type = "range",
+                                                               @name = inputName,
+                                                               @class = "form-range",
+                                                               min = pregunta.Minimo ?? 0,
+                                                               max = pregunta.Maximo ?? 10,
+                                                               value = pregunta.ValorRespuesta,
+                                                               onchange = $"document.getElementById('{formId}').submit();"
+                                                           })
                                                             <small class="text-muted"><span id="valor-@inputName">@pregunta.ValorRespuesta</span></small>
                                                         </div>
                                                         break;
@@ -69,7 +69,11 @@
                                                     case "Texto":
                                                         // Tipo: Texto (Textarea para respuestas largas)
                                                         <div class="mt-2">
-                                                            @Html.TextAreaFor(model => model.Pregunta.TextoRespuesta, new { @class = "form-control", rows = "3" })
+                                                            @Html.TextAreaFor(model => pregunta.TextoRespuesta, new { 
+                                                               @class = "form-control", 
+                                                               rows = "3",
+                                                               onchange = $"document.getElementById('{formId}').submit();"
+                                                           })
                                                         </div>
                                                         break;
 
@@ -79,7 +83,6 @@
                                                             <select 
                                                                 name="TextoRespuesta"
                                                                 class="form-select"
-                                                                multiple
                                                                 onchange="document.getElementById('@formId').submit();"
                                                             >
                                                                 @foreach (var opcion in (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -100,27 +103,31 @@
 
                                                     case "CasillasVerificacion":
                                                         // Tipo: Casillas de Verificación (Checkboxes)
-                                                        <div class="mt-2">
-                                                            @foreach (var opcion in (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                                            {
-                                                                var opcionTrimmed = opcion.Trim();
-                                                                var isChecked = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
+                                            <div class="mt-2">
+                                                @{
+                                                    var opcionesSplit = (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                    var opcionesConIndice = opcionesSplit.Select((opcion, i) => new { Opcion = opcion, Index = i });
+                                                }
 
-                                                                <div class="form-check">
-                                                                    <input 
-                                                                        class="form-check-input"
-                                                                        type="checkbox"
-                                                                        name="TextoRespuesta"
-                                                                        value="@opcionTrimmed"
-                                                                        @(isChecked ? "checked" : "")
-                                                                        onchange = "(function(event) { event.preventDefault(); event.stopPropagation(); document.getElementById('@formId').submit(); })(event)"
-                                                                    >
-                                                                    <label class="form-check-label" for="TextoRespuesta">
-                                                                        @opcionTrimmed
-                                                                    </label>
-                                                                </div>
-                                                            }
+                                                @foreach (var @item in opcionesConIndice)
+                                                {
+                                                        var opcionTrimmed = @item.Opcion.Trim();
+                                                        var isChecked = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
+                                                        string checkboxName = $"{inputName}-{ item.Index }";
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   name="@checkboxName"
+                                                                   value="@opcionTrimmed"
+                                                                   @(isChecked ? "checked" : "")
+                                                                   onchange="document.getElementById('@formId').submit();">
+                                                            <label class="form-check-label" for="@checkboxName">
+                                                                @opcionTrimmed
+                                                            </label>
                                                         </div>
+                                                    }
+                                                </div>
 
                                                         break;
 

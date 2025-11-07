@@ -67,20 +67,45 @@ namespace FastParts.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta)
+        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta, String SessionId)
         {
             if (IdEncuesta != null)
             {
                 var viewModel = new EncuestaViewModel();
                 var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
                 encuesta.Preguntas = await db.Preguntas
-                    .Where(p => p.ID_Encuesta == IdEncuesta)
-                    .Include(p => p.Respuestas)
-                    .ToListAsync();
+                        .Where(p => p.ID_Encuesta == IdEncuesta)
+                        //.Include(p => p.Respuestas)
+                        .ToListAsync();
+
+                if (SessionId != null)
+                {
+                    var respuestasPrevias = db.Respuestas
+                        .Where(r => r.ID_Encuesta == IdEncuesta && r.Session_Id == SessionId)
+                        .ToList();
+
+                    foreach (var pregunta in encuesta.Preguntas)
+                    {
+                        var respuestaEncontrada = respuestasPrevias
+                            .OrderByDescending(r => r.ID_Respuesta)
+                            .FirstOrDefault(r => r.ID_Pregunta == pregunta.ID_Pregunta);
+
+                        if (respuestaEncontrada != null && respuestaEncontrada.ValorRespuesta != null)
+                        {
+                            pregunta.ValorRespuesta = respuestaEncontrada.ValorRespuesta;
+                        }
+
+                        if (respuestaEncontrada != null && respuestaEncontrada.TextoRespuesta != null)
+                        {
+                            pregunta.TextoRespuesta = respuestaEncontrada.TextoRespuesta;
+                        }
+                    }
+                }
 
                 viewModel.ID_Encuesta = encuesta.ID_Encuesta;
                 viewModel.Encuesta = encuesta;
                 viewModel.Pregunta = new PreguntaModel();
+                viewModel.Session_Id = SessionId != null ? SessionId : DateTime.Now.Ticks.ToString();
 
                 //return PartialView("_LlenarEncuesta", viewModel);
                 return View("Formulario", viewModel);
@@ -202,8 +227,8 @@ namespace FastParts.Controllers
                     var respuesta = new RespuestasModel();
                     respuesta.ID_Encuesta = viewModel.ID_Encuesta;
                     respuesta.ID_Pregunta = viewModel.ID_Pregunta;
+                    respuesta.Session_Id = viewModel.Session_Id;
                     respuesta.Tipo = viewModel.Tipo;
-                    respuesta.ValorRespuesta = viewModel.ValorRespuesta;
 
                     if (viewModel.ValorRespuesta != null)
                     {
@@ -227,7 +252,11 @@ namespace FastParts.Controllers
 
                     db.Respuestas.Add(respuesta);
                     db.SaveChanges();
-                    return RedirectToAction("LlenarEncuesta", new { IdEncuesta = viewModel.ID_Encuesta, IdPregunta = viewModel.ID_Pregunta });
+                    return RedirectToAction("LlenarEncuesta", new { 
+                        IdEncuesta = viewModel.ID_Encuesta, 
+                        IdPregunta = viewModel.ID_Pregunta, 
+                        SessionId = viewModel.Session_Id
+                    });
                 }
                 else
                 {
