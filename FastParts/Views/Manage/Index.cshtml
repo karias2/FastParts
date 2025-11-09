@@ -1,89 +1,80 @@
 ﻿@model FastParts.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Configuración de cuenta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-4">
+                <i class="bi bi-person-gear fs-1 text-primary"></i>
+                <h2 class="fw-bold">@ViewBag.Title</h2>
+                <p class="text-muted">Administra la seguridad y preferencias de tu cuenta</p>
+            </div>
 
-    <p class="text-success">@ViewBag.StatusMessage</p>
-    <div>
-        <h4>Change your account settings</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>Password:</dt>
-            <dd>
-                [
-                @if (Model.HasPassword)
-                {
-                    @Html.ActionLink("Change your password", "ChangePassword")
-                }
-                else
-                {
-                    @Html.ActionLink("Create", "SetPassword")
-                }
-                ]
-            </dd>
-            <dt>External Logins:</dt>
-            <dd>
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>
-            @*
-                Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-                
-                See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-                
-                Uncomment the following block after you have set up two-factor authentication
-            *@
-            @*  
-                <dt>Phone Number:</dt>
-                <dd>
-                    @(Model.PhoneNumber ?? "None")
-                    @if (Model.PhoneNumber != null)
-                    {
-                        <br />
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
-                        }
-                    }
-                    else
-                    {
-                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-                    }
-                </dd>
-            *@
-            <dt>Two-Factor Authentication:</dt>
-            <dd>
-                <p>
-                    There are no two-factor authentication providers configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                    for details on setting up this ASP.NET application to support two-factor authentication.
-                </p>
-                @*@if (Model.TwoFactor)
-                    {
-                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Enabled
-                            <input type="submit" value="Disable" class="btn btn-link" />
-                            </text>
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <text>Disabled
-                            <input type="submit" value="Enable" class="btn btn-link" />
-                            </text>
-                        }
-                    }*@
-            </dd>
-        </dl>
+            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+            {
+                <div class="alert alert-success text-center mb-4 rounded-pill shadow-sm">
+                    <i class="bi bi-check-circle me-2"></i>@ViewBag.StatusMessage
+                </div>
+            }
+
+            <div class="row g-4">
+                <!-- Contraseña -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-lock-fill fs-2 text-primary mb-2"></i>
+                            <h5 class="fw-semibold">Contraseña</h5>
+                            <p class="text-muted small mb-3">Actualiza tu contraseña para mantener tu cuenta segura.</p>
+                            @if (Model.HasPassword)
+                            {
+                                <a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-outline-primary btn-sm rounded-pill">
+                                    <i class="bi bi-arrow-repeat me-1"></i>Cambiar contraseña
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("SetPassword", "Manage")" class="btn btn-outline-success btn-sm rounded-pill">
+                                    <i class="bi bi-plus-circle me-1"></i>Crear contraseña
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inicios de sesión externos -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-box-arrow-in-right fs-2 text-primary mb-2"></i>
+                            <h5 class="fw-semibold">Inicios de sesión externos</h5>
+                            <p class="text-muted small mb-3">Tienes <strong>@Model.Logins.Count</strong> método(s) vinculado(s) para acceder a tu cuenta.</p>
+                            <a href="@Url.Action("ManageLogins", "Manage")" class="btn btn-outline-primary btn-sm rounded-pill">
+                                <i class="bi bi-gear me-1"></i>Gestionar logins
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Autenticación de dos factores -->
+                <div class="col-md-12">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-body text-center">
+                            <i class="bi bi-shield-lock-fill fs-2 text-primary mb-2"></i>
+                            <h5 class="fw-semibold">Autenticación en dos pasos</h5>
+                            <p class="text-muted small mb-3">
+                                Aún no se ha configurado un proveedor de autenticación de dos factores.<br />
+                                Puedes revisar <a href="https://go.microsoft.com/fwlink/?LinkId=403804" target="_blank">esta guía</a> para habilitarlo.
+                            </p>
+                            <button class="btn btn-secondary btn-sm rounded-pill" disabled>
+                                <i class="bi bi-lock me-1"></i>No disponible
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>

@@ -11,17 +11,53 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using FastParts.Models;
+using System.Diagnostics;
 
 namespace FastParts
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            System.Diagnostics.Debug.WriteLine("📩 Entró al método EmailService.SendAsync");
+
+            try
+            {
+                using (var smtp = new System.Net.Mail.SmtpClient())
+                {
+                    var mail = new System.Net.Mail.MailMessage();
+                    mail.To.Add(message.Destination);
+                    mail.From = new System.Net.Mail.MailAddress("josephum14@gmail.com", "FastParts");
+                    mail.Subject = message.Subject;
+                    mail.Body = message.Body;
+                    mail.IsBodyHtml = true;
+
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential("josephum14@gmail.com", "tjce ximh kxmp cfmd");
+
+                    await smtp.SendMailAsync(mail);
+                    System.Diagnostics.Debug.WriteLine("✅ Correo enviado correctamente a " + message.Destination);
+                }
+            }
+            catch (System.Net.Mail.SmtpException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("❌ Error SMTP: " + ex.Message);
+                if (ex.InnerException != null)
+                    System.Diagnostics.Debug.WriteLine("👉 Inner: " + ex.InnerException.Message);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("❌ Error general: " + ex.Message);
+                if (ex.InnerException != null)
+                    System.Diagnostics.Debug.WriteLine("👉 Inner: " + ex.InnerException.Message);
+            }
         }
     }
+
+
 
     public class SmsService : IIdentityMessageService
     {
