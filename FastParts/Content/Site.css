@@ -1,4 +1,31 @@
-﻿.switch-success .form-check-input:checked {
+﻿/* Logos grises con animación al pasar el mouse */
+.brand-logos .brand-svg {
+    max-height: 44px;
+    width: auto;
+    filter: grayscale(100%) opacity(0.75);
+    transition: filter 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+    .brand-logos .brand-svg:hover {
+        filter: grayscale(0%) opacity(1);
+        transform: translateY(-2px);
+    }
+
+/* Ajustes responsivos suaves */
+@media (min-width: 768px) {
+    .brand-logos .brand-svg {
+        max-height: 52px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .brand-logos .brand-svg {
+        max-height: 56px;
+    }
+}
+
+
+.switch-success .form-check-input:checked {
     background-color: var(--bs-success);
     border-color: var(--bs-success);
 }
@@ -7,12 +34,42 @@
     box-shadow: 0 0 0 .2rem rgba(25, 135, 84, .25); /* usa tono de success */
 }
 
+.hero-header {
+    position: relative;
+    min-height: 55vh; /* ajusta a tu gusto */
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.hero-chip {
+    display: inline-block;
+    background: rgba(0,0,0,.55);
+    padding: .35rem .75rem;
+    border-radius: .75rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.45); /* overlay oscuro para uniformar el fondo */
+    background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
+    /* Si prefieres un degradado:
+    
+  */
+}
+
+.hero-title, .hero-subtitle {
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,.85); /* mejora legibilidad sobre rojo/celeste/blanco/negro */
+}
+
 /* Set padding to keep content from hitting the edges */
-.body-content {
+/*.body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
-}
+}*/
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 

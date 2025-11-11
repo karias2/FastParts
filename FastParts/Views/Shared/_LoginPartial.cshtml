@@ -5,7 +5,7 @@
     {
     @Html.AntiForgeryToken()
 
-<ul class="navbar-nav navbar-right">
+<ul class="navbar-nav navbar-right navbar-nav-hover ms-6">
     @*Condicional para mostrar dropdown basado en rol. Habilitar despues de pruebas iniciales.*@
     @*@if (User.IsInRole("Admin")){
         <li class="nav-item dropdown">
@@ -37,16 +37,30 @@
 
 
     <li>
-        @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
+        @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link text-white" })
     </li>
-    <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion  <i class="bi bi-box-arrow-right"></i></a></li>
+    <li><a class="nav-link text-white" href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion  <i class="bi bi-box-arrow-right"></i></a></li>
 </ul>
     }
 }
 else
 {
-    <ul class="navbar-nav navbar-right">
-        <li>@Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class="nav-link" })</li>
-        <li>@Html.ActionLink("Iniciar Sesion", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class="nav-link" })</li>
-    </ul>
+<ul class="navbar-nav navbar-nav-hover ms-6" >
+    <li class="nav-item ms-lg-auto  mx-2">
+        @Html.ActionLink("Registrarse", "Register", "Account", null, new
+              {
+                  @class = "nav-link nav-link-icon me-2 text-white",
+                  data_bs_toggle = "tooltip",
+                  data_bs_placement = "bottom"
+              })
+    </li>
+    <li class="nav-item ms-lg-auto">
+        @Html.ActionLink("Iniciar Sesion", "Login", "Account", null, new
+              {
+                  @class = "nav-link nav-link-icon me-2 text-white",                
+                  data_bs_toggle = "tooltip",
+                  data_bs_placement = "bottom"
+              })
+    </li>
+</ul>
 }
