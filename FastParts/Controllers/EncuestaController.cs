@@ -160,9 +160,10 @@ namespace FastParts.Controllers
             var preguntaModel = viewModel.Pregunta;
             if (preguntaModel != null && viewModel.ID_Encuesta != null)
             {
-                if (viewModel.ID_Pregunta != null)
+                var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
+
+                if (pregunta != null)
                 {
-                    var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
                     pregunta.Descripcion = viewModel.Pregunta.Descripcion;
                     pregunta.Tipo = viewModel.Pregunta.Tipo;
                     pregunta.Minimo = viewModel.Pregunta.Minimo;
