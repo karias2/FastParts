@@ -179,6 +179,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
+    <Compile Include="Migrations\SeedRepuestos.cs" />
+    <Compile Include="Migrations\SeedServicios.cs" />
     <Compile Include="Migrations\SeedUsuarios.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AlertaInventarioModel.cs" />
