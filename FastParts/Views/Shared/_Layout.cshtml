@@ -60,7 +60,7 @@
                     </button>
                 </div>
                 <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-6 ps-lg-2" id="navigation">
-                    <ul class="navbar-nav navbar-nav-hover ms-auto"> 
+                    <ul class="navbar-nav navbar-nav-hover ms-auto">
                         <li class="nav-item dropdown dropdown-hover mx-2 ms-lg-6">
                             <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
                                id="dropdownCliente" data-bs-toggle="dropdown" aria-expanded="false">
@@ -119,10 +119,10 @@
                             </div>
                         </li>
                         <li class="nav-item ms-lg-auto">
-                            @Html.ActionLink("Encuestas", "AdministrarEncuestas", "Encuesta", null, new
+                            @Html.ActionLink("Servicios", "Index", "Servicio", null, new
                             {
                                 @class = "nav-link nav-link-icon me-2 text-white",
-                                title = "Administrar encuestas",
+                                title = "Servicios",
                                 data_bs_toggle = "tooltip",
                                 data_bs_placement = "bottom"
                             })
@@ -132,6 +132,24 @@
                             {
                                 @class = "nav-link nav-link-icon me-2 text-white",
                                 title = "Repuestos",
+                                data_bs_toggle = "tooltip",
+                                data_bs_placement = "bottom"
+                            })
+                        </li>
+                        <li class="nav-item ms-lg-auto">
+                            @Html.ActionLink("Encuestas", "AdministrarEncuestas", "Encuesta", null, new
+                            {
+                                @class = "nav-link nav-link-icon me-2 text-white",
+                                title = "Administrar encuestas",
+                                data_bs_toggle = "tooltip",
+                                data_bs_placement = "bottom"
+                            })
+                        </li>
+                        <li class="nav-item ms-lg-auto">
+                            @Html.ActionLink("Alertas", "AlertasInventario", "Admin", null, new
+                            {
+                                @class = "nav-link nav-link-icon me-2 text-white",
+                                title = "Alertas Inventario",
                                 data_bs_toggle = "tooltip",
                                 data_bs_placement = "bottom"
                             })
