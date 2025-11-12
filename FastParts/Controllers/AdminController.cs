@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace FastParts.Controllers
 {
+
     // Permiso para acceder panel de administrador cuando solo si pertenece a rol "Admin".
     //Habilitar despues de pruebas.
     //[Authorize(Roles = "Admin")]
@@ -14,6 +15,11 @@ namespace FastParts.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public ActionResult Index()
+        {
+            return View();
+
+        }
         public ActionResult AlertasInventario()
         {
             var vm = new AlertasInventarioVM
