@@ -17,7 +17,9 @@ namespace FastParts.Controllers
         [HttpGet]
         public ActionResult AdministrarEncuestas()
         {
-            var model = db.Encuestas.ToList();
+            var model = db.Encuestas
+                    .Where(e => e.Activa == true)
+                    .ToList();
             return View(model);
         }
  
@@ -40,7 +42,7 @@ namespace FastParts.Controllers
                 var viewModel = new EncuestaViewModel();
                 var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
                 encuesta.Preguntas = await db.Preguntas
-                    .Where(p => p.ID_Encuesta == IdEncuesta)
+                    .Where(p => p.ID_Encuesta == IdEncuesta && p.Activa == true)
                     .ToListAsync();
 
                 var TiposDePregunta = new List<System.Web.Mvc.SelectListItem>();
@@ -74,7 +76,7 @@ namespace FastParts.Controllers
                 var viewModel = new EncuestaViewModel();
                 var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
                 encuesta.Preguntas = await db.Preguntas
-                        .Where(p => p.ID_Encuesta == IdEncuesta)
+                        .Where(p => p.ID_Encuesta == IdEncuesta && p.Activa == true)
                         //.Include(p => p.Respuestas)
                         .ToListAsync();
 
@@ -172,6 +174,7 @@ namespace FastParts.Controllers
                 else
                 {
                     preguntaModel.ID_Encuesta = viewModel.ID_Encuesta;
+                    preguntaModel.Activa = true;
                     db.Preguntas.Add(preguntaModel);
                     db.SaveChanges();
                     return RedirectToAction("CrearEncuesta", new { IdEncuesta = viewModel.ID_Encuesta });

@@ -43,9 +43,9 @@
             @if (@Model.ID_Pregunta != null)
             {
                 <div class="row mt-4">
-                    @using (Html.BeginForm("EliminarEncuesta", "Encuesta", new { ID_Pregunta = @Model.ID_Pregunta }, FormMethod.Post))
+                    @using (Html.BeginForm("EliminarEncuesta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta }, FormMethod.Post))
                     {
-                        <div class="col-sm-4"><button type="submit" class="btn btn-sm btn-outline-danger me-2"><i class="fas fa-trash-can"></i> Eliminar</button></div>
+                        <div class="col-sm-4"><button type="submit" class="btn btn-sm btn-outline-danger me-2"><i class="fas fa-trash-can"></i> Eliminar Encuenta</button></div>
                     }
                 </div>
             }
@@ -217,7 +217,7 @@
                         <div class="row mt-4">
                             @using (Html.BeginForm("EliminarPregunta", "Encuesta", new { ID_Encuesta = @Model.ID_Encuesta, ID_Pregunta = @Model.ID_Pregunta }, FormMethod.Post))
                             {
-                                <div class="col-sm-4"><button type="submit" class="btn btn-sm btn-outline-danger me-2"><i class="fas fa-trash-can"></i> Eliminar</button></div>
+                                <div class="col-sm-4"><button type="submit" class="btn btn-sm btn-outline-danger me-2"><i class="fas fa-trash-can"></i> Eliminar Pregunta</button></div>
                             }
                         </div>
 
