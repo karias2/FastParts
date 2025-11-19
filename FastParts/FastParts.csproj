@@ -163,9 +163,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CotizacionController.cs" />
     <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
-    <Compile Include="Controllers\CotizacionsController.cs" />
     <Compile Include="Controllers\EncuestaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -186,7 +186,7 @@
     <Compile Include="Models\AlertaInventarioModel.cs" />
     <Compile Include="Models\AlertasInventarioViewModel.cs" />
     <Compile Include="Models\ConsumosServicioViewModel.cs" />
-    <Compile Include="Models\cotizacion.cs" />
+    <Compile Include="Models\CotizacionesModel.cs" />
     <Compile Include="Models\EncuestaModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

@@ -56,6 +56,8 @@ namespace FastParts.Models
         public DbSet<MovimientoInventarioModel> Movimientos { get; set; }
         public DbSet<AlertaInventarioModel> Alertas { get; set; }
 
+        public DbSet<CotizacionesModel> Cotizaciones { get; set; }
+
 
 
         public System.Data.Entity.DbSet<FastParts.Models.ServicioModel> ServicioModels { get; set; }
