@@ -42,7 +42,6 @@ namespace FastParts.Models
         public int? ValorRespuesta { get; set; }
 
         public string TextoRespuesta { get; set; }
-
     }
 
     public class RespuestasModel

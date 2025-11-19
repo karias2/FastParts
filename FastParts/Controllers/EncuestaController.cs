@@ -50,6 +50,7 @@ namespace FastParts.Controllers
                 TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "Texto", Text = "Párrafo" });
                 TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "OpcionMultiple", Text = "Opcion multiple" });
                 TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "CasillasVerificacion", Text = "Casillas de merificacion" });
+                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "Imagen", Text = "Imagen" });
 
                 viewModel.ID_Encuesta = encuesta.ID_Encuesta;
                 viewModel.Encuesta = encuesta;

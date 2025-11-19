@@ -36,14 +36,16 @@ namespace FastParts.Migrations
             {
                 ID_Encuesta = EncuestaSatisfaccion.ID_Encuesta,
                 Descripcion = "¿Cómo califica el tiempo de entrega?",
-                Tipo = "CasillasVerificacion"
+                Tipo = "CasillasVerificacion",
+                Opciones = "Rapido, Lento"
             });
 
             context.Preguntas.Add(new PreguntaModel
             {
                 ID_Encuesta = EncuestaSatisfaccion.ID_Encuesta,
                 Descripcion = "¿Cómo califica el trato recibido?",
-                Tipo = "OpcionMultiple"
+                Tipo = "OpcionMultiple",
+                Opciones = "Bueno, Malo, Se Puede Mejorar"
             });
 
             context.Preguntas.Add(new PreguntaModel
@@ -51,6 +53,13 @@ namespace FastParts.Migrations
                 ID_Encuesta = EncuestaSatisfaccion.ID_Encuesta,
                 Descripcion = "Comentarios adicionales (opcional)",
                 Tipo = "Texto"
+            });
+
+            context.Preguntas.Add(new PreguntaModel
+            {
+                ID_Encuesta = EncuestaSatisfaccion.ID_Encuesta,
+                Descripcion = "Eviencias",
+                Tipo = "Imagen"
             });
 
             context.SaveChanges();

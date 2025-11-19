@@ -40,6 +40,5 @@ namespace FastParts.Models
         public string Tipo { get; set; }
         public int ValorRespuesta { get; set; }
         public string TextoRespuesta { get; set; }
-
     }
 }

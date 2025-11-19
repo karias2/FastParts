@@ -45,7 +45,6 @@ namespace FastParts.Models
             base.OnModelCreating(modelBuilder);
         }
 
-
         // Modelos a registrar en la base de datos
         public DbSet<EncuestaModel> Encuestas { get; set; }
         public DbSet<PreguntaModel> Preguntas { get; set; }
@@ -57,8 +56,8 @@ namespace FastParts.Models
         public DbSet<AlertaInventarioModel> Alertas { get; set; }
 
         public DbSet<CotizacionesModel> Cotizaciones { get; set; }
-
-
+        public DbSet<RepuestosCotizadosModel> RepuestosCotizados { get; set; }
+        public DbSet<ServiciosCotizadosModel> ServiciosCotizados { get; set; }
 
         public System.Data.Entity.DbSet<FastParts.Models.ServicioModel> ServicioModels { get; set; }
 

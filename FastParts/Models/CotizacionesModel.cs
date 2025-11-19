@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FastParts.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,6 +10,7 @@ namespace FastParts.Models
 {
     public class CotizacionesModel
     {
+        [Key]
         public int IdCotizacion { get; set; }
 
         [Display(Name = "Cliente")]
@@ -22,7 +25,7 @@ namespace FastParts.Models
         [DataType(DataType.Date)]
         public DateTime FechaCita { get; set; }
 
-        public string Estado { get; set; } // ACTIVA, INACTIVA, REVICION, ASIGANADA, COMPLETADA
+        public string Estado { get; set; } // ACTIVA, INACTIVA, REVICION, COLA, COMPLETADA
 
         [DataType(DataType.Currency)]
         public decimal MontoTotal { get; set; }
@@ -41,4 +44,30 @@ namespace FastParts.Models
             this.ServiciosCotizados = new List<ServicioModel>();
         }
     }
+}
+
+public class RepuestosCotizadosModel
+{
+    [Key]
+    public int ID { get; set; }
+    public int IdCotizacion { get; set; }
+    [ForeignKey("IdCotizacion")]
+    public virtual CotizacionesModel Cotizacion { get; set; }
+
+    public int IdRepuesto { get; set; }
+    [ForeignKey("IdRepuesto")]
+    public virtual RepuestoModel Repuesto { get; set; }
+}
+
+public class ServiciosCotizadosModel
+{
+    [Key]
+    public int ID { get; set; }
+    public int IdCotizacion { get; set; }
+    [ForeignKey("IdCotizacion")]
+    public virtual CotizacionesModel Cotizacion { get; set; }
+
+    public int IdServicio { get; set; }
+    [ForeignKey("IdServicio")]
+    public virtual ServicioModel Repuesto { get; set; }
 }

@@ -25,16 +25,14 @@
                                             ID_Encuesta = @Model.Encuesta.ID_Encuesta,
                                             Session_Id = @Model.Session_Id,
                                             ID_Pregunta = @pregunta.ID_Pregunta,
-                                            Tipo = @pregunta.Tipo,
-                                            ValorRespuesta = @pregunta.ValorRespuesta,
-                                            TextoRespuesta = @pregunta.TextoRespuesta
+                                            Tipo = @pregunta.Tipo
+      
                                         },
                                         FormMethod.Post,
                                         new
                                         {
                                             id = $"formPregunta_{pregunta.ID_Pregunta}",
-                                            data_ajax = "true",
-                                            data_ajax_method = "POST"
+                                            enctype = "multipart/form-data"
                                         }
                                     )) {
                                         <div class="encuesta-title">
@@ -53,7 +51,8 @@
                                                     case "Rango":
                                                         // Tipo: Rango (Input Type Range)
                                                         <div class="mt-2">
-                                                            @Html.TextBoxFor(model => pregunta.ValorRespuesta, new {
+                                                            @Html.TextBoxFor(model => pregunta.ValorRespuesta, new
+                                                            {
                                                                @type = "range",
                                                                @name = inputName,
                                                                @class = "form-range",
@@ -69,8 +68,9 @@
                                                     case "Texto":
                                                         // Tipo: Texto (Textarea para respuestas largas)
                                                         <div class="mt-2">
-                                                            @Html.TextAreaFor(model => pregunta.TextoRespuesta, new { 
-                                                               @class = "form-control", 
+                                                            @Html.TextAreaFor(model => pregunta.TextoRespuesta, new
+                                                            {
+                                                               @class = "form-control",
                                                                rows = "3",
                                                                onchange = $"document.getElementById('{formId}').submit();"
                                                            })
@@ -79,21 +79,17 @@
 
                                                     case "OpcionMultiple":
                                                         // Tipo: Opción Múltiple (Dropdown/Select con múltiples opciones)
-                                                        <div class="mt-2">                                                            
-                                                            <select 
-                                                                name="TextoRespuesta"
-                                                                class="form-select"
-                                                                onchange="document.getElementById('@formId').submit();"
-                                                            >
+                                                        <div class="mt-2">
+                                                            <select name="TextoRespuesta"
+                                                                    class="form-select"
+                                                                    onchange="document.getElementById('@formId').submit();">
                                                                 @foreach (var opcion in (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                                                 {
                                                                     var opcionTrimmed = opcion.Trim();
                                                                     var isSelected = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
 
-                                                                    <option 
-                                                                        value="@opcionTrimmed"
-                                                                        @(isSelected ? "selected" : "")
-                                                                    >
+                                                                    <option value="@opcionTrimmed"
+                                                                            @(isSelected ? "selected" : "")>
                                                                         @opcionTrimmed
                                                                     </option>
                                                                 }
@@ -103,33 +99,93 @@
 
                                                     case "CasillasVerificacion":
                                                         // Tipo: Casillas de Verificación (Checkboxes)
-                                            <div class="mt-2">
-                                                @{
-                                                    var opcionesSplit = (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                    var opcionesConIndice = opcionesSplit.Select((opcion, i) => new { Opcion = opcion, Index = i });
-                                                }
+                                                        <div class="mt-2">
+                                                            @{
+                                                                var opcionesSplit = (pregunta.Opciones ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                var opcionesConIndice = opcionesSplit.Select((opcion, i) => new { Opcion = opcion, Index = i });
+                                                            }
 
-                                                @foreach (var @item in opcionesConIndice)
-                                                {
-                                                        var opcionTrimmed = @item.Opcion.Trim();
-                                                        var isChecked = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
-                                                        string checkboxName = $"{inputName}-{ item.Index }";
+                                                            @foreach (var @item in opcionesConIndice)
+                                                            {
+                                                                var opcionTrimmed = @item.Opcion.Trim();
+                                                                var isChecked = pregunta.TextoRespuesta != null && pregunta.TextoRespuesta.Contains(opcionTrimmed);
+                                                                string checkboxName = $"{inputName}-{item.Index}";
 
-                                                        <div class="form-check">
-                                                            <input class="form-check-input"
-                                                                   type="checkbox"
-                                                                   name="@checkboxName"
-                                                                   value="@opcionTrimmed"
-                                                                   @(isChecked ? "checked" : "")
-                                                                   onchange="document.getElementById('@formId').submit();">
-                                                            <label class="form-check-label" for="@checkboxName">
-                                                                @opcionTrimmed
-                                                            </label>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input"
+                                                                           type="checkbox"
+                                                                           name="@checkboxName"
+                                                                           value="@opcionTrimmed"
+                                                                           @(isChecked ? "checked" : "")
+                                                                           onchange="document.getElementById('@formId').submit();">
+                                                                    <label class="form-check-label" for="@checkboxName">
+                                                                        @opcionTrimmed
+                                                                    </label>
+                                                                </div>
+                                                            }
                                                         </div>
-                                                    }
-                                                </div>
-
                                                         break;
+
+                                                    case "Imagen":
+                                                        // Tipo: Imagen (Input File con vista previa)
+                                                        <div class="mt-3">
+                                                            <input type="hidden"
+                                                                   id="hidden-@pregunta.ID_Pregunta"
+                                                                   name="TextoRespuesta"
+                                                                   value="" />
+                                                            <input type="file"
+                                                                   name="@inputName"
+                                                                   accept="image/png, image/jpeg, image/gif, image/webp"
+                                                                   class="form-control"
+                                                                   onchange="(async () => {
+                                                                                    console.log('Daniel');
+                                                                                    var p = document.getElementById('preview-@pregunta.ID_Pregunta');
+                                                                                    var s = document.getElementById('submit-@pregunta.ID_Pregunta');
+                                                                                    var f = document.getElementById('formPregunta_@pregunta.ID_Pregunta');
+                                                                                    var hiddenInput = document.getElementById('hidden-@pregunta.ID_Pregunta');
+                                                                                    var img = this.files[0];
+                                                                                    p.src = window.URL.createObjectURL(img);
+                                                                                    p.style.display = 'block';
+                                                                                    s.style.display = 'block';
+                                                                                    var reader = new FileReader();
+
+                                                                                    reader.onload = function (e) {
+                                                                                        var base64Data = e.target.result;
+                                                                                        hiddenInput.value = base64Data; 
+                                                                                        // Si desea enviar automáticamente:
+                                                                                        // f.submit();
+                                                                                    };
+
+                                                                                    reader.onerror = function (error) {
+                                                                                        console.error('Error al leer el archivo:', error);
+                                                                                        alert('Hubo un error al cargar la imagen. Inténtelo de nuevo.');
+                                                                                    };
+
+                                                                                    // Iniciar la lectura del archivo. Esto dispara el evento 'onload'.
+                                                                                    reader.readAsDataURL(img);
+                                                                                })();" />
+
+                                                            <div class="form-text text-muted mb-2" style="font-size: 0.8rem;">
+                                                                Formatos: JPG, PNG. Máx 10MB.
+                                                            </div>
+
+                                                            <div class="text-center p-2 border rounded bg-light mt-2 position-relative" style="min-height: 60px;">
+                                                                @{
+                                                                    var hasSrc = pregunta.TextoRespuesta != null ? "block" : "none";
+                                                                }
+                                                                <img id="preview-@pregunta.ID_Pregunta"
+                                                                     src="@pregunta.TextoRespuesta"
+                                                                     alt="Vista previa"
+                                                                     style="display: @hasSrc; max-width: 100%; max-height: 200px; object-fit: contain; margin: 0 auto;" />
+                                                            </div>
+                                                            <div id="submit-@pregunta.ID_Pregunta" class="mt-2 gap-2" style="display: @hasSrc;">
+                                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                                    <i class="fa fa-upload"></i> Guardar Imagen
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        break;
+
 
                                                     default: break;
                                                 }
