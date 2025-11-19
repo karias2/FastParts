@@ -377,7 +377,7 @@
     <Content Include="Views\Recordatorio\Crear.cshtml" />
     <Content Include="Views\Recordatorio\Editar.cshtml" />
     <Content Include="Views\Recordatorio\Eliminar.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Index1.cshtml" />
     <Content Include="Views\Usuario\Lista.cshtml" />
     <Content Include="Views\Usuario\Crear.cshtml" />
     <Content Include="Views\Usuario\Editar.cshtml" />
@@ -607,6 +607,7 @@
     <Content Include="Views\Encuesta\Formulario.cshtml" />
     <Content Include="Services\AlertasInventario.cshtml" />
     <Content Include="Views\Admin\AlertasInventario.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

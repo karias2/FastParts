@@ -10,7 +10,7 @@ namespace FastParts.Controllers
 
     // Permiso para acceder panel de administrador cuando solo si pertenece a rol "Admin".
     //Habilitar despues de pruebas.
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

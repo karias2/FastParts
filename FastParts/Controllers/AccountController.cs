@@ -616,9 +616,9 @@ namespace FastParts.Controllers
             return RedirectToAction("Usuarios");
         }
 
-        // =========================
-        // POST: ToggleEstado (habilitar/deshabilitar)
-        // =========================
+
+        // Seccion Gestion de Usuarios
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]

@@ -1,3 +1,4 @@
+
 @{
     ViewBag.Title = "Perfil de Usuario";
 }
@@ -20,4 +21,10 @@
 
         <a href="@Url.Action("EditarPerfil", "Cliente")" class="btn btn-primary mt-3">Editar Perfil</a>
     </div>
+    <dl class="dl-horizontal">
+        <dt>Password:</dt>
+        <dd>
+            @Html.ActionLink("Cambiar Contraseña", "ChangePassword")
+        </dd>  
+    </dl>
 </div>

@@ -22,6 +22,21 @@ namespace FastParts.Migrations
             if (!roleManager.RoleExists("Cliente"))
                 roleManager.Create(new IdentityRole("Cliente"));
 
+            if (userManager.FindByName("superuser@fastparts.com") == null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "superadmin@fastparts.com",
+                    Email = "superadmin@fastparts.com",
+                    NombreCompleto = "Super Admin Por Defecto",
+                    Estado = true
+                };
+                var result = userManager.Create(user, "Superadmin123");
+                if (result.Succeeded) userManager.AddToRole(user.Id, "Admin");
+                if (result.Succeeded) userManager.AddToRole(user.Id, "Mecanico");
+                if (result.Succeeded) userManager.AddToRole(user.Id, "Cliente");
+            }
+
             if (userManager.FindByName("admin@fastparts.com") == null)
             {
                 var user = new ApplicationUser

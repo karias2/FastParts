@@ -7,6 +7,7 @@ using System.Net;
 
 namespace FastParts.Controllers
 {
+    [Authorize(Roles = "Mecanico")]
     public class MecanicoController : Controller
     {
 
