@@ -266,7 +266,7 @@
     <script>
         // get the element to animate
         var element = document.getElementById('count-stats');
-        var elementHeight = element.clientHeight;
+        var elementHeight = element?.clientHeight || 100;
 
         // listen for scroll event and call animate function
 
@@ -274,6 +274,11 @@
 
         // check if element is in view
         function inView() {
+
+            if (!element) {
+                return false;
+            }
+
             // get window height
             var windowHeight = window.innerHeight;
             // get number of pixels that the document is scrolled

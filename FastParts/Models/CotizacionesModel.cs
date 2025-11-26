@@ -14,13 +14,13 @@ namespace FastParts.Models
         public int IdCotizacion { get; set; }
 
         [Display(Name = "Cliente")]
-        public int IdCliente { get; set; }
+        public string IdCliente { get; set; }
 
         [Display(Name = "Responsable")]
-        public int IdResponsable { get; set; }
+        public string IdResponsable { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public DateTime FechaCreacion { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime FechaCita { get; set; }
@@ -42,6 +42,8 @@ namespace FastParts.Models
         {
             this.RepuestosCotizados = new List<RepuestoModel>();
             this.ServiciosCotizados = new List<ServicioModel>();
+            this.FechaCreacion = DateTime.Now;
+            this.FechaCita = DateTime.Now;
         }
     }
 }
@@ -63,6 +65,8 @@ public class ServiciosCotizadosModel
 {
     [Key]
     public int ID { get; set; }
+    [Display(Name = "Cliente")]
+    public int IdCliente { get; set; }
     public int IdCotizacion { get; set; }
     [ForeignKey("IdCotizacion")]
     public virtual CotizacionesModel Cotizacion { get; set; }

@@ -35,10 +35,15 @@ namespace FastParts.Models
 
         public List<System.Web.Mvc.SelectListItem> TiposDePregunta { get; set; }
 
+        public List<RespuestasModel> Respuestas { get; set; }
+
+        public Boolean IsEdit { get; set; }
+
         // Respuestas
 
         public string Tipo { get; set; }
         public int ValorRespuesta { get; set; }
         public string TextoRespuesta { get; set; }
     }
+
 }

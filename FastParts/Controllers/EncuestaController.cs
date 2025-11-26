@@ -70,7 +70,7 @@ namespace FastParts.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta, String SessionId)
+        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta, String SessionId, bool? IsEdit)
         {
             if (IdEncuesta != null)
             {
@@ -109,6 +109,7 @@ namespace FastParts.Controllers
                 viewModel.Encuesta = encuesta;
                 viewModel.Pregunta = new PreguntaModel();
                 viewModel.Session_Id = SessionId != null ? SessionId : DateTime.Now.Ticks.ToString();
+                viewModel.IsEdit = IsEdit != null ? true : false;
 
                 //return PartialView("_LlenarEncuesta", viewModel);
                 return View("Formulario", viewModel);
@@ -117,7 +118,6 @@ namespace FastParts.Controllers
                 return RedirectToAction("Index");
             }
         }
-
 
         public ActionResult ActualizarEncuesta(EncuestaViewModel viewModel)
         {
@@ -260,7 +260,8 @@ namespace FastParts.Controllers
                     return RedirectToAction("LlenarEncuesta", new { 
                         IdEncuesta = viewModel.ID_Encuesta, 
                         IdPregunta = viewModel.ID_Pregunta, 
-                        SessionId = viewModel.Session_Id
+                        SessionId = viewModel.Session_Id,
+                        IsEdit = true
                     });
                 }
                 else
@@ -272,6 +273,29 @@ namespace FastParts.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = $"error: {ex.Message}" });
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> HistorialEncuesta(int? IdEncuesta)
+        {
+            if (IdEncuesta != null)
+            {
+                var viewModel = new EncuestaViewModel();
+                var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
+                var respuestasPrevias = db.Respuestas
+                        .Where(r => r.ID_Encuesta == IdEncuesta)
+                        .ToList();
+                viewModel.Respuestas = respuestasPrevias;
+                viewModel.Encuesta = encuesta;
+                viewModel.ID_Encuesta = encuesta.ID_Encuesta;
+
+                return View("Historial", viewModel);
+            }
+            else
+            {
+                return RedirectToAction("Index");
             }
         }
 

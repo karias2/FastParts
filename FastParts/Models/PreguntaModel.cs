@@ -54,6 +54,9 @@ namespace FastParts.Models
         public virtual PreguntaModel Pregunta { get; set; }
         public string Session_Id { get; set; }
 
+        [Display(Name = "Fecha de creación")]
+        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+
         [Required]
         public string Tipo { get; set; }
 

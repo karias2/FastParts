@@ -59,7 +59,7 @@
                                                                min = pregunta.Minimo ?? 0,
                                                                max = pregunta.Maximo ?? 10,
                                                                value = pregunta.ValorRespuesta,
-                                                               onchange = $"document.getElementById('{formId}').submit();"
+                                                               onchange = $"{@Model.IsEdit} && document.getElementById('{formId}').submit();"
                                                            })
                                                             <small class="text-muted"><span id="valor-@inputName">@pregunta.ValorRespuesta</span></small>
                                                         </div>
@@ -138,32 +138,32 @@
                                                                    accept="image/png, image/jpeg, image/gif, image/webp"
                                                                    class="form-control"
                                                                    onchange="(async () => {
-                                                                                    console.log('Daniel');
-                                                                                    var p = document.getElementById('preview-@pregunta.ID_Pregunta');
-                                                                                    var s = document.getElementById('submit-@pregunta.ID_Pregunta');
-                                                                                    var f = document.getElementById('formPregunta_@pregunta.ID_Pregunta');
-                                                                                    var hiddenInput = document.getElementById('hidden-@pregunta.ID_Pregunta');
-                                                                                    var img = this.files[0];
-                                                                                    p.src = window.URL.createObjectURL(img);
-                                                                                    p.style.display = 'block';
-                                                                                    s.style.display = 'block';
-                                                                                    var reader = new FileReader();
+                                                                                                console.log('Daniel');
+                                                                                                var p = document.getElementById('preview-@pregunta.ID_Pregunta');
+                                                                                                var s = document.getElementById('submit-@pregunta.ID_Pregunta');
+                                                                                                var f = document.getElementById('formPregunta_@pregunta.ID_Pregunta');
+                                                                                                var hiddenInput = document.getElementById('hidden-@pregunta.ID_Pregunta');
+                                                                                                var img = this.files[0];
+                                                                                                p.src = window.URL.createObjectURL(img);
+                                                                                                p.style.display = 'block';
+                                                                                                s.style.display = 'block';
+                                                                                                var reader = new FileReader();
 
-                                                                                    reader.onload = function (e) {
-                                                                                        var base64Data = e.target.result;
-                                                                                        hiddenInput.value = base64Data; 
-                                                                                        // Si desea enviar automáticamente:
-                                                                                        // f.submit();
-                                                                                    };
+                                                                                                reader.onload = function (e) {
+                                                                                                    var base64Data = e.target.result;
+                                                                                                    hiddenInput.value = base64Data;
+                                                                                                    // Si desea enviar automáticamente:
+                                                                                                    // f.submit();
+                                                                                                };
 
-                                                                                    reader.onerror = function (error) {
-                                                                                        console.error('Error al leer el archivo:', error);
-                                                                                        alert('Hubo un error al cargar la imagen. Inténtelo de nuevo.');
-                                                                                    };
+                                                                                                reader.onerror = function (error) {
+                                                                                                    console.error('Error al leer el archivo:', error);
+                                                                                                    alert('Hubo un error al cargar la imagen. Inténtelo de nuevo.');
+                                                                                                };
 
-                                                                                    // Iniciar la lectura del archivo. Esto dispara el evento 'onload'.
-                                                                                    reader.readAsDataURL(img);
-                                                                                })();" />
+                                                                                                // Iniciar la lectura del archivo. Esto dispara el evento 'onload'.
+                                                                                                reader.readAsDataURL(img);
+                                                                                            })();" />
 
                                                             <div class="form-text text-muted mb-2" style="font-size: 0.8rem;">
                                                                 Formatos: JPG, PNG. Máx 10MB.
@@ -184,6 +184,7 @@
                                                                 </button>
                                                             </div>
                                                         </div>
+                                              
                                                         break;
 
 
