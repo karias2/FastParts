@@ -1,15 +1,14 @@
 ﻿@{
     ViewBag.Title = "Panel de Administración";
 
-    var totalEncuestas = ViewBag.TotalEncuestas ?? 128;
-    var totalUsuarios = ViewBag.TotalUsuarios ?? 42;
-    var totalReportes = ViewBag.TotalReportes ?? 14;
-    var totalServicios = ViewBag.TotalServicios ?? 18;
+    var totalCitasIngresadas = ViewBag.TotalCitasIngresadas ?? 0;
 
-    // Nuevos totales (puedes setearlos desde el controlador)
-    var totalPromociones = ViewBag.TotalPromociones ?? 3;
-    var totalMantenimientos = ViewBag.TotalMantenimientos ?? 7;
-    var totalRepuestos = ViewBag.TotalRepuestos ?? 256;
+    var totalUsuarios = ViewBag.TotalUsuarios ?? 0;
+    var totalUsuariosActivos = ViewBag.TotalUsuariosActivos ?? 0;
+    var totalEncuestas = ViewBag.TotalEncuestas ?? 0;
+    var totalRepuestos = ViewBag.TotalRepuestos ?? 0;
+    var totalServicios = ViewBag.TotalServicios ?? 0;
+
 }
 
 <link rel="stylesheet" href="~/css/site.css" />
@@ -25,34 +24,37 @@
     <!-- GRID: UNA COLUMNA -->
     <div class="row admin-grid row-cols-1 g-3">
 
-        <!-- Encuestas -->
+        <!-- Tarjeta Citas Admin -->
         <div class="col col-12">
-            <a href="@Url.Action("AdministrarEncuestas", "Encuesta")" class="admin-card-link">
+            <a href="@Url.Action("CrearAdmin", "Cita")" class="admin-card-link">
                 <div class="admin-card gradient-primary d-flex align-items-center">
                     <div class="card-body d-flex w-100">
                         <div class="me-3">
-                            <div class="icon-circle"><i class="bi bi-chat-left-text"></i></div>
+                            <div class="icon-circle"><i class="bi bi-person-lines-fill"></i></div>
                         </div>
 
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h5 class="mb-1">Encuestas</h5>
-                                    <div class="small-stat">Ver y analizar las encuestas enviadas por los clientes.</div>
+                                    <h5 class="mb-1">Agendar Cita</h5>
+                                    <div class="small-stat">Crear y gestionar citas para clientes.</div>
                                 </div>
                                 <div class="text-end">
-                                   
+                                    <span class="badge bg-white text-success">@totalCitasIngresadas cita sin asignar</span>
                                 </div>
                             </div>
 
                             <div class="admin-actions">
-                                <a class="btn btn-sm btn-light ms-2" href="@Url.Action("AdministrarEncuestas", "Encuesta")"><i class="bi bi-bar-chart-line me-1"></i> Gestionar Encuestas</a>
+                                <a class="btn btn-sm btn-light ms-2" href="@Url.Action("CrearAdmin", "Cita")"><i class="bi bi-plus-lg me-1"></i> Crear Cita</a>
+                                <a class="btn btn-sm btn-light ms-2" href="@Url.Action("ListaAdmin", "Cita")"><i class="bi bi-list-ul me-1"></i> Ver Cola</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
+
+
 
         <!--Tarejeta Gestion Usuarios -->
         <div class="col col-12">
@@ -69,8 +71,8 @@
                                     <div class="small-stat">Consultar, editar roles y permisos.</div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fs-5 fw-bold">@totalUsuarios</div>
-                                    <span class="badge bg-white text-success">Activos</span>
+                                    <div class="fs-5 fw-bold">Total: @totalUsuarios</div>
+                                    <span class="badge bg-white text-success">@totalUsuariosActivos Activos</span>
                                 </div>
                             </div>
                             <div class="admin-actions">
@@ -82,7 +84,7 @@
             </a>
         </div>
 
-        <!-- Repuestos/Inventario -->
+        <!-- Tarjeta Repuestos/Inventario -->
         <div class="col col-12">
             <a href="@Url.Action("Index", "Repuestos")" class="admin-card-link">
                 <div class="admin-card gradient-danger d-flex align-items-center">
@@ -98,7 +100,7 @@
                                     <div class="small-stat">Visualizar repuestos en inventario y alertas.</div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fs-5 fw-bold">@totalReportes</div>
+                                    <div class="fs-5 fw-bold">@totalRepuestos</div>
                                     <div class="chip mt-1">Última: 3 días</div>
                                 </div>
                             </div>
@@ -144,36 +146,35 @@
             </a>
         </div>
 
-        <!-- Tarjeta Extra#1 -->
-        @*<div class="col col-12">
-            <a href="@Url.Action("Index", "Promocion")" class="admin-card-link">
+        <!-- Tarjeta Encuestas -->
+        <div class="col col-12">
+            <a href="@Url.Action("AdministrarEncuestas", "Encuesta")" class="admin-card-link">
                 <div class="admin-card gradient-primary d-flex align-items-center">
                     <div class="card-body d-flex w-100">
                         <div class="me-3">
-                            <div class="icon-circle"><i class="bi bi-tag"></i></div>
+                            <div class="icon-circle"><i class="bi bi-chat-left-text"></i></div>
                         </div>
 
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h5 class="mb-1">Promociones</h5>
-                                    <div class="small-stat">Crear y gestionar ofertas y descuentos futuros.</div>
+                                    <h5 class="mb-1">Encuestas de Satisfacción</h5>
+                                    <div class="small-stat">Ver y analizar las encuestas enviadas por los clientes.</div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fs-5 fw-bold">@totalPromociones</div>
-                                    <div class="chip mt-1">Activas: 1</div>
+                                    <div class="fs-5 fw-bold">@totalEncuestas</div>
+                                    <div class="chip mt-1">Nuevas: 5</div>
                                 </div>
                             </div>
 
                             <div class="admin-actions">
-                                <a class="btn btn-sm btn-outline-light" href="@Url.Action("Crear", "Promocion")"><i class="bi bi-plus-circle me-1"></i> Nueva promoción</a>
-                                <a class="btn btn-sm btn-light ms-2" href="@Url.Action("Index", "Promocion")"><i class="bi bi-list-ul me-1"></i> Ver promociones</a>
+                                <a class="btn btn-sm btn-light ms-2" href="@Url.Action("AdministrarEncuestas", "Encuesta")"><i class="bi bi-bar-chart-line me-1"></i> Gestionar Encuestas</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </a>
-        </div>*@
+        </div>
 
         <!-- Tarjeta Extra#2  -->
         @*<div class="col col-12">

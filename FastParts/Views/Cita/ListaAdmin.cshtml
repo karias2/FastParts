@@ -1,0 +1,137 @@
+﻿@model IEnumerable<FastParts.Models.CitaListadoViewModel>
+@{
+    ViewBag.Title = "Listado de Citas (Admin)";
+}
+
+<div class="container mt-4">
+    <div class="col">
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Listado de Citas</h2>
+        <a href="@Url.Action("CrearAdmin", "Cita")" class="btn btn-primary">
+            Crear nueva cita
+        </a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filtroEstado" class="form-label">Filtrar por estado</label>
+            <select id="filtroEstado" class="form-select">
+                <option value="">Todos</option>
+                <option value="Ingresada">Ingresada</option>
+                <option value="Asignada">Asignada</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Terminada">Terminada</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <label for="filtroFecha" class="form-label">Filtrar por fecha</label>
+        <input type="date" id="filtroFecha" class="form-control" />
+    </div>
+    <br />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-bordered" id="tablaCitasAdmin">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Teléfono</th>
+                        <th>Vehículo</th>
+                        <th>Placa</th>
+                        <th>Fecha cita</th>
+                        <th>Estado</th>
+                        <th>Mecánico</th>
+                        <th style="width:130px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.NombreCliente</td>
+                            <td>@item.TelefonoCliente</td>
+                            <td>@item.Vehiculo</td>
+                            <td>@item.Placa</td>
+                            <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.Estado</td>
+                            <td>@item.NombreMecanico</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("DetalleAdmin", "Cita", new { id = item.Id })"
+                                   class="btn btn-sm btn-outline-info">
+                                    Ver detalles
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+
+                if (settings.nTable.id !== 'tablaCitasAdmin') {
+                    return true;
+                }
+
+                var fechaFiltro = $('#filtroFecha').val();
+                if (!fechaFiltro) {
+                    return true;
+                }
+
+                var fechaTexto = data[4] || '';
+                if (!fechaTexto) return false;
+
+                var soloFecha = fechaTexto.split(' ')[0];
+
+                var partes = soloFecha.split('/');
+                if (partes.length !== 3) {
+                    return true;
+                }
+
+                var dia = partes[0];
+                var mes = partes[1];
+                var anio = partes[2];
+
+                var fechaNormalizada = anio + '-' + mes + '-' + dia;
+
+                return fechaNormalizada === fechaFiltro;
+            });
+
+            var tabla = $("#tablaCitasAdmin").DataTable({
+                order: [[4, "desc"]],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                }
+            });
+
+            $('#filtroEstado').on('change', function () {
+                var valor = $(this).val();
+                if (valor) {
+                    tabla.column(5).search('^' + valor + '$', true, false).draw();
+                } else {
+                    tabla.column(5).search('').draw();
+                }
+            });
+
+            $('#filtroFecha').on('change', function () {
+                tabla.draw();
+            });
+
+            var mensaje = '@TempData["CitaCreada"]';
+            if (mensaje) {
+                Swal.fire('¡Cita creada!', mensaje, 'success');
+            }
+        });
+    </script>
+}

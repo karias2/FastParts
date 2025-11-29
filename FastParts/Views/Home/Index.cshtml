@@ -37,9 +37,9 @@
                         </a>
                         <h6 class="text-white mb-2 mt-5">Encuentranos en:</h6>
                         <div class="d-flex justify-content-center">
-                            <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="fab fa-facebook text-lg text-white me-4"></i></a>
-                            <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="fab fa-instagram text-lg text-white me-4"></i></a>
-                            <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="fab fa-whatsapp text-lg text-white me-4"></i></a>
+                            <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-lg text-white me-4"></i></a>
+                            <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-lg text-white me-4"></i></a>
+                            <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg text-white me-4"></i></a>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,8 @@
                                 <p class="mb-0">
                                     Agende una cita o visitenos en nuestro taller para la revision de su vehiculo.
                                 </p>
-                                <button type="button" class="btn bg-gradient-info btn-sm mb-0 mt-3">Agendar Cita</button>
+                                <button type="button" class="btn bg-gradient-info btn-sm mb-0 mt-3" onclick="window.location.href='/Cita/CrearCliente'">Agendar Cita</button>
+
                             </div>
                         </div>
                     </div>
@@ -224,28 +225,25 @@
                 </div>
             </div>
         </section>
-        <!-- -------- START PRE-FOOTER 1 w/ SUBSCRIBE BUTTON AND IMAGE ------- -->
-        <!-- -------- END PRE-FOOTER 1 w/ SUBSCRIBE BUTTON AND IMAGE ------- -->
     </div>
+
+
     <!--   Core JS Files   -->
-    <!--<script src="/Content/assets/js/core/popper.min.js" type="text/javascript"></script>
+    <script src="/Content/assets/js/core/popper.min.js" type="text/javascript"></script>
     <script src="/Content/assets/js/core/bootstrap.min.js" type="text/javascript"></script>
-    <script src="/Content/assets/js/plugins/perfect-scrollbar.min.js"></script>-->
+    <script src="/Content/assets/js/plugins/perfect-scrollbar.min.js"></script>
     <!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
-    <!--<script src="/Content/assets/js/plugins/countup.min.js"></script>-->
+    <script src="/Content/assets/js/plugins/countup.min.js"></script>
     <!-- Control Center for Material UI Kit: parallax effects, scripts for the example pages etc -->
     <!--  Google Maps Plugin    -->
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
     <script src="/Content/assets/js/material-kit.min.js?v=3.1.0" type="text/javascript"></script>
     <script>
         // get the element to animate
         var element = document.getElementById('count-stats');
         var elementHeight = element.clientHeight;
-
         // listen for scroll event and call animate function
-
         document.addEventListener('scroll', animate);
-
         // check if element is in view
         function inView() {
             // get window height
@@ -256,19 +254,15 @@
             var scrollPosition = scrollY + windowHeight;
             // get element position (distance from the top of the page to the bottom of the element)
             var elementPosition = element.getBoundingClientRect().top + scrollY + elementHeight;
-
             // is scroll position greater than element position? (is element in view?)
             if (scrollPosition > elementPosition) {
                 return true;
             }
-
             return false;
         }
-
         var animateComplete = true;
         // animate element when it is in view
         function animate() {
-
             // is element in view?
             if (inView()) {
                 if (animateComplete) {
@@ -300,7 +294,6 @@
                 }
             }
         }
-
         if (document.getElementById('typed')) {
             var typed = new Typed("#typed", {
                 stringsElement: '#typed-strings',
@@ -321,7 +314,7 @@
                 bgParallax.style.transform = 'translate3d(0,' + oVal + 'px,0)';
             }, 6);
         }
-    </script>-->
+    </script>
 </body>
 
 </html>

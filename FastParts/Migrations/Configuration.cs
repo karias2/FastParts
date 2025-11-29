@@ -39,6 +39,8 @@
 
             var seedServicios = new SeedServicios();
             seedServicios.AddServicios(context);
+
+            new SeedCitas().CrearCitasDemo(context);
         }
     }
 }

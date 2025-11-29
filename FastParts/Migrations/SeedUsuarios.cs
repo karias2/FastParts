@@ -29,6 +29,7 @@ namespace FastParts.Migrations
                     UserName = "superadmin@fastparts.com",
                     Email = "superadmin@fastparts.com",
                     NombreCompleto = "Super Admin Por Defecto",
+                    PhoneNumber="1111-1111",
                     Estado = true
                 };
                 var result = userManager.Create(user, "Superadmin123");
@@ -44,6 +45,7 @@ namespace FastParts.Migrations
                     UserName = "admin@fastparts.com",
                     Email = "admin@fastparts.com",
                     NombreCompleto = "Usuario Admin Por Defecto",
+                    PhoneNumber = "2222-2222",
                     Estado = true
                 };
                 var result = userManager.Create(user, "Admin123");
@@ -57,6 +59,7 @@ namespace FastParts.Migrations
                     UserName = "mecanico@fastparts.com",
                     Email = "mecanico@fastparts.com",
                     NombreCompleto = "Usuario Mecanico Por Defecto",
+                    PhoneNumber = "3333-3333",
                     Estado = true
                 };
                 var result = userManager.Create(user, "Mecanico123");
@@ -70,6 +73,7 @@ namespace FastParts.Migrations
                     UserName = "cliente@fastparts.com",
                     Email = "cliente@fastparts.com",
                     NombreCompleto = "Usuario Cliente Por Defecto",
+                    PhoneNumber = "4444-4444",
                     Estado = true
                 };
                 var result = userManager.Create(user, "Cliente123");

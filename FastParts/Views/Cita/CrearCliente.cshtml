@@ -1,0 +1,93 @@
+﻿@model FastParts.Models.CrearCitaClienteViewModel
+@{
+    ViewBag.Title = "Crear Cita (Cliente)";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Agendar Cita</h2>
+
+    @using (Html.BeginForm("CrearCliente", "Cita", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.NombreCliente, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.NombreCliente, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.TelefonoCliente, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", placeholder = "8888-8888" })
+                        @Html.ValidationMessageFor(m => m.TelefonoCliente, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Vehiculo, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Vehiculo, new { @class = "form-control", placeholder = "Ej: Toyota Corolla 2018" })
+                        @Html.ValidationMessageFor(m => m.Vehiculo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Placa, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Placa, new { @class = "form-control", placeholder = "ABC123" })
+                        @Html.ValidationMessageFor(m => m.Placa, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.FechaCita, new { @class = "form-label" })
+                        @Html.TextBoxFor(
+                                      m => m.FechaCita,
+                                      new
+                                      {
+                                          @class = "form-control",
+                                          type = "datetime-local",
+                                          value = Model != null ? Model.FechaCita.ToString("yyyy-MM-ddTHH:mm") : ""
+                                      })
+                        @Html.ValidationMessageFor(m => m.FechaCita, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Motivo, new { @class = "form-label" })
+                        @Html.TextAreaFor(m => m.Motivo, 4, 40, new { @class = "form-control", placeholder = "Detalle del motivo de la visita" })
+                        @Html.ValidationMessageFor(m => m.Motivo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a href="@Url.Action("MisCitas", "Cita")" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" id="btnGuardarCitaCliente">Guardar Cita</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+            $("#btnGuardarCitaCliente").on("click", function (e) {               
+                e.preventDefault();
+                Swal.fire({
+                    title: '¿Confirmar cita?',
+                    text: 'Se registrará la cita con los datos indicados.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, guardar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(e.target).closest("form").off("submit").submit();
+                    }
+                });              
+            });
+        });
+    </script>
+}

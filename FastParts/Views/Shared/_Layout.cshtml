@@ -3,170 +3,80 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="apple-touch-icon" sizes="76x76" href="~/Content/assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="/Content/assets/img/favicon.png">
-    <link rel="icon" type="image/png" href="/Content/assets/img/favicon.png">
+
     <title>@ViewBag.Title - ProPartes</title>
-    <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
-    <!-- Nucleo Icons -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Content/assets/img/favicon.png">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+
+    <!-- Icons -->
     <link href="~/Content/assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="~/Content/assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-uU8qH5J2J9+hw1Y6E0cFH9E0lO+N7qQiQ1C7hK0Bk6GB9ieQtD0T1pffY3I4KCAzc9ZaYCrrZxjD7c6DqSc9cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
     <!-- Material Icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <!-- CSS Files -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Material Kit CSS -->
     <link id="pagestyle" href="~/Content/assets/css/material-kit.css?v=3.1.0" rel="stylesheet" />
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
+
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
+
+    <!-- Custom Site CSS -->
     <link href="~/Content/Site.css" rel="stylesheet" />
-    <!-- Font Awesome-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>*@
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
+
 <body class="about-us bg-gray-100">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
         <div class="container-fluid">
+
             <div class="navbar-toggler-bar mx-10">
                 <a class="navbar-brand">
-                    @Html.ActionLink(
-                        "Propartes",
-                        "Index",
-                        "Home",
-                        new { area = "" },
-                        new
-                             {
-                            @class = "navbar-brand text-white",
-                            data_bs_toggle = "tooltip",
-                            data_bs_placement = "bottom"
-                        })
+                    @Html.ActionLink("ProPartes", "Index", "Home", new { },
+                         new { @class = "navbar-brand text-white" })
                 </a>
-                <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon mt-2">
-                        <span class="navbar-toggler-bar bar1"></span>
-                        <span class="navbar-toggler-bar bar2"></span>
-                        <span class="navbar-toggler-bar bar3"></span>
-                    </span>
+                <button class="navbar-toggler shadow-none ms-2" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navigation">
+                    <span class="navbar-toggler-icon mt-2"></span>
                 </button>
             </div>
-            <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-6 ps-lg-2" id="navigation">
-                <ul class="navbar-nav navbar-nav-hover ms-auto">
-                    @*<li class="nav-item dropdown dropdown-hover mx-2 ms-lg-6">
-                        <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-                           id="dropdownCliente" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="material-symbols-rounded opacity-6 me-2 text-md">person</i>
-                            Cliente
-                            <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-                                 class="arrow ms-2 d-lg-block d-none">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-                             aria-labelledby="dropdownCliente">
-                            <a>
-                                @Html.ActionLink("Perfil", "Perfil", "Cliente", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                            <a>
-                                @Html.ActionLink("Editar Perfil", "EditarPerfil", "Cliente", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                            <a>
-                                @Html.ActionLink("Recordatorios", "ListaRecordatorios", "Recordatorio", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                        </div>
-                    </li>*@
-                    @*<li class="nav-item dropdown dropdown-hover mx-2">
-                        <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-                           id="dropdownAdmin" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="material-symbols-rounded opacity-6 me-2 text-md">dashboard</i>
-                            Admin
-                            <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-                                 class="arrow ms-2 d-lg-block d-none">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-                             aria-labelledby="dropdownAdmin">
-                            <a>
-                                @Html.ActionLink("Panel Administrador", "Index", "Admin", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                            <a>
-                                @Html.ActionLink("Listado de Cotizaciones", "Index", "Cotizacions", null, new { @class = "dropdown-item" })
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown dropdown-hover mx-2">
-                        <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-                           id="dropdownMecanico" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="material-symbols-rounded opacity-6 me-2 text-md">water_pump</i>
-                            Mecánico
-                            <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-                                 class="arrow ms-2 d-lg-block d-none">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-                             aria-labelledby="dropdownMecanico">
-                            <a>
-                                @Html.ActionLink("Ingreso Vehículo", "IngresoVehiculo", "Mecanico", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                            <a>
-                                @Html.ActionLink("Detalles Servicio", "DetallesServicio", "Mecanico", null, new { @class = "dropdown-item border-radius-md" })
-                            </a>
-                        </div>
-                    </li>*@
-                    @*<li class="nav-item ms-lg-auto">
-                        @Html.ActionLink("Servicios", "Index", "Servicio", null, new
-                        {
-                            @class = "nav-link nav-link-icon me-2 text-white",
-                            title = "Servicios",
-                            data_bs_toggle = "tooltip",
-                            data_bs_placement = "bottom"
-                        })
-                    </li>*@
-                    @*<li class="nav-item ms-lg-auto">
-                        @Html.ActionLink("Repuestos", "Index", "Repuestos", null, new
-                        {
-                            @class = "nav-link nav-link-icon me-2 text-white",
-                            title = "Repuestos",
-                            data_bs_toggle = "tooltip",
-                            data_bs_placement = "bottom"
-                        })
-                    </li>*@
-                    @*<li class="nav-item ms-lg-auto">
-                        @Html.ActionLink("Encuestas", "AdministrarEncuestas", "Encuesta", null, new
-                        {
-                            @class = "nav-link nav-link-icon me-2 text-white",
-                            title = "Administrar encuestas",
-                            data_bs_toggle = "tooltip",
-                            data_bs_placement = "bottom"
-                        })
-                    </li>*@
-                    @*<li class="nav-item ms-lg-auto">
-                        @Html.ActionLink("Alertas", "AlertasInventario", "Admin", null, new
-                        {
-                            @class = "nav-link nav-link-icon me-2 text-white",
-                            title = "Alertas Inventario",
-                            data_bs_toggle = "tooltip",
-                            data_bs_placement = "bottom"
-                        })
-                    </li>*@
-                </ul>
-            </div>
+
+            <div class="collapse navbar-collapse w-100" id="navigation"></div>
+
             <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-1 ps-lg-1" id="login">
                 @Html.Partial("_LoginPartial")
             </div>
+
         </div>
     </nav>
+
     <div class="@(ViewBag.BodyClass ?? "container body-content d-flex flex-column min-vh-70")">
         @RenderBody()
     </div>
 
     <footer class="mt-auto text-center py-4 bg-gradient-light border-top">
         <div class="row pt-3">
+
             <div class="col-md-4">
                 <h5 class="font-weight-bolder mb-4">Enlaces Rápidos</h5>
                 <ul class="list-unstyled">
@@ -174,52 +84,37 @@
                     <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
                 </ul>
             </div>
+
             <div class="col-md-4">
                 <h5 class="font-weight-bolder mb-4">Redes Sociales</h5>
-                <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/" class="mx-2"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg==" class=" mx-2"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/50612345678?text=¡Hola%20FastParts!"
-                   class="mx-2"
-                   target="_blank"
-                   rel="noopener"
-                   aria-label="WhatsApp FastParts">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
+                <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-lg me-4"></i></a>
+                <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-lg me-4"></i></a>
+                <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg me-4"></i></a>
             </div>
+
             <div class="col-md-4">
                 <h5 class="font-weight-bolder mb-4">ProPartes CR</h5>
-                <p>
-                    📍Tibás, 150 mts Este de Epa.
-                    (Frente a Fresh Market)🔧🏎️
-                </p>
+                <p>📍Tibás, 150 mts Este de Epa.</p>
+                <p>(Frente a Fresh Market)🔧🏎️</p>
                 <p>Email: <a href="mailto:propartescr@hotmail.com">propartescr@hotmail.com</a></p>
-                <p>Teléfono: <a href="tel:+50683737272">+(506)8373-7272</a></p>
+                <p>Teléfono: <a href="tel:+50683737272">+(506) 8373-7272</a></p>
             </div>
-        </div>
-        <div class="col-12">
-            <div class="text-center">
-                <p class="text-dark my-4 text-sm font-weight-bold">
-                    Copyright &copy; @DateTime.Now.Year FastParts
-                </p>
-            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col">
-                <img src="@Url.Content("~/Content/PropartesLogoCircular.png")"
-                     alt="Logo FastParts"
-                     class="img-fluid mx-auto d-block mb-2"
-                     style="max-height: 60px;" />
-            </div>
+        <div class="col-12">
+            <p class="text-dark my-4 text-sm font-weight-bold">
+                Copyright &copy;
+                @DateTime.Now.Year FastParts
+            </p>
         </div>
+
+        <img src="@Url.Content("~/Content/PropartesLogoCircular.png")"
+             class="img-fluid mx-auto d-block mb-2" style="max-height: 60px;" />
+
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
-    @*@Scripts.Render("~/bundles/bootstrap")*@
-    @RenderSection("scripts", required: false)
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <!-- Chatbot -->
+    <!-- CHATBOT -->
     <div id="chatbot-container">
         <div id="chatbot-toggle">💬</div>
         <div id="chatbot-box" class="hidden">
@@ -231,35 +126,31 @@
         </div>
     </div>
 
+    <!-- jQuery -->
+    @Scripts.Render("~/bundles/jquery")
+
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Material Kit -->
+    <script src="/Content/assets/js/material-kit.min.js?v=3.1.0"></script>
+
+    <!-- Chatbot -->
     <script>
         const toggle = document.getElementById("chatbot-toggle");
         const box = document.getElementById("chatbot-box");
 
-        toggle.addEventListener("click", () => {
-            box.classList.toggle("hidden");
-        });
-
+        toggle.addEventListener("click", () => box.classList.toggle("hidden"));
         document.querySelectorAll('.chatbot-question').forEach(el => {
             el.addEventListener('click', () => {
-                alert("Funcionalidad en desarrollo. ¡Gracias por tu consulta!");
-            });
-        });
-    </script>
-
-    @*<script src="~/Content/assets/js/core/popper.min.js" type="text/javascript"></script>
-        <script src="~/Content/assets/js/core/bootstrap.min.js" type="text/javascript"></script>*@
-    <script src="~/Content/assets/js/plugins/perfect-scrollbar.min.js"></script>
-
-    <!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
-    <script src="/Content/assets/js/plugins/countup.min.js"></script>
-    <!-- Control Center for Material UI Kit: parallax effects, scripts for the example pages etc -->
-    <!--  Google Maps Plugin    -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
-    <script src="/Content/assets/js/material-kit.min.js?v=3.1.0" type="text/javascript"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function (el) {
-                try { new bootstrap.Dropdown(el); } catch (e) { /* no-op */ }
+                Swal.fire("Funcionalidad en desarrollo", "", "info");
             });
         });
     </script>
@@ -332,27 +223,8 @@
             }
         }
 
-        if (document.getElementById('typed')) {
-            var typed = new Typed("#typed", {
-                stringsElement: '#typed-strings',
-                typeSpeed: 90,
-                backSpeed: 90,
-                backDelay: 200,
-                startDelay: 500,
-                loop: true
-            });
-        }
-    </script>
-    <script>
-        if (document.getElementsByClassName('page-header')) {
-            window.onscroll = debounce(function () {
-                var scrollPosition = window.pageYOffset;
-                var bgParallax = document.querySelector('.page-header');
-                var oVal = (window.scrollY / 3);
-                bgParallax.style.transform = 'translate3d(0,' + oVal + 'px,0)';
-            }, 6);
-        }
-    </script>
+    <!-- Scripts de cada vista -->
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>

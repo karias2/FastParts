@@ -1,0 +1,147 @@
+﻿@model IEnumerable<FastParts.Models.CitaListadoViewModel>
+@{
+    ViewBag.Title = "Mis Citas (Mecánico)";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Mis Citas Asignadas</h2>
+        <a href="@Url.Action("Cola", "Cita")" class="btn btn-outline-primary">
+            Ver cola de citas
+        </a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filtroEstado" class="form-label">Filtrar por estado</label>
+            <select id="filtroEstado" class="form-select">
+                <option value="">Todos</option>
+                <option value="Asignada">Asignada</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Terminada">Terminada</option>
+            </select>
+        </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-bordered" id="tablaMisCitasMecanico">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Vehículo</th>
+                        <th>Placa</th>
+                        <th>Fecha Cita</th>
+                        <th>Estado</th>
+                        <th style="width: 180px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.NombreCliente</td>
+                            <td>@item.Vehiculo</td>
+                            <td>@item.Placa</td>
+                            <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.Estado</td>
+                            <td class="text-center">
+                                @if (item.Estado == "Asignada")
+                                {
+                                    using (Html.BeginForm("IniciarServicio", "Cita", FormMethod.Post, new { @class = "formIniciar d-inline" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("id", item.Id)
+                                        <button type="submit" class="btn btn-sm btn-success btnIniciar">
+                                            Iniciar servicio
+                                        </button>
+                                    }
+                                }
+                                else if (item.Estado == "En Proceso")
+                                {
+                                    <a href="@Url.Action("FinalizarServicio", "Cita", new { id = item.Id })"
+                                       class="btn btn-sm btn-primary btnFinalizar">
+                                        Finalizar servicio
+                                    </a>
+                                }
+                                else if (item.Estado == "Terminada")
+                                {
+                                    <a href="@Url.Action("EditarServicio", "Cita", new { id = item.Id })"
+                                       class="btn btn-sm btn-warning btnEditar">
+                                        Editar
+                                    </a>
+                                }
+
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var tabla = $("#tablaMisCitasMecanico").DataTable({
+                order: [[3, "desc"]],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                }
+            });
+
+            $(".btnIniciar").on("click", function (e) {
+                e.preventDefault();
+                var form = $(this).closest("form");
+
+                Swal.fire({
+                    title: '¿Iniciar servicio?',
+                    text: 'Se registrará la hora de inicio del servicio a partir de este momento.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Iniciar servicio',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) form.off("submit").submit();
+                });
+            });
+
+            $(".btnEditar").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("href");
+
+                Swal.fire({
+                    title: 'Editar cita terminada',
+                    text: 'Podrás ajustar comentarios y fotos si fue necesario corregir algo.',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location = url;
+                    }
+                });
+            });
+
+            $('#filtroEstado').on('change', function () {
+                var valor = $(this).val();
+                if (valor) {
+                    tabla.column(4).search('^' + valor + '$', true, false).draw();
+                } else {
+                    tabla.column(4).search('').draw();
+                }
+            });
+
+            var mensaje = '@TempData["CitaEditadaMecanico"]';
+            if (mensaje) {
+                Swal.fire('Cambios guardados', mensaje, 'success');
+            }
+        });
+    </script>
+}
+

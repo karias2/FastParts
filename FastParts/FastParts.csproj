@@ -164,6 +164,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CotizacionController.cs" />
+    <Compile Include="Controllers\CitaController.cs" />
     <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\EncuestaController.cs" />
@@ -178,6 +179,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\SeedCitas.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
     <Compile Include="Migrations\SeedRepuestos.cs" />
     <Compile Include="Migrations\SeedServicios.cs" />
@@ -185,8 +187,13 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AlertaInventarioModel.cs" />
     <Compile Include="Models\AlertasInventarioViewModel.cs" />
+    <Compile Include="Models\CitaServicioModel.cs" />
+    <Compile Include="Models\CitaRepuestoModel.cs" />
+    <Compile Include="Models\CitaViewModels.cs" />
     <Compile Include="Models\ConsumosServicioViewModel.cs" />
     <Compile Include="Models\CotizacionesModel.cs" />
+    <Compile Include="Models\CitaModel.cs" />
+    <Compile Include="Models\cotizacion.cs" />
     <Compile Include="Models\EncuestaModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -367,8 +374,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\Index1.cshtml" />
-    <Content Include="Views\Shared\_Layout - Copy.cshtml" />
     <Content Include="Views\Mecanico\IngresoVehiculo.cshtml" />
     <Content Include="Views\Mecanico\DetallesServicio.cshtml" />
     <Content Include="Views\Cliente\Perfil.cshtml" />
@@ -377,7 +382,6 @@
     <Content Include="Views\Recordatorio\Crear.cshtml" />
     <Content Include="Views\Recordatorio\Editar.cshtml" />
     <Content Include="Views\Recordatorio\Eliminar.cshtml" />
-    <Content Include="Views\Admin\Index1.cshtml" />
     <Content Include="Views\Usuario\Lista.cshtml" />
     <Content Include="Views\Usuario\Crear.cshtml" />
     <Content Include="Views\Usuario\Editar.cshtml" />
@@ -609,6 +613,15 @@
     <Content Include="Views\Admin\AlertasInventario.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Encuesta\Historial.cshtml" />
+    <Content Include="Views\Cita\CrearCliente.cshtml" />
+    <Content Include="Views\Cita\FinalizarServicio.cshtml" />
+    <Content Include="Views\Cita\MisCitasMecanico.cshtml" />
+    <Content Include="Views\Cita\CrearAdmin.cshtml" />
+    <Content Include="Views\Cita\Cola.cshtml" />
+    <Content Include="Views\Cita\MisCitas.cshtml" />
+    <Content Include="Views\Cita\ListaAdmin.cshtml" />
+    <Content Include="Views\Cita\DetalleAdmin.cshtml" />
+    <Content Include="Views\Cita\EditarServicio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

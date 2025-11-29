@@ -54,6 +54,9 @@ namespace FastParts.Models
         public DbSet<ServicioRepuestoModel> ServicioRepuestos { get; set; }
         public DbSet<MovimientoInventarioModel> Movimientos { get; set; }
         public DbSet<AlertaInventarioModel> Alertas { get; set; }
+        public DbSet<CitaModel> CitaModels { get; set; }
+        public DbSet<CitaServicioModel> CitaServicioModels { get; set; }
+        public DbSet<CitaRepuestoModel> CitaRepuestoModels { get; set; }
 
         public DbSet<CotizacionesModel> Cotizaciones { get; set; }
         public DbSet<RepuestosCotizadosModel> RepuestosCotizados { get; set; }

@@ -8,8 +8,6 @@ using System.Web.Mvc;
 namespace FastParts.Controllers
 {
 
-    // Permiso para acceder panel de administrador cuando solo si pertenece a rol "Admin".
-    //Habilitar despues de pruebas.
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
@@ -17,6 +15,17 @@ namespace FastParts.Controllers
 
         public ActionResult Index()
         {
+            int totalUsuarios = db.Users.Count();
+            ViewBag.TotalUsuarios = totalUsuarios;
+
+            int totalUsuariosActivos = db.Users.Count(u => u.Estado == true);
+            ViewBag.TotalUsuariosActivos = totalUsuariosActivos;
+
+            int totalRepuestos = db.Repuestos.Count();
+            ViewBag.TotalRepuestos = totalRepuestos;
+
+            int totalCitasIngresadas = db.CitaModels.Count(c => c.Estado == "Ingresada");
+            ViewBag.TotalCitasIngresadas = totalCitasIngresadas;
             return View();
 
         }
