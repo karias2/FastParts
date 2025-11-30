@@ -1,0 +1,17 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+@{
+    ViewBag.Title = "Editar Rol";
+}
+<h2>Editar Rol</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("id", Model.Id)
+    <div class="form-group">
+        <label>Nombre</label>
+        <input name="name" value="@Model.Name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-link" })
+}
+@Html.ValidationSummary()

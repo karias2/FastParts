@@ -2,138 +2,119 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - FastParts</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@ViewBag.Title - ProPartes</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Content/assets/img/favicon.png">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+
+    <!-- Icons -->
+    <link href="~/Content/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-uU8qH5J2J9+hw1Y6E0cFH9E0lO+N7qQiQ1C7hK0Bk6GB9ieQtD0T1pffY3I4KCAzc9ZaYCrrZxjD7c6DqSc9cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <!-- Material Icons -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Material Kit CSS -->
+    <link id="pagestyle" href="~/Content/assets/css/material-kit.css?v=3.1.0" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
+
+    <!-- Custom Site CSS -->
     <link href="~/Content/Site.css" rel="stylesheet" />
-    <!-- Font Awesome-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            @Html.ActionLink("FastParts", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("¿Quienes somos?", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <!-- Cliente Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="clienteDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cliente
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="clienteDropdown">
-                            <li>@Html.ActionLink("Perfil", "Perfil", "Cliente", null, new { @class = "dropdown-item" })</li>
-                            <li>@Html.ActionLink("Editar Perfil", "EditarPerfil", "Cliente", null, new { @class = "dropdown-item" })</li>
-                            <li>@Html.ActionLink("Recordatorios", "ListaRecordatorios", "Recordatorio", null, new { @class = "dropdown-item" })</li>
-                        </ul>
-                    </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Admin
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <li>@Html.ActionLink("Panel Administrador", "Index", "Admin", null, new { @class = "dropdown-item" })</li>
-                            <li>
-                                @Html.ActionLink("Listado de Cotizaciones", "Index", "Cotizacions", null, new { @class = "dropdown-item" })
-                            </li>
-                        </ul>
-                    </li>
+<body class="about-us bg-gray-100">
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="mecanicoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Mecánico
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="mecanicoDropdown">
-                            <li>@Html.ActionLink("Ingreso Vehículo", "IngresoVehiculo", "Mecanico", null, new { @class = "dropdown-item" })</li>
-                            <li>@Html.ActionLink("Detalles Servicio", "DetallesServicio", "Mecanico", null, new { @class = "dropdown-item" })</li>
-                        </ul>
-                    </li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
+        <div class="container-fluid">
 
-                    <li>@Html.ActionLink("Encuestas", "AdministrarEncuestas", "Encuesta", null, new { @class = "nav-link" })</li>
+            <div class="navbar-toggler-bar mx-10">
+                <a class="navbar-brand">
+                    @Html.ActionLink("ProPartes", "Index", "Home", new { },
+                         new { @class = "navbar-brand text-white" })
+                </a>
+                <button class="navbar-toggler shadow-none ms-2" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navigation">
+                    <span class="navbar-toggler-icon mt-2"></span>
+                </button>
+            </div>
 
-                    <li>@Html.ActionLink("Repuestos", "Index", "Repuestos", null, new { @class = "nav-link" })</li>
-                </ul>
+            <div class="collapse navbar-collapse w-100" id="navigation"></div>
+
+            <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-1 ps-lg-1" id="login">
                 @Html.Partial("_LoginPartial")
             </div>
+
         </div>
     </nav>
 
-    <div class="container body-content flex-grow-1">
+    <div class="@(ViewBag.BodyClass ?? "container body-content d-flex flex-column min-vh-70")">
         @RenderBody()
-        @*<hr />*@
     </div>
 
-    <footer class="mt-auto text-center bg-dark">
+    <footer class="mt-auto text-center py-4 bg-gradient-light border-top">
         <div class="row pt-3">
-            <div class="col-md-4 text-white">
-                <h5>Enlaces Rápidos</h5>
+
+            <div class="col-md-4">
+                <h5 class="font-weight-bolder mb-4">Enlaces Rápidos</h5>
                 <ul class="list-unstyled">
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                     <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
                 </ul>
             </div>
-            <div class="col-md-4 text-white">
-                <h5>Redes Sociales</h5>
-                <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/" class="text-white me-2"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg==" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/50612345678?text=¡Hola%20FastParts!"
-                   class="text-white mx-2"
-                   target="_blank"
-                   rel="noopener"
-                   aria-label="WhatsApp FastParts">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
+
+            <div class="col-md-4">
+                <h5 class="font-weight-bolder mb-4">Redes Sociales</h5>
+                <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-lg me-4"></i></a>
+                <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-lg me-4"></i></a>
+                <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg me-4"></i></a>
             </div>
-            <div class="col-md-4 text-white">
-                <h5>ProPartes CR</h5>
-                <p>
-                    📍Tibás, 150 mts Este de Epa.
-                    (Frente a Fresh Market)🔧🏎️
-                </p>
+
+            <div class="col-md-4">
+                <h5 class="font-weight-bolder mb-4">ProPartes CR</h5>
+                <p>📍Tibás, 150 mts Este de Epa.</p>
+                <p>(Frente a Fresh Market)🔧🏎️</p>
                 <p>Email: <a href="mailto:propartescr@hotmail.com">propartescr@hotmail.com</a></p>
-                <p>Teléfono: <a href="tel:+50683737272">+(506)8373-7272</a></p>
+                <p>Teléfono: <a href="tel:+50683737272">+(506) 8373-7272</a></p>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <img src="@Url.Content("~/Content/ProPartesLogo-bgTransparente.png")"
-                     alt="Logo FastParts"
-                     class="img-fluid mx-auto d-block mb-2"
-                     style="max-height: 60px;" />
-            </div>
+
         </div>
 
-        <div class="row pb-4">
-            <div class="col">
-                <p class="m-0 text-white">
-                    Copyright &copy; @DateTime.Now.Year FastParts
-                </p>
-            </div>
+        <div class="col-12">
+            <p class="text-dark my-4 text-sm font-weight-bold">
+                Copyright &copy;
+                @DateTime.Now.Year FastParts
+            </p>
         </div>
+
+        <img src="@Url.Content("~/Content/PropartesLogoCircular.png")"
+             class="img-fluid mx-auto d-block mb-2" style="max-height: 60px;" />
+
     </footer>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-
-    <!-- Chatbot -->
+    <!-- CHATBOT -->
     <div id="chatbot-container">
         <div id="chatbot-toggle">💬</div>
         <div id="chatbot-box" class="hidden">
@@ -145,20 +126,105 @@
         </div>
     </div>
 
+    <!-- jQuery -->
+    @Scripts.Render("~/bundles/jquery")
+
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Material Kit -->
+    <script src="/Content/assets/js/material-kit.min.js?v=3.1.0"></script>
+
+    <!-- Chatbot -->
     <script>
         const toggle = document.getElementById("chatbot-toggle");
         const box = document.getElementById("chatbot-box");
 
-        toggle.addEventListener("click", () => {
-            box.classList.toggle("hidden");
-        });
-
+        toggle.addEventListener("click", () => box.classList.toggle("hidden"));
         document.querySelectorAll('.chatbot-question').forEach(el => {
             el.addEventListener('click', () => {
-                alert("Funcionalidad en desarrollo. ¡Gracias por tu consulta!");
+                Swal.fire("Funcionalidad en desarrollo", "", "info");
             });
         });
     </script>
+    <script>
+        // get the element to animate
+        var element = document.getElementById('count-stats');
+        var elementHeight = element?.clientHeight || 100;
+
+        // listen for scroll event and call animate function
+
+        document.addEventListener('scroll', animate);
+
+        // check if element is in view
+        function inView() {
+
+            if (!element) {
+                return false;
+            }
+
+            // get window height
+            var windowHeight = window.innerHeight;
+            // get number of pixels that the document is scrolled
+            var scrollY = window.scrollY || window.pageYOffset;
+            // get current scroll position (distance from the top of the page to the bottom of the current viewport)
+            var scrollPosition = scrollY + windowHeight;
+            // get element position (distance from the top of the page to the bottom of the element)
+            var elementPosition = element.getBoundingClientRect().top + scrollY + elementHeight;
+
+            // is scroll position greater than element position? (is element in view?)
+            if (scrollPosition > elementPosition) {
+                return true;
+            }
+
+            return false;
+        }
+
+        var animateComplete = true;
+        // animate element when it is in view
+        function animate() {
+
+            // is element in view?
+            if (inView()) {
+                if (animateComplete) {
+                    if (document.getElementById('state1')) {
+                        const countUp = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
+                        if (!countUp.error) {
+                            countUp.start();
+                        } else {
+                            console.error(countUp.error);
+                        }
+                    }
+                    if (document.getElementById('state2')) {
+                        const countUp1 = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
+                        if (!countUp1.error) {
+                            countUp1.start();
+                        } else {
+                            console.error(countUp1.error);
+                        }
+                    }
+                    if (document.getElementById('state3')) {
+                        const countUp2 = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
+                        if (!countUp2.error) {
+                            countUp2.start();
+                        } else {
+                            console.error(countUp2.error);
+                        };
+                    }
+                    animateComplete = false;
+                }
+            }
+        }
+
+    <!-- Scripts de cada vista -->
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>

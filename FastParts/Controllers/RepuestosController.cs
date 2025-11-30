@@ -1,4 +1,5 @@
 ﻿using FastParts.Models;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Web.Mvc;
 
 namespace FastParts.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class RepuestosController : Controller
     {
 
@@ -16,21 +17,28 @@ namespace FastParts.Controllers
 
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: /Repuestos
+        // GET: /Repuesto
         public async Task<ActionResult> Index(string q, string sort = "nombre")
         {
-            var query = db.Repuestos.AsQueryable();
+            q = (q ?? string.Empty).Trim();
 
-            if (!string.IsNullOrWhiteSpace(q))
+            var query = db.Repuestos
+                .AsNoTracking()
+                .Where(r => !r.IsDeleted
+                            && !r.OcultarClientes
+                            && !r.SinStockForzado
+                            && r.Stock > 0);
+
+            if (q.Length > 0)
             {
                 query = query.Where(r =>
                     r.Nombre.Contains(q) ||
-                    r.Marca.Contains(q) ||
-                    r.NumeroParte.Contains(q) ||
-                    r.Proveedor.Contains(q));
+                    (r.Marca ?? "").Contains(q) ||
+                    (r.NumeroParte ?? "").Contains(q) ||
+                    (r.Proveedor ?? "").Contains(q));
             }
 
-            switch (sort)
+            switch ((sort ?? "nombre").ToLowerInvariant())
             {
                 case "precio":
                     query = query.OrderBy(r => r.Precio);
@@ -47,8 +55,9 @@ namespace FastParts.Controllers
             return View(list);
         }
 
+
         // GET: Repuestos/Create
-        [Authorize]
+        //[Authorize]
         public ActionResult Create() => View();
 
         // POST: Repuestos/Create
@@ -83,7 +92,7 @@ namespace FastParts.Controllers
         }
 
         // GET: Repuestos/Edit/5
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             var repuesto = await db.Repuestos.FindAsync(id);
@@ -132,47 +141,63 @@ namespace FastParts.Controllers
             return View(entity);
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Delete(int id)
         {
-            var repuesto = await db.Repuestos.FindAsync(id);
+            // Find only if it's NOT deleted
+            var repuesto = await db.Repuestos
+                                   .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
             if (repuesto == null) return HttpNotFound();
+
             return View(repuesto);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var repuesto = await db.Repuestos.FindAsync(id);
             if (repuesto == null) return HttpNotFound();
 
-            try
+            if (repuesto.IsDeleted)
             {
-                if (!string.IsNullOrWhiteSpace(repuesto.ImagenUrl))
-                {
-                    var absPath = Server.MapPath(repuesto.ImagenUrl);
-                    if (System.IO.File.Exists(absPath))
-                        System.IO.File.Delete(absPath);
-                }
+                TempData["OkMsg"] = "El repuesto ya estaba eliminado.";
+                return RedirectToAction("Index");
             }
-            // TODO: Improve error handling
-            catch { return null; }
 
-            db.Repuestos.Remove(repuesto);
+            repuesto.IsDeleted = true;
+            repuesto.DeletedAt = DateTime.UtcNow; 
 
             try
             {
                 await db.SaveChangesAsync();
-                TempData["OkMsg"] = "Repuesto eliminado.";
+                TempData["OkMsg"] = "Repuesto eliminado (soft delete).";
             }
             catch (DbUpdateException)
             {
-                TempData["ErrMsg"] = "No se puede eliminar: hay registros relacionados.";
+                TempData["ErrMsg"] = "No se puede marcar como eliminado.";
                 return RedirectToAction("Delete", new { id });
             }
 
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ToggleOcultar(int id)
+        {
+            var r = db.Repuestos.Find(id);
+            r.OcultarClientes = !r.OcultarClientes;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult ToggleForzarSinStock(int id)
+        {
+            var r = db.Repuestos.Find(id);
+            r.SinStockForzado = !r.SinStockForzado;
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Crear Rol";
+}
+<h2>Crear Rol</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label>Nombre del rol</label>
+        <input name="name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-link" })
+}
+@Html.ValidationSummary()

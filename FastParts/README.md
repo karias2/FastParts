@@ -3,14 +3,26 @@
 Instalar Entity Framework
 Abre Visual Studio y ve a Tools > NuGet Package Manager > Package Manager Console.
 
-> Install-Package EntityFramework
+Comando de Restauración
+
+PM>  Update-Package -Reinstall
+
+PM> Install-Package EntityFramework
 
 Habilitar migraciones
 
-> Enable-Migrations -EnableAutomaticMigrations
+PM> Enable-Migrations -EnableAutomaticMigrations
 
 Crear y actualizar la base de datos
 
-> Add-Migration CrearBaseDeDatos -Verbose
+PM> Add-Migration CrearBaseDeDatos -Verbose
 
-> Update-Database -Verbose
+PM> Update-Database -Verbose
+
+
+# Restauración
+
+# Borrar FastParts en (localdb)\MSSQLLocalDB
+
+PM>  Update-Package -Reinstall
+PM> Update-Database -Verbose

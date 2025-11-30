@@ -23,11 +23,47 @@ namespace FastParts.Models
         [Required]
         public string Tipo { get; set; }
 
+        public Boolean Requerido { get; set; }
+
+        public Boolean Activa { get; set; } = true;
+
         // Separados por ,
-        public string opciones { get; set; }
+        public string Opciones { get; set; }
 
         // Propiedades opcionales para preguntas de tipo Rango
-        public int? Minimo { get; set; }
-        public int? Maximo { get; set; }
+        public int? Minimo { get; set; } = 0;
+        public int? Maximo { get; set; } = 10;
+
+        // Respuestas
+
+        // .Include(p => p.Respuestas)
+        public ICollection<RespuestasModel> Respuestas { get; set; } = new List<RespuestasModel>();
+
+        public int? ValorRespuesta { get; set; }
+
+        public string TextoRespuesta { get; set; }
+    }
+
+    public class RespuestasModel
+    {
+        [Key]
+        public int ID_Respuesta { get; set; }
+        public int ID_Encuesta { get; set; }
+        public int ID_Pregunta { get; set; }
+        [ForeignKey("ID_Pregunta")]
+        public virtual PreguntaModel Pregunta { get; set; }
+        public string Session_Id { get; set; }
+
+        [Display(Name = "Fecha de creación")]
+        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public string Tipo { get; set; }
+
+        // Respuestas
+
+        public int? ValorRespuesta { get; set; }
+
+        public string TextoRespuesta { get; set; }
     }
 }

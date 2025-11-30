@@ -1,0 +1,48 @@
+﻿
+@model IEnumerable<FastParts.Models.UsersViewModel>
+
+@{
+    ViewBag.Title = "Lista de Usuarios";
+}
+
+
+<div class="container mt-4">
+    <div class="col">
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+    </div>
+    <h2>Usuarios del Sistema</h2>
+    <a href="@Url.Action("Crear")" class="btn btn-success mb-3">+ Nuevo Usuario</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NombreCompleto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Roles)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.NombreCompleto)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <th> @string.Join(", ", item.Roles)</th>
+                    <td>
+                        <a href="@Url.Action("Editar", new { id = item.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="@Url.Action("Eliminar", new { id = item.Id })" class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Eliminar este usuario?');">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

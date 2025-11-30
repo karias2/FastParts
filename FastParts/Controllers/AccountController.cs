@@ -1,14 +1,16 @@
-﻿using System;
+﻿using FastParts.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using FastParts.Models;
 
 namespace FastParts.Controllers
 {
@@ -17,12 +19,14 @@ namespace FastParts.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private RoleManager<IdentityRole> _roleManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +38,9 @@ namespace FastParts.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -51,6 +55,17 @@ namespace FastParts.Controllers
                 _userManager = value;
             }
         }
+
+
+        public RoleManager<IdentityRole> RoleManager
+        => _roleManager ?? HttpContext.GetOwinContext().Get<RoleManager<IdentityRole>>();
+
+        private async Task EnsureRoleExistsAsync(string roleName)
+        {
+            if (!await RoleManager.RoleExistsAsync(roleName))
+                await RoleManager.CreateAsync(new IdentityRole(roleName));
+        }
+
 
         //
         // GET: /Account/Login
@@ -73,6 +88,15 @@ namespace FastParts.Controllers
                 return View(model);
             }
 
+            // Verificar si el usuario está deshabilitado
+            var user = await UserManager.FindByNameAsync(model.Email);
+            var appUser = user as ApplicationUser;
+            if (appUser != null && !appUser.Estado)
+            {
+                ModelState.AddModelError("", "La cuenta está deshabilitada.");
+                return View(model);
+            }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -90,6 +114,87 @@ namespace FastParts.Controllers
                     return View(model);
             }
         }
+
+
+        // GET: Account/Editar/{id}
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Editar(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return HttpNotFound();
+
+            var user = await UserManager.FindByIdAsync(id) as ApplicationUser;
+            if (user == null) return HttpNotFound();
+
+            var allRoles = RoleManager.Roles.Select(r => r.Name).OrderBy(n => n).ToList();
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+            var vm = new EditUserRolesViewModel
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                NombreCompleto = user.NombreCompleto,
+                Roles = allRoles.Select(r => new RoleCheck
+                {
+                    Name = r,
+                    Assigned = userRoles.Contains(r)
+                }).ToList()
+            };
+
+            return View(vm);
+        }
+
+        // POST: Account/Editar
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Editar(EditUserRolesViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await UserManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                TempData["MsgErr"] = "Usuario no encontrado.";
+                return RedirectToAction("Usuarios");
+            }
+
+            var currentRoles = await UserManager.GetRolesAsync(user.Id);
+            var selected = model.Roles?.Where(x => x.Assigned).Select(x => x.Name).ToArray() ?? new string[] { };
+
+            // Asegurar que los roles marcados existan
+            foreach (var r in selected)
+                if (!await RoleManager.RoleExistsAsync(r))
+                    await RoleManager.CreateAsync(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole(r));
+
+            var toAdd = selected.Except(currentRoles).ToArray();
+            var toRemove = currentRoles.Except(selected).ToArray();
+
+            if (toAdd.Any())
+            {
+                var addRes = await UserManager.AddToRolesAsync(user.Id, toAdd);
+                if (!addRes.Succeeded)
+                {
+                    ModelState.AddModelError("", string.Join("; ", addRes.Errors));
+                    return View(model);
+                }
+            }
+
+            if (toRemove.Any())
+            {
+                var remRes = await UserManager.RemoveFromRolesAsync(user.Id, toRemove);
+                if (!remRes.Succeeded)
+                {
+                    ModelState.AddModelError("", string.Join("; ", remRes.Errors));
+                    return View(model);
+                }
+            }
+
+            TempData["MsgOk"] = $"Roles actualizados para {user.Email}.";
+            return RedirectToAction("Usuarios");
+        }
+
+
 
         //
         // GET: /Account/VerifyCode
@@ -120,7 +225,7 @@ namespace FastParts.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -151,12 +256,16 @@ namespace FastParts.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, NombreCompleto = model.NombreCompleto, Direccion = model.Direccion, Estado = true };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    const string defaultRole = "Cliente";
+                    await EnsureRoleExistsAsync(defaultRole);
+                    await UserManager.AddToRoleAsync(user.Id, defaultRole);
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -436,6 +545,192 @@ namespace FastParts.Controllers
 
             base.Dispose(disposing);
         }
+
+        //GET Usuarios
+        [Authorize(Roles = "Admin")]
+        public ActionResult Usuarios()
+        {
+            //ViewBag.AllRoles = RoleManager.Roles.Select(r => r.Name).OrderBy(n => n).ToList();
+            var usuarios = db.Users.ToList();
+            var userViewModels = new List<UsersViewModel>();
+
+            foreach (var user in usuarios)
+            {
+                var roles = UserManager.GetRoles(user.Id).ToList();
+                userViewModels.Add(new UsersViewModel
+                {
+                    Id = user.Id,
+                    NombreCompleto = user.NombreCompleto,
+                    Email = user.Email,
+                    Estado = user.Estado,
+                    Roles = roles
+                });
+            }
+
+            if (TempData["MsgOk"] != null) ViewBag.MsgOk = TempData["MsgOk"];
+            if (TempData["MsgErr"] != null) ViewBag.MsgErr = TempData["MsgErr"];
+
+            return View(userViewModels);
+        }
+
+
+        // =========================
+        // POST: UpdateRoles (desde la misma vista)
+        // =========================
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateRoles(string userId, string[] roles)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["MsgErr"] = "Usuario inválido.";
+                return RedirectToAction("Usuarios");
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                TempData["MsgErr"] = "Usuario no encontrado.";
+                return RedirectToAction("Usuarios");
+            }
+
+            roles = roles ?? new string[] { };
+
+            // Garantiza que los roles existan
+            foreach (var r in roles)
+                if (!await RoleManager.RoleExistsAsync(r))
+                    await RoleManager.CreateAsync(new IdentityRole(r));
+
+            var currentRoles = await UserManager.GetRolesAsync(user.Id);
+
+            var toAdd = roles.Except(currentRoles).ToArray();
+            var toRemove = currentRoles.Except(roles).ToArray();
+
+            if (toAdd.Any())
+            {
+                var addRes = await UserManager.AddToRolesAsync(user.Id, toAdd);
+                if (!addRes.Succeeded)
+                {
+                    TempData["MsgErr"] = string.Join("; ", addRes.Errors);
+                    return RedirectToAction("Usuarios");
+                }
+            }
+            if (toRemove.Any())
+            {
+                var remRes = await UserManager.RemoveFromRolesAsync(user.Id, toRemove);
+                if (!remRes.Succeeded)
+                {
+                    TempData["MsgErr"] = string.Join("; ", remRes.Errors);
+                    return RedirectToAction("Usuarios");
+                }
+            }
+
+            TempData["MsgOk"] = $"Roles actualizados para {user.Email}.";
+            return RedirectToAction("Usuarios");
+        }
+
+
+        // Seccion Gestion de Usuarios
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ToggleEstado(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["MsgErr"] = "Usuario inválido.";
+                return RedirectToAction("Usuarios");
+            }
+
+            var user = await UserManager.FindByIdAsync(userId) as ApplicationUser;
+            if (user == null)
+            {
+                TempData["MsgErr"] = "Usuario no encontrado.";
+                return RedirectToAction("Usuarios");
+            }
+
+            user.Estado = !user.Estado;
+
+            // Bloqueo “duro” cuando se deshabilita
+            if (!user.Estado)
+            {
+                user.LockoutEnabled = true;
+                user.LockoutEndDateUtc = DateTime.UtcNow.AddYears(100);
+            }
+            else
+            {
+                user.LockoutEndDateUtc = null;
+            }
+
+            var res = await UserManager.UpdateAsync(user);
+            if (!res.Succeeded)
+            {
+                TempData["MsgErr"] = string.Join("; ", res.Errors);
+                return RedirectToAction("Usuarios");
+            }
+
+            TempData["MsgOk"] = $"{user.Email} ahora está {(user.Estado ? "HABILITADO" : "DESHABILITADO")}.";
+            return RedirectToAction("Usuarios");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GET: Users/Details/5
+        public ActionResult Details(string id)
+        {
+            var user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // GET: Users/Delete/5
+        public ActionResult Delete(string id)
+        {
+            var user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // POST: Users/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            var user = db.Users.Find(id);
+            db.Users.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
 
         #region Helpers
         // Used for XSRF protection when adding external logins

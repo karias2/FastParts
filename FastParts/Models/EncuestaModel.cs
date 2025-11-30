@@ -17,6 +17,8 @@ namespace FastParts.Models
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
+        public Boolean Activa { get; set; } = true;
+
         public virtual ICollection<PreguntaModel> Preguntas { get; set; }
     }
 
@@ -24,9 +26,24 @@ namespace FastParts.Models
     {
         public int ID_Encuesta { get; set; }
 
+        public int ID_Pregunta { get; set; }
+
+        public string Session_Id { get; set; }
+
         public virtual EncuestaModel Encuesta { get; set; }
         public virtual PreguntaModel Pregunta { get; set; }
 
         public List<System.Web.Mvc.SelectListItem> TiposDePregunta { get; set; }
+
+        public List<RespuestasModel> Respuestas { get; set; }
+
+        public Boolean IsEdit { get; set; }
+
+        // Respuestas
+
+        public string Tipo { get; set; }
+        public int ValorRespuesta { get; set; }
+        public string TextoRespuesta { get; set; }
     }
+
 }

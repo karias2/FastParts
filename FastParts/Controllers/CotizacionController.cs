@@ -1,85 +1,84 @@
-﻿using System;
+﻿using FastParts.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using FastParts.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System.Data.Entity; // Required for GetUserManager
+
 
 namespace FastParts.Controllers
 {
     public class CotizacionController : Controller
     {
-        //// GET: Cotizacion
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-        private static List<Cotizacion> _cotizaciones = new List<Cotizacion>();
-        private static int _nextId = 1;
-
-        public ActionResult Lista()
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
         {
-            return View(_cotizaciones);
-        }
-
-        public ActionResult Crear()
-        {
-            return View(new Cotizacion
+            get
             {
-                Fecha = DateTime.Today
-            });
-        }
-
-        [HttpPost]
-        public ActionResult Crear(Cotizacion model)
-        {
-            if (ModelState.IsValid)
-            {
-                model.Id = _nextId++;
-                _cotizaciones.Add(model);
-                return RedirectToAction("Lista");
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
-            return View(model);
+            private set
+            {
+                _userManager = value;
+            }
         }
 
-        public ActionResult Editar(int id)
+        [HttpGet]
+        public async Task<ActionResult> CotizarRepuesto(RepuestosCotizadosModel repuesto)
         {
-            var cot = _cotizaciones.FirstOrDefault(c => c.Id == id);
-            if (cot == null) return HttpNotFound();
-            return View(cot);
+            string refererUrl = Request.Headers["Referer"].ToString();
+            var userId = User.Identity.GetUserId();
+            var cotizacion = db.Cotizaciones
+                .Where(c => c.IdCliente == userId)
+                .FirstOrDefault();
+            ApplicationUser loggedInUser = await UserManager.FindByIdAsync(userId);
+
+            if (loggedInUser == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (cotizacion != null)
+            {
+                repuesto.IdCotizacion = cotizacion.IdCotizacion;
+                db.RepuestosCotizados.Add(repuesto);
+                db.SaveChanges();
+            }
+            else
+            {
+                var cotizacionesModel = new CotizacionesModel();
+                cotizacionesModel.IdCliente = userId;
+                db.Cotizaciones.Add(cotizacionesModel);
+                db.SaveChanges();
+                repuesto.IdCotizacion = cotizacionesModel.IdCotizacion;
+                db.RepuestosCotizados.Add(repuesto);
+                db.SaveChanges();
+            }
+
+            return Redirect(refererUrl);
         }
 
-        [HttpPost]
-        public ActionResult Editar(Cotizacion model)
+        [HttpGet]
+        public async Task<ActionResult> CotizarServicio(ServiciosCotizadosModel servicio)
         {
-            var cot = _cotizaciones.FirstOrDefault(c => c.Id == model.Id);
-            if (cot == null) return HttpNotFound();
+            string refererUrl = Request.Headers["Referer"].ToString();
 
-            cot.Cliente = model.Cliente;
-            cot.Fecha = model.Fecha;
-            cot.ServicioSolicitado = model.ServicioSolicitado;
-            cot.Observaciones = model.Observaciones;
-            cot.MontoEstimado = model.MontoEstimado;
-            cot.Aprobada = model.Aprobada;
-
-            return RedirectToAction("Lista");
+            if (!string.IsNullOrEmpty(refererUrl))
+            {
+                // Redirect the user back to the URL specified in the Referer header.
+                return Redirect(refererUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
-
-        public ActionResult Eliminar(int id)
-        {
-            var cot = _cotizaciones.FirstOrDefault(c => c.Id == id);
-            if (cot == null) return HttpNotFound();
-            return View(cot);
-        }
-
-        [HttpPost, ActionName("Eliminar")]
-        public ActionResult EliminarConfirmado(int id)
-        {
-            var cot = _cotizaciones.FirstOrDefault(c => c.Id == id);
-            if (cot != null) _cotizaciones.Remove(cot);
-            return RedirectToAction("Lista");
-        }
-
-
     }
 }

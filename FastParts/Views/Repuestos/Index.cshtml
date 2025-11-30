@@ -15,24 +15,57 @@
     </div>
 </div>
 
-
-<div class="cards">
+<div class="cards" id="cards">
     @foreach (var x in Model)
     {
-        <article class="card">
+        <article class="card" data-nombre="@x.Nombre" data-marca="@x.Marca">
             <div class="img-wrap">
                 <img src="@Url.Content(string.IsNullOrWhiteSpace(x.ImagenUrl) ? placeholder : x.ImagenUrl)"
                      alt="@x.Nombre" />
             </div>
+
             <h4>@x.Nombre</h4>
+
             <div class="meta">
                 <span>@x.Marca</span>
-                <strong>@x.Precio.ToString("C")</strong>
+                <strong>@x.Precio.ToString("C", new System.Globalization.CultureInfo("es-CR"))</strong>
             </div>
+
+            <div class="badges">
+                @if (x.SinStockForzado)
+                {<span class="badge badge-danger">SIN STOCK (forzado)</span> }
+                else if (x.Stock <= x.StockMinimo)
+                { <span class="badge badge-warning">Bajo mínimo (@x.Stock/@x.StockMinimo)</span> }
+            else
+            { <span class="badge badge-ok">En stock: @x.Stock</span>}
+
+                @if (x.OcultarClientes)
+                {<span class="badge badge-muted">Oculto a clientes</span>}
+            </div>
+
             <div class="actions">
-                @Html.ActionLink("Ver detalles", "Details", new { id = x.Id }, new { @class = "btn btn-sm btn-default" })
-                @Html.ActionLink("Editar", "Edit", new { id = x.Id }, new { @class = "btn btn-sm btn-warning" })
-                @Html.ActionLink("Eliminar", "Delete", new { id = x.Id }, new { @class = "btn btn-sm btn-danger" })
+                @Html.ActionLink("Ver detalles", "Details", "Repuestos", new { id = x.Id }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Editar", "Edit", "Repuestos", new { id = x.Id }, new { @class = "btn btn-sm btn-warning" })
+                @Html.ActionLink("Eliminar", "Delete", "Repuestos", new { id = x.Id }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+
+            <div class="admin-actions">
+                @using (Html.BeginForm("ToggleOcultar", "Repuestos", FormMethod.Post, new { @class = "inline" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", x.Id)
+                    <button type="submit" class="btn btn-xs @(x.OcultarClientes ? "btn-warning" : "btn-default")">
+                        @(x.OcultarClientes ? "Mostrar" : "Ocultar")
+                    </button>
+                }
+                @using (Html.BeginForm("ToggleForzarSinStock", "Repuestos", FormMethod.Post, new { @class = "inline", style = "margin-left:4px" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("id", x.Id)
+                    <button type="submit" class="btn btn-xs @(x.SinStockForzado ? "btn-danger" : "btn-default")">
+                        @(x.SinStockForzado ? "Quitar \"Sin stock\"" : "Forzar \"Sin stock\"")
+                    </button>
+                }
             </div>
         </article>
     }
@@ -42,8 +75,6 @@
 {<div class="alert alert-success">@TempData["OkMsg"]</div>}
 @if (TempData["ErrMsg"] != null)
 {<div class="alert alert-danger">@TempData["ErrMsg"]</div>}
-
-
 
 <style>
     .cards {
@@ -56,7 +87,8 @@
         border: 1px solid #e6e6e6;
         border-radius: 10px;
         overflow: hidden;
-        background: #fff
+        background: #fff;
+        padding-bottom: 8px
     }
 
     .img-wrap {
@@ -79,16 +111,59 @@
     }
 
     .card .meta {
-        margin: 6px 12px 10px;
+        margin: 6px 12px 6px;
         color: #666;
         display: flex;
         justify-content: space-between
     }
 
     .card .actions {
-        padding: 10px 12px 14px;
+        padding: 8px 12px 0;
         display: flex;
-        gap: 8px
+        gap: 8px;
+        flex-wrap: wrap
+    }
+
+    .admin-actions {
+        padding: 8px 12px 0
+    }
+
+    .inline {
+        display: inline-block;
+    }
+
+    .badges {
+        margin: 0 12px 6px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 12px
+    }
+
+    .badge-danger {
+        background: #f2dede;
+        color: #a94442
+    }
+
+    .badge-warning {
+        background: #fcf8e3;
+        color: #8a6d3b
+    }
+
+    .badge-ok {
+        background: #e8f5e9;
+        color: #2e7d32
+    }
+
+    .badge-muted {
+        background: #eee;
+        color: #666
     }
 
     .repuestos-toolbar {
@@ -112,12 +187,20 @@
 <script>
     (function () {
         var btn = document.getElementById('searchBtn');
-        if (btn) {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                alert('Funcionalidad no implementada aún!');
+        var search = document.getElementById('searchText');
+        var cards = document.getElementById('cards');
+
+        function filtrar() {
+            var q = (search.value || '').toLowerCase();
+            var items = cards.querySelectorAll('.card');
+            items.forEach(function (el) {
+                var nombre = (el.getAttribute('data-nombre') || '').toLowerCase();
+                var marca = (el.getAttribute('data-marca') || '').toLowerCase();
+                el.style.display = (nombre.indexOf(q) >= 0 || marca.indexOf(q) >= 0) ? '' : 'none';
             });
         }
+
+        if (btn) btn.addEventListener('click', function (e) { e.preventDefault(); filtrar(); });
+        if (search) search.addEventListener('keyup', function (e) { if (e.key === 'Enter') filtrar(); });
     })();
 </script>
-

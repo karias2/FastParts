@@ -1,217 +1,320 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿<!--
+=========================================================
+* Material Kit 3 - v3.1.0
+=========================================================
+
+* Product Page:  https://www.creative-tim.com/product/material-kit
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+@{
+    ViewBag.BodyClass = "body-content d-flex flex-column min-vh-70";
 }
 
-<main>
-    <!-- Header-->
-    <header class="bg-black py-1">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1 class="display-4 fw-bolder">Repuestos</h1>
+<body class="about-us bg-gray-100">
+
+    <!-- -------- START HEADER 7 w/ text and video ------- -->
+    <header class="bg-gradient-dark">
+        <div class="page-header min-vh-75" style="background-image: url('/Content/assets/img/PropartesBanner.png'); background-size: cover; background-position: center top; background-repeat: no-repeat; min-height: 100vh; ">
+            <span class="mask bg-gradient-dark opacity-3"></span>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center mx-auto my-auto">
+                        <h1 class="text-white">EN PROPARTES CR DIAGNOSTICAMOS, NO ADIVINAMOS!</h1>
+                        @*<p class="lead mb-4 text-white ">Somos expertos certificados en BMW</p>*@
+                        <br />
+                        <a href="@Url.Action("Register", "Account")"
+                           class="btn bg-white text-dark"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="bottom"
+                           title="Registrarse">
+                            Crear cuenta
+                        </a>
+                        <h6 class="text-white mb-2 mt-5">Encuentranos en:</h6>
+                        <div class="d-flex justify-content-center">
+                            <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-lg text-white me-4"></i></a>
+                            <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-lg text-white me-4"></i></a>
+                            <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg text-white me-4"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
-    <!-- Section-->
-    <section class="py-5">
-        <div class="container px-4 px-lg-5 mt-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://www.clasf.es/pics/2020/05/17/dm-autoteile-e36-parachoques-delantero-sport-negro-accesorios-evo-lippe-para-m3-m-bj-90-99-abe-17958.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Bumper M3 e36</h5>
-                                <!-- Product price-->
-                                $40.00 - $80.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/gAMAAOSwM71d6yTS/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Focos principales e36</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
+
+    <!-- -------- END HEADER 7 w/ text and video ------- -->
+    <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6">
+        <!-- Section with four info areas left & one card right with image and waves -->
+        <section class="py-7">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row justify-content-start">
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">public</i>
+                                    <h5 class="fw-bold">Mecanica carros Europeos</h5>
+                                    <p>Somos especialistas en mecánica de carros Europeos.</p>
                                 </div>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$20.00</span>
-                                $18.00
                             </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/BukAAeSw2MZn7qDe/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Cable de acelerador e36</h5>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$50.00</span>
-                                $25.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/9dUAAOSwoi9nJdAU/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Molduras  de bumper delantero e36</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">Troubleshoot</i>
+                                    <h5 class="fw-bold">Diagnóstico Computarizado</h5>
+                                    <p>Escaneo y lectura de fallas en sistemas electrónicos.</p>
                                 </div>
-                                <!-- Product price-->
-                                $40.00
                             </div>
                         </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/c58AAOSwni5mJ5a9/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Tacómetro e36</h5>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$50.00</span>
-                                $25.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/MMIAAOSw4z9oD-mg/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Direccionales 34</h5>
-                                <!-- Product price-->
-                                $120.00 - $280.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/YbMAAOSwoZBf0y29/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Manguera de gasolina e34</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
+                        <div class="row justify-content-start mt-4">
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">build_circle</i>
+                                    <h5 class="fw-bold">Mantenimiento Preventivo</h5>
+                                    <p>Cambio de aceite, filtros, revisión de frenos, niveles y batería según estándares europeos.</p>
                                 </div>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$20.00</span>
-                                $18.00
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">engineering</i>
+                                    <h5 class="fw-bold">Reparación de Motor</h5>
+                                    <p>Diagnóstico y reparación de sistemas de inyección, turbo y componentes del motor.</p>
+                                </div>
                             </div>
                         </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
+                        <div class="row justify-content-start mt-4">
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">air</i>
+                                    <h5 class="fw-bold">Sistema de Aire Acondicionado</h5>
+                                    <p>Revisión, carga de gas y limpieza del sistema HVAC..</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info">
+                                    <i class="material-symbols-rounded text-3xl text-gradient text-info mb-3">auto_transmission</i>
+                                    <h5 class="fw-bold">Servicio de Transmisión Automática</h5>
+                                    <p>Mantenimiento, limpieza y cambio de fluidos de cajas DSG, Tiptronic, CVT, etc.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://i.ebayimg.com/images/g/J84AAOSwPdtoAGKX/s-l500.webp" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Bomba de agua e34</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                <!-- Product price-->
-                                $80.00
+                    <div class="col-lg-4 ms-auto mt-lg-0 mt-4">
+                        <div class="card">
+                            <div class="card-header p-0 position-relative mt-2 mx-2 z-index-2">
+                                <a class="d-block blur-shadow-image">
+                                    <img src="https://images.pexels.com/photos/13065692/pexels-photo-13065692.jpeg?auto=compress&cs=tinysrgb&w=1950"
+                                         alt="Mecánico trabajando con motor"
+                                         class="img-fluid border-radius-lg">
+                                </a>
                             </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver detalles</a></div>
+                            <div class="card-body text-center">
+                                <p class="mb-0">
+                                    Agende una cita o visitenos en nuestro taller para la revision de su vehiculo.
+                                </p>
+                                <button type="button" class="btn bg-gradient-info btn-sm mb-0 mt-3" onclick="window.location.href='/Cita/CrearCliente'">Agendar Cita</button>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+        <!-- END Section with four info areas left & one card right with image and waves -->
+        <!-- -------- START Features w/ pattern background & stats & rocket -------- -->
+        <section class="pb-5 position-relative bg-gradient-dark mx-n3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 text-start mb-5 mt-5">
+                        <h3 class="text-white">Lo que dicen nuestros clientes</h3>
+                        <p class="text-white opacity-8">Confianza y transparencia en cada servicio.</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <p class="mb-2">“Diagnóstico preciso y entrega a tiempo. Mi BMW quedó como nuevo.”</p>
+                                <h6 class="text-info mb-0">Ricardo A.</h6>
+                                <small class="text-muted">320i · Mantenimiento + Frenos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <p class="mb-2">“Excelente trato y me explicaron todo con fotos. 100% recomendados.”</p>
+                                <h6 class="text-info mb-0">Carolina M.</h6>
+                                <small class="text-muted">GLC300 · Servicio de transmisión</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <!-- -------- END Features w/ pattern background & stats & rocket -------- -->
+        <section class="pt-4 pb-6" id="count-stats">
+            <div class="container">
+                <div class="row mb-7 justify-content-center align-items-center brand-logos">
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/bmw" alt="BMW" title="BMW">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/audi" alt="Audi" title="Audi">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/lamborghini" alt="Lamborghini" title="Lamborghini">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/volkswagen" alt="Volkswagen" title="Volkswagen">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/volvo" alt="Volvo" title="Volvo">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/porsche" alt="Porsche" title="Porsche">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/mini" alt="MINI" title="MINI">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/ferrari" alt="Ferrari" title="Ferrari">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/landrover" alt="Land Rover" title="Land Rover">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/alfaromeo" alt="Alfa Romeo" title="Alfa Romeo">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/peugeot" alt="Peugeot" title="Peugeot">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-4">
+                        <img class="w-100 opacity-7 brand-svg" src="https://cdn.simpleicons.org/mclaren" alt="mclaren" title="mclaren">
+                    </div>
+                </div>
+
+
+
+                <div class="row justify-content-center text-center">
+                    <div class="col-md-4">
+                        <h1 class="text-gradient text-info"><span id="state1" countTo="10">0</span>+</h1>
+                        <h5>Marcas Europeas</h5>
+                        <p>Ofrecemos servicios de mecánica para más de 10 marcas Europeas</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h1 class="text-gradient text-info"><span id="state2" countTo="1000">0</span>+</h1>
+                        <h5>Variedad de Repuestos</h5>
+                        <p>Tenemos más de 1000 variedades de repuestos para autos Europeos</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h1 class="text-gradient text-info"><span id="state3" countTo="6">0</span>+</h1>
+                        <h5>Años de Experiencia</h5>
+                        <p>Contamos con más de 6 años de experiencia en marcas Europeas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!--   Core JS Files   -->
+    <script src="/Content/assets/js/core/popper.min.js" type="text/javascript"></script>
+    <script src="/Content/assets/js/core/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Content/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
+    <script src="/Content/assets/js/plugins/countup.min.js"></script>
+    <!-- Control Center for Material UI Kit: parallax effects, scripts for the example pages etc -->
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
+    <script src="/Content/assets/js/material-kit.min.js?v=3.1.0" type="text/javascript"></script>
+    <script>
+        // get the element to animate
+        var element = document.getElementById('count-stats');
+        var elementHeight = element.clientHeight;
+        // listen for scroll event and call animate function
+        document.addEventListener('scroll', animate);
+        // check if element is in view
+        function inView() {
+            // get window height
+            var windowHeight = window.innerHeight;
+            // get number of pixels that the document is scrolled
+            var scrollY = window.scrollY || window.pageYOffset;
+            // get current scroll position (distance from the top of the page to the bottom of the current viewport)
+            var scrollPosition = scrollY + windowHeight;
+            // get element position (distance from the top of the page to the bottom of the element)
+            var elementPosition = element.getBoundingClientRect().top + scrollY + elementHeight;
+            // is scroll position greater than element position? (is element in view?)
+            if (scrollPosition > elementPosition) {
+                return true;
+            }
+            return false;
+        }
+        var animateComplete = true;
+        // animate element when it is in view
+        function animate() {
+            // is element in view?
+            if (inView()) {
+                if (animateComplete) {
+                    if (document.getElementById('state1')) {
+                        const countUp = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
+                        if (!countUp.error) {
+                            countUp.start();
+                        } else {
+                            console.error(countUp.error);
+                        }
+                    }
+                    if (document.getElementById('state2')) {
+                        const countUp1 = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
+                        if (!countUp1.error) {
+                            countUp1.start();
+                        } else {
+                            console.error(countUp1.error);
+                        }
+                    }
+                    if (document.getElementById('state3')) {
+                        const countUp2 = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
+                        if (!countUp2.error) {
+                            countUp2.start();
+                        } else {
+                            console.error(countUp2.error);
+                        };
+                    }
+                    animateComplete = false;
+                }
+            }
+        }
+        if (document.getElementById('typed')) {
+            var typed = new Typed("#typed", {
+                stringsElement: '#typed-strings',
+                typeSpeed: 90,
+                backSpeed: 90,
+                backDelay: 200,
+                startDelay: 500,
+                loop: true
+            });
+        }
+    </script>
+    <script>
+        if (document.getElementsByClassName('page-header')) {
+            window.onscroll = debounce(function () {
+                var scrollPosition = window.pageYOffset;
+                var bgParallax = document.querySelector('.page-header');
+                var oVal = (window.scrollY / 3);
+                bgParallax.style.transform = 'translate3d(0,' + oVal + 'px,0)';
+            }, 6);
+        }
+    </script>
+</body>
+
+</html>

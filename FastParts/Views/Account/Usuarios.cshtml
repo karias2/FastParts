@@ -1,0 +1,77 @@
+﻿@model IEnumerable<FastParts.Models.UsersViewModel>
+
+@{
+    ViewBag.Title = "Lista de Usuarios";
+}
+
+<div class="container mt-4">
+    <div class="col">
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary mb-3"> ← Volver al Panel de Administración </a>
+    </div>
+
+    <h2>Lista de Usuarios</h2>
+
+    @if (ViewBag.MsgOk != null)
+    {<div class="alert alert-success">@ViewBag.MsgOk</div>}
+    @if (ViewBag.MsgErr != null)
+    {<div class="alert alert-danger">@ViewBag.MsgErr</div>}
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().NombreCompleto)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Roles)</th>
+                <th>Estado</th>
+                <th style="width: 320px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.Estado ? "" : "table-warning")">
+                    <td>@item.NombreCompleto</td>
+                    <td>@item.Email</td>
+                    <td>@string.Join(", ", item.Roles ?? new List<string>())</td>
+                    <td>
+                        @if (item.Estado)
+                        {
+                            <span class="badge bg-success">Habilitado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Deshabilitado</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-inline-flex align-items-center gap-2">
+
+                            
+                            <a href="@Url.Action("Editar", "Account", new { id = item.Id })"
+                               class="bi bi-pencil-square text-primary mx-1" title="Editar"></a>
+
+                            
+                            @using (Html.BeginForm("ToggleEstado", "Account", FormMethod.Post, new { @class = "d-inline align-middle" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("userId", item.Id)
+
+                                <div class="form-check form-switch form-switch-sm switch-success m-0">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="sw_@item.Id"
+                                           @(item.Estado ? Html.Raw("checked") : null)
+                                           aria-label="@(item.Estado ? "Deshabilitar" : "Habilitar")"
+                                           title="@(item.Estado ? "Habilitado (click para deshabilitar)" : "Deshabilitado (click para habilitar)")"
+                                           onchange="if(!this.checked){ if(confirm('¿Deseas deshabilitar esta cuenta?')) { this.form.submit(); } else { this.checked = true; } } else { this.form.submit(); }" />
+                                    <label for="sw_@item.Id" class="visually-hidden">Toggle estado</label>
+                                </div>
+                            }
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<FastParts.Models.CitaListadoViewModel>
+@{
+    ViewBag.Title = "Cola de Citas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Cola de Citas Disponibles</h2>
+        <a href="@Url.Action("MisCitasMecanico", "Cita")" class="btn btn-outline-primary">
+            Ver mis citas asignadas
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-bordered" id="tablaColaCitas">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Teléfono</th>
+                        <th>Vehículo</th>
+                        <th>Placa</th>
+                        <th>Fecha Cita</th>
+                        <th>Estado</th>
+                        <th style="width: 140px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.NombreCliente</td>
+                            <td>@item.TelefonoCliente</td>
+                            <td>@item.Vehiculo</td>
+                            <td>@item.Placa</td>
+                            <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.Estado</td>
+                            <td class="text-center">
+                                @using (Html.BeginForm("TomarCita", "Cita", FormMethod.Post, new { @class = "formTomarCita d-inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", item.Id)
+                                    <button type="submit" class="btn btn-sm btn-primary btnTomarCita">
+                                        Tomar cita
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(function () {
+            $("#tablaColaCitas").DataTable({
+                language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json" }
+            });
+
+            $(".btnTomarCita").on("click", function (e) {
+                e.preventDefault();
+                const form = $(this).closest("form");
+
+                Swal.fire({
+                    title: '¿Tomar esta cita?',
+                    text: 'La cita quedara asignada en tu lista de citas.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, tomar cita',
+                    cancelButtonText: 'Cancelar'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        form.off("submit").submit();
+                    }
+                });
+            });
+        });
+    </script>
+}
+

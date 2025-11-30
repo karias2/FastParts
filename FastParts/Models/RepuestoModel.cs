@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
-
 
 namespace FastParts.Models
 {
@@ -14,6 +12,22 @@ namespace FastParts.Models
         [Required, StringLength(120)]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
+
+        [Range(0, int.MaxValue)]
+        [Display(Name = "Stock mínimo")]
+        public int StockMinimo { get; set; } = 0;
+
+        [Display(Name = "Ocultar a clientes")]
+        public bool OcultarClientes { get; set; } = false;
+
+        [Display(Name = "Forzar sin stock")]
+        public bool SinStockForzado { get; set; } = false;
+
+        [NotMapped]
+        public bool EstaBajoMinimo => Stock <= StockMinimo;
+
+        [NotMapped]
+        public bool MostrarEnCatalogo => !OcultarClientes && !SinStockForzado && Stock > 0;
 
         [StringLength(80)]
         [Display(Name = "Marca")]
@@ -48,5 +62,9 @@ namespace FastParts.Models
 
         [NotMapped]
         public HttpPostedFileBase ImagenFile { get; set; }
+
+        // --- Soft delete ---
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
     }
 }

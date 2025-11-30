@@ -23,6 +23,7 @@
                 <th scope="col">Fecha de Creacion</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripcion</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -33,10 +34,12 @@
                     <td>@encuesta.Nombre</td>
                     <td>@encuesta.Descripcion</td>
                     <td>
-                        <a href="@Url.Action("CrearEncuesta", "Encuesta", new { id = @encuesta.ID_Encuesta })" class="btn btn-primary mb-3">Editar</a>
+                        <a href="@Url.Action("CrearEncuesta", "Encuesta", new { IdEncuesta = @encuesta.ID_Encuesta })" class="btn btn-primary mb-3">Editar</a>
+                        <a href="@Url.Action("LlenarEncuesta", "Encuesta", new { IdEncuesta = @encuesta.ID_Encuesta, IsEdit = true  })" class="btn btn-secondary mb-3">LLenar</a>
+                        <a href="@Url.Action("HistorialEncuesta", "Encuesta", new { IdEncuesta = @encuesta.ID_Encuesta })" class="btn btn-secondary mb-3">Historial</a>
                     </td>
 
-</tr>
+                </tr>
             }
         </tbody>
     </table>

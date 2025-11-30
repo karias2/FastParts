@@ -22,7 +22,7 @@
             <dt>Número de parte</dt>
             <dd>@Model.NumeroParte</dd>
             <dt>Precio</dt>
-            <dd>@Model.Precio.ToString("C")</dd>
+            <dd>@Model.Precio.ToString("C", new System.Globalization.CultureInfo("es-CR"))</dd>
             <dt>Stock</dt>
             <dd>@Model.Stock</dd>
             <dt>Proveedor</dt>
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("Delete", "Repuestos", FormMethod.Post))
+@using (Html.BeginForm("DeleteConfirmed", "Repuestos", new { id = Model.Id }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)

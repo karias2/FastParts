@@ -1,0 +1,93 @@
+﻿@model FastParts.Models.CitaDetalleViewModel
+@{
+    ViewBag.Title = "Detalle de Cita";
+}
+
+<div class="container mt-4">
+    <div class="col mb-3">
+        <a href="@Url.Action("ListaAdmin", "Cita")"
+           class="btn btn-outline-secondary"> ← Volver al listado de citas</a>
+    </div>
+
+    <h2 class="mb-4">Detalle de Cita #@Model.Id</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-dark text-white">
+                    Información general
+                </div>
+                <div class="card-body">
+                    <p><strong>Cliente:</strong> @Model.NombreCliente</p>
+                    <p><strong>Teléfono:</strong> @Model.TelefonoCliente</p>
+                    <p><strong>Usuario del sistema:</strong> @Model.NombreUsuario</p>
+                    <hr />
+                    <p><strong>Vehículo:</strong> @Model.Vehiculo</p>
+                    <p><strong>Placa:</strong> @Model.Placa</p>
+                    <p><strong>Fecha de la cita:</strong> @Model.FechaCita.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Estado:</strong> @Model.Estado</p>
+                    <p><strong>Mecánico asignado:</strong> @Model.NombreMecanico</p>
+                    <hr />
+                    <p>
+                        <strong>Hora inicio:</strong>
+                        @(Model.HoraInicio.HasValue ? Model.HoraInicio.Value.ToString("dd/MM/yyyy HH:mm") : "No registrada")
+                    </p>
+                    <p>
+                        <strong>Hora fin:</strong>
+                        @(Model.HoraFin.HasValue ? Model.HoraFin.Value.ToString("dd/MM/yyyy HH:mm") : "No registrada")
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-secondary text-white">
+                    Comentarios / Motivo
+                </div>
+                <div class="card-body">
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Model.Motivo)
+                            ? "Sin comentarios registrados."
+                            : Model.Motivo)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    Fotos del servicio
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center mb-3">
+                            <h6>Antes</h6>
+                            @if (Model.TieneFotoAntes)
+                            {
+                                <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "antes" })"
+                                     class="img-fluid rounded shadow-sm" />
+                            }
+                            else
+                            {
+                                <p class="text-muted">Sin foto</p>
+                            }
+                        </div>
+                        <div class="col-6 text-center mb-3">
+                            <h6>Después</h6>
+                            @if (Model.TieneFotoDespues)
+                            {
+                                <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "despues" })"
+                                     class="img-fluid rounded shadow-sm" />
+                            }
+                            else
+                            {
+                                <p class="text-muted">Sin foto</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

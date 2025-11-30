@@ -49,13 +49,13 @@ namespace FastParts.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo Electrónico")]
         [EmailAddress]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]
@@ -66,19 +66,30 @@ namespace FastParts.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La {0} debe ser de almenos {2} caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirme la contraseña")]
+        [Compare("Password", ErrorMessage = "La contraseña y confirmacion no coinciden.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]       
+        [Display(Name = "Nombre Completo")]
+        public string NombreCompleto { get; set; }
+
+        [Required]
+        [Display(Name = "Direccion")]
+        public string Direccion { get; set; }
+
+        public bool Estado { get; set; }
+
     }
 
     public class ResetPasswordViewModel
@@ -89,14 +100,14 @@ namespace FastParts.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La {0} debe ser de almenos {2} caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "La contraseña y confirmacion no coinciden.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
@@ -109,4 +120,28 @@ namespace FastParts.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+    public class UsersViewModel
+    {
+        public string Id { get; set; }
+        [Display(Name = "Nombre Completo")]
+        public string NombreCompleto { get; set; }
+        public string Email { get; set; }
+        public bool Estado { get; set; }
+        public List<string> Roles { get; set; }
+    }
+
+    public class EditUserRolesViewModel
+    {
+        public string UserId { get; set; }
+        public string Email { get; set; }
+        public string NombreCompleto { get; set; }
+        public List<RoleCheck> Roles { get; set; } = new List<RoleCheck>();
+    }
+    public class RoleCheck
+    {
+        public string Name { get; set; }
+        public bool Assigned { get; set; }
+    }
+
 }
