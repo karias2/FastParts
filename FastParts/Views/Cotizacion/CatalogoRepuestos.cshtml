@@ -1,0 +1,133 @@
+@model IEnumerable<FastParts.Models.RepuestoModel>
+@using System.Globalization
+@{
+    ViewBag.Title = "Catálogo de Repuestos";
+    var cr = new CultureInfo("es-CR");
+    var placeholder = Url.Content("~/Content/img/placeholder-part.png");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">
+      <i class="bi bi-gear-fill"></i> Catálogo de Repuestos
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+      <div class="alert alert-success alert-dismissible fade show">
+         @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+   </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+      <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+     </div>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show">
+            @TempData["Info"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+    <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" id="searchText" class="form-control" placeholder="Buscar repuestos..." value="@Request.QueryString["q"]" />
+  <button type="button" id="searchBtn" class="btn btn-primary">
+         <i class="bi bi-search"></i> Buscar
+         </button>
+    </div>
+        </div>
+      <div class="col-md-4 text-end">
+       <a href="@Url.Action("MiCarrito", "Cotizacion")" class="btn btn-success">
+    <i class="bi bi-cart3"></i> Ver Mi Carrito
+     </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+         <i class="bi bi-exclamation-triangle"></i> No se encontraron repuestos disponibles.
+        </div>
+    }
+else
+    {
+   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="cards">
+       @foreach (var repuesto in Model)
+            {
+ <div class="col" data-nombre="@repuesto.Nombre" data-marca="@(repuesto.Marca ?? "")">
+        <div class="card h-100 shadow-sm">
+     <div class="card-img-top p-3 bg-light" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+ <img src="@Url.Content(string.IsNullOrWhiteSpace(repuesto.ImagenUrl) ? placeholder : repuesto.ImagenUrl)"
+       alt="@repuesto.Nombre"
+      style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+      </div>
+    <div class="card-body d-flex flex-column">
+     <h5 class="card-title">@repuesto.Nombre</h5>
+       
+          @if (!string.IsNullOrEmpty(repuesto.Marca))
+      {
+    <p class="text-muted mb-1"><small><i class="bi bi-tag"></i> @repuesto.Marca</small></p>
+         }
+      
+            @if (!string.IsNullOrEmpty(repuesto.NumeroParte))
+     {
+   <p class="text-muted mb-2"><small><i class="bi bi-hash"></i> @repuesto.NumeroParte</small></p>
+      }
+
+       @if (!string.IsNullOrEmpty(repuesto.Descripcion))
+       {
+          <p class="card-text flex-grow-1">
+   @(repuesto.Descripcion.Length > 100 ? repuesto.Descripcion.Substring(0, 100) + "..." : repuesto.Descripcion)
+  </p>
+    }
+
+  <div class="mb-2">
+         <span class="badge bg-success">
+    <i class="bi bi-check-circle"></i> Stock: @repuesto.Stock
+     </span>
+    </div>
+
+         <div class="d-flex justify-content-between align-items-center mt-auto">
+      <span class="h4 text-primary mb-0">@repuesto.Precio.ToString("C", cr)</span>
+       
+ @using (Html.BeginForm("AgregarRepuesto", "Cotizacion", FormMethod.Post, new { @class = "d-inline" }))
+  {
+   @Html.AntiForgeryToken()
+   <input type="hidden" name="idRepuesto" value="@repuesto.Id" />
+ <button type="submit" class="btn btn-primary">
+   <i class="bi bi-cart-plus"></i> Agregar
+        </button>
+  }
+          </div>
+        </div>
+                </div>
+             </div>
+}
+        </div>
+    }
+</div>
+
+<script>
+    (function () {
+        var btn = document.getElementById('searchBtn');
+    var search = document.getElementById('searchText');
+
+        function buscar() {
+    var q = search.value.trim();
+         window.location.href = '@Url.Action("CatalogoRepuestos", "Cotizacion")?q=' + encodeURIComponent(q);
+        }
+
+        if (btn) btn.addEventListener('click', buscar);
+     if (search) search.addEventListener('keypress', function (e) {
+   if (e.key === 'Enter') buscar();
+        });
+    })();
+</script>

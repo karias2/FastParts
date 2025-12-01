@@ -1,0 +1,123 @@
+@model IEnumerable<FastParts.Models.CotizacionesModel>
+@using System.Globalization
+@{
+    ViewBag.Title = "Mis Cotizaciones";
+    var cr = new CultureInfo("es-CR");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">
+  <i class="bi bi-clock-history"></i> Mis Cotizaciones
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+ <div class="alert alert-success alert-dismissible fade show">
+       @TempData["Success"]
+ <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+    }
+
+    <div class="mb-3">
+    <a href="@Url.Action("MiCarrito", "Cotizacion")" class="btn btn-primary">
+     <i class="bi bi-cart3"></i> Volver al Carrito
+     </a>
+        <a href="@Url.Action("CatalogoRepuestos", "Cotizacion")" class="btn btn-outline-primary">
+  <i class="bi bi-gear"></i> Catálogo Repuestos
+        </a>
+ <a href="@Url.Action("CatalogoServicios", "Cotizacion")" class="btn btn-outline-success">
+    <i class="bi bi-wrench"></i> Catálogo Servicios
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+   <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No tienes cotizaciones enviadas aún.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+      <table class="table table-striped table-hover">
+      <thead class="table-dark">
+  <tr>
+  <th>ID</th>
+   <th>Fecha Creación</th>
+  <th>Fecha Cita</th>
+          <th>Estado</th>
+       <th class="text-end">Monto Total</th>
+     <th>Detalles</th>
+  </tr>
+</thead>
+          <tbody>
+       @foreach (var cotizacion in Model)
+         {
+   var estadoClass = "";
+    var estadoTexto = cotizacion.Estado;
+    
+        switch (cotizacion.Estado)
+      {
+     case "REVICION":
+       estadoClass = "bg-warning text-dark";
+        estadoTexto = "En Revisión";
+      break;
+        case "COLA":
+      estadoClass = "bg-info text-white";
+   estadoTexto = "En Cola";
+      break;
+    case "COMPLETADA":
+     estadoClass = "bg-success text-white";
+estadoTexto = "Completada";
+   break;
+     case "INACTIVA":
+          estadoClass = "bg-secondary text-white";
+ estadoTexto = "Inactiva";
+     break;
+       default:
+      estadoClass = "bg-light text-dark";
+      break;
+  }
+     
+       <tr>
+     <td><strong>#@cotizacion.IdCotizacion</strong></td>
+  <td>@cotizacion.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+      <td>@cotizacion.FechaCita.ToString("dd/MM/yyyy")</td>
+       <td><span class="badge @estadoClass">@estadoTexto</span></td>
+      <td class="text-end"><strong>@cotizacion.MontoTotal.ToString("C", cr)</strong></td>
+    <td>
+           <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#detalle-@cotizacion.IdCotizacion">
+      <i class="bi bi-eye"></i> Ver
+ </button>
+       </td>
+     </tr>
+
+     <!-- Modal de detalle -->
+<div class="modal fade" id="detalle-@cotizacion.IdCotizacion" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+       <div class="modal-header">
+    <h5 class="modal-title">Cotización #@cotizacion.IdCotizacion</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+   </div>
+    <div class="modal-body">
+       <p><strong>Estado:</strong> <span class="badge @estadoClass">@estadoTexto</span></p>
+       <p><strong>Fecha creación:</strong> @cotizacion.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</p>
+          <p><strong>Fecha cita:</strong> @cotizacion.FechaCita.ToString("dd/MM/yyyy")</p>
+    <p><strong>Monto total:</strong> @cotizacion.MontoTotal.ToString("C", cr)</p>
+         
+  <hr />
+         <p class="text-muted"><em>Los detalles completos serán mostrados por el administrador.</em></p>
+    </div>
+       <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+       </div>
+           </div>
+        </div>
+            }
+   </tbody>
+ </table>
+    </div>
+ }
+</div>

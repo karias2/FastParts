@@ -26,9 +26,16 @@ namespace FastParts.Controllers
 
             int totalCitasIngresadas = db.CitaModels.Count(c => c.Estado == "Ingresada");
             ViewBag.TotalCitasIngresadas = totalCitasIngresadas;
-            return View();
 
+            int alertasPendientes = db.Alertas.Count(a => !a.Atendida);
+            ViewBag.AlertasPendientes = alertasPendientes;
+
+            int repuestosBajoMinimo = db.Repuestos.Count(r => !r.IsDeleted && r.Stock <= r.StockMinimo);
+            ViewBag.RepuestosBajoMinimo = repuestosBajoMinimo;
+
+            return View();
         }
+
         public ActionResult AlertasInventario()
         {
             var vm = new AlertasInventarioVM

@@ -227,9 +227,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202510140214317_CrearBaseDeDatos.cs" />
-    <Compile Include="Migrations\202510140214317_CrearBaseDeDatos.Designer.cs">
-      <DependentUpon>202510140214317_CrearBaseDeDatos.cs</DependentUpon>
+    <Compile Include="Migrations\202512012031355_InitialCreate.cs" />
+    <Compile Include="Migrations\202512012031355_InitialCreate.Designer.cs">
+      <DependentUpon>202512012031355_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedCitas.cs" />
@@ -246,7 +246,7 @@
     <Compile Include="Models\ConsumosServicioViewModel.cs" />
     <Compile Include="Models\CotizacionesModel.cs" />
     <Compile Include="Models\CitaModel.cs" />
-    <Compile Include="Models\cotizacion.cs" />
+    <Compile Include="Models\CotizacionListadoViewModel.cs" />
     <Compile Include="Models\EncuestaModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -675,6 +675,12 @@
     <Content Include="Views\Cita\ListaAdmin.cshtml" />
     <Content Include="Views\Cita\DetalleAdmin.cshtml" />
     <Content Include="Views\Cita\EditarServicio.cshtml" />
+    <Content Include="Views\Cotizacion\MiCarrito.cshtml" />
+    <Content Include="Views\Cotizacion\CatalogoRepuestos.cshtml" />
+    <Content Include="Views\Cotizacion\CatalogoServicios.cshtml" />
+    <Content Include="Views\Cotizacion\MisCotizaciones.cshtml" />
+    <Content Include="Views\Cotizacion\GestionarCotizaciones.cshtml" />
+    <Content Include="Views\Cotizacion\DetalleCotizacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -686,8 +692,8 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202510140214317_CrearBaseDeDatos.resx">
-      <DependentUpon>202510140214317_CrearBaseDeDatos.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202512012031355_InitialCreate.resx">
+      <DependentUpon>202512012031355_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

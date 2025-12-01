@@ -1,0 +1,296 @@
+@model FastParts.Models.CotizacionesModel
+@using System.Globalization
+@{
+    ViewBag.Title = $"Cotización #{Model.IdCotizacion}";
+    var cr = new CultureInfo("es-CR");
+    var cliente = ViewBag.Cliente as FastParts.Models.ApplicationUser;
+    
+    var estadoClass = "";
+    var estadoTexto = Model.Estado;
+    var puedeAprobar = Model.Estado == "REVICION";
+    
+    switch (Model.Estado)
+    {
+        case "REVICION":
+     estadoClass = "bg-warning text-dark";
+  estadoTexto = "En Revisión";
+            break;
+        case "COMPLETADA":
+   estadoClass = "bg-success text-white";
+            estadoTexto = "Completada";
+   break;
+        case "INACTIVA":
+        estadoClass = "bg-secondary text-white";
+        estadoTexto = "Rechazada";
+            break;
+    }
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-file-earmark-text"></i> Cotización #@Model.IdCotizacion</h2>
+  <div>
+        <a href="@Url.Action("GestionarCotizaciones")" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+            </a>
+ </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+   <div class="alert alert-success alert-dismissible fade show">
+ @TempData["Success"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+     <div class="alert alert-danger alert-dismissible fade show">
+    @TempData["Error"]
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+      <!-- Información General -->
+       <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+ <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información General</h5>
+    </div>
+<div class="card-body">
+        <div class="row">
+     <div class="col-md-6">
+       <p><strong>Estado:</strong> <span class="badge @estadoClass">@estadoTexto</span></p>
+          <p><strong>Fecha Creación:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</p>
+          <p><strong>Fecha Cita Solicitada:</strong> @Model.FechaCita.ToString("dd/MM/yyyy")</p>
+            </div>
+  <div class="col-md-6">
+    <p><strong>Cliente:</strong> @(cliente?.NombreCompleto ?? "N/A")</p>
+ <p><strong>Email:</strong> @(cliente?.Email ?? "N/A")</p>
+          <p><strong>Teléfono:</strong> @(cliente?.PhoneNumber ?? "N/A")</p>
+    </div>
+ </div>
+      </div>
+            </div>
+
+     <!-- Repuestos Solicitados -->
+            <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+      <h5 class="mb-0"><i class="bi bi-gear-fill"></i> Repuestos Solicitados (@Model.RepuestosCotizados.Count)</h5>
+          </div>
+      <div class="card-body">
+   @if (Model.RepuestosCotizados.Any())
+            {
+      <div class="table-responsive">
+           <table class="table table-hover">
+       <thead>
+         <tr>
+            <th>Repuesto</th>
+     <th>Marca</th>
+     <th>Número Parte</th>
+           <th class="text-center">Stock Actual</th>
+             <th class="text-end">Precio</th>
+            </tr>
+           </thead>
+            <tbody>
+          @foreach (var repuesto in Model.RepuestosCotizados)
+      {
+               var stockBajo = repuesto.Stock <= repuesto.StockMinimo;
+           var sinStock = repuesto.Stock <= 0;
+        <tr class="@(sinStock ? "table-danger" : stockBajo ? "table-warning" : "")">
+         <td>
+            <strong>@repuesto.Nombre</strong>
+       @if (!string.IsNullOrEmpty(repuesto.Descripcion))
+ {
+ <br />
+         <small class="text-muted">@repuesto.Descripcion</small>
+      }
+           </td>
+     <td>@(repuesto.Marca ?? "-")</td>
+          <td>@(repuesto.NumeroParte ?? "-")</td>
+           <td class="text-center">
+   @if (sinStock)
+   {
+                 <span class="badge bg-danger">Sin Stock</span>
+      }
+        else if (stockBajo)
+          {
+       <span class="badge bg-warning text-dark">@repuesto.Stock (Bajo)</span>
+     }
+           else
+             {
+    <span class="badge bg-success">@repuesto.Stock</span>
+      }
+   </td>
+     <td class="text-end"><strong>@repuesto.Precio.ToString("C", cr)</strong></td>
+            </tr>
+      }
+      </tbody>
+  <tfoot>
+       <tr class="table-light">
+        <td colspan="4" class="text-end"><strong>Subtotal Repuestos:</strong></td>
+     <td class="text-end"><strong>@Model.RepuestosCotizados.Sum(r => r.Precio).ToString("C", cr)</strong></td>
+       </tr>
+          </tfoot>
+             </table>
+        </div>
+ }
+   else
+            {
+   <p class="text-muted mb-0">No hay repuestos en esta cotización.</p>
+        }
+         </div>
+            </div>
+
+          <!-- Servicios Solicitados -->
+      <div class="card mb-4">
+   <div class="card-header bg-success text-white">
+<h5 class="mb-0"><i class="bi bi-wrench"></i> Servicios Solicitados (@Model.ServiciosCotizados.Count)</h5>
+             </div>
+           <div class="card-body">
+       @if (Model.ServiciosCotizados.Any())
+            {
+   <div class="table-responsive">
+              <table class="table table-hover">
+         <thead>
+   <tr>
+   <th>Servicio</th>
+          <th>Descripción</th>
+   <th class="text-end">Precio</th>
+   </tr>
+    </thead>
+               <tbody>
+     @foreach (var servicio in Model.ServiciosCotizados)
+     {
+         <tr>
+            <td><strong>@servicio.Nombre</strong></td>
+     <td>@(servicio.Descripcion ?? "-")</td>
+     <td class="text-end"><strong>@servicio.PrecioServicio.ToString("C", cr)</strong></td>
+   </tr>
+          }
+         </tbody>
+                <tfoot>
+     <tr class="table-light">
+      <td colspan="2" class="text-end"><strong>Subtotal Servicios:</strong></td>
+ <td class="text-end"><strong>@Model.ServiciosCotizados.Sum(s => s.PrecioServicio).ToString("C", cr)</strong></td>
+   </tr>
+        </tfoot>
+            </table>
+    </div>
+            }
+       else
+   {
+          <p class="text-muted mb-0">No hay servicios en esta cotización.</p>
+         }
+  </div>
+            </div>
+   </div>
+
+ <!-- Panel de Acciones -->
+        <div class="col-md-4">
+       <div class="card sticky-top" style="top: 20px;">
+  <div class="card-header bg-dark text-white">
+             <h5 class="mb-0">Resumen y Acciones</h5>
+                </div>
+          <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+            <span>Repuestos:</span>
+       <strong>@Model.RepuestosCotizados.Sum(r => r.Precio).ToString("C", cr)</strong>
+                 </div>
+         <div class="d-flex justify-content-between mb-2">
+           <span>Servicios:</span>
+      <strong>@Model.ServiciosCotizados.Sum(s => s.PrecioServicio).ToString("C", cr)</strong>
+</div>
+     <hr />
+  <div class="d-flex justify-content-between mb-3">
+       <span class="h5">Total:</span>
+          <span class="h5 text-primary"><strong>@Model.MontoTotal.ToString("C", cr)</strong></span>
+          </div>
+
+      @if (puedeAprobar)
+       {
+   <div class="alert alert-info">
+      <i class="bi bi-info-circle"></i> Esta cotización está pendiente de aprobación.
+             </div>
+
+  var stockProblemas = Model.RepuestosCotizados.Where(r => r.Stock <= 0).ToList();
+           
+      if (stockProblemas.Any())
+  {
+  <div class="alert alert-danger">
+         <strong><i class="bi bi-exclamation-triangle"></i> Problemas de Stock:</strong>
+    <ul class="mb-0 mt-2">
+      @foreach (var rep in stockProblemas)
+ {
+           <li>@rep.Nombre: Sin stock</li>
+     }
+    </ul>
+    </div>
+       }
+
+          <div class="d-grid gap-2">
+            @using (Html.BeginForm("AprobarCotizacion", "Cotizacion", FormMethod.Post))
+ {
+      @Html.AntiForgeryToken()
+      <input type="hidden" name="id" value="@Model.IdCotizacion" />
+      <button type="submit" class="btn btn-success btn-lg" 
+ @(stockProblemas.Any() ? "disabled" : "")
+        onclick="return confirm('¿Aprobar esta cotización? Se descontará el stock de repuestos.')">
+    <i class="bi bi-check-circle"></i> Aprobar Cotización
+        </button>
+    }
+
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rechazarModal">
+       <i class="bi bi-x-circle"></i> Rechazar Cotización
+    </button>
+     </div>
+       }
+      else if (Model.Estado == "COMPLETADA")
+          {
+       <div class="alert alert-success">
+              <i class="bi bi-check-circle"></i> Esta cotización ya fue aprobada y procesada.
+               </div>
+         }
+           else if (Model.Estado == "INACTIVA")
+         {
+    <div class="alert alert-secondary">
+               <i class="bi bi-x-circle"></i> Esta cotización fue rechazada.
+       </div>
+            }
+          </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Rechazo -->
+<div class="modal fade" id="rechazarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("RechazarCotizacion", "Cotizacion", FormMethod.Post))
+    {
+ @Html.AntiForgeryToken()
+     <input type="hidden" name="id" value="@Model.IdCotizacion" />
+      
+         <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Rechazar Cotización</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+ </div>
+  <div class="modal-body">
+        <p>¿Estás seguro que deseas rechazar la cotización #@Model.IdCotizacion?</p>
+            <div class="mb-3">
+        <label for="motivo" class="form-label">Motivo del rechazo (opcional):</label>
+          <textarea name="motivo" id="motivo" class="form-control" rows="3" 
+    placeholder="Ej: Stock insuficiente, precio no disponible, etc."></textarea>
+        </div>
+       </div>
+           <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger">Confirmar Rechazo</button>
+  </div>
+    }
+        </div>
+    </div>
+</div>
