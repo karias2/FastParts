@@ -23387,9 +23387,9 @@ body.dark-version {
   position: relative;
   overflow: hidden;
   display: flex;
-  align-items: center;
   background-size: cover;
   background-position: 50%;
+  padding-top: 100px;
 }
 
 .page-header .container {

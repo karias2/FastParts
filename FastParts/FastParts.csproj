@@ -227,10 +227,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202512012031355_InitialCreate.cs" />
-    <Compile Include="Migrations\202512012031355_InitialCreate.Designer.cs">
-      <DependentUpon>202512012031355_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedCitas.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
@@ -690,11 +686,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202512012031355_InitialCreate.resx">
-      <DependentUpon>202512012031355_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

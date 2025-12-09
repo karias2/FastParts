@@ -4424,6 +4424,7 @@ progress {
 .text-white {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
+    text-shadow: 0 0 1px #3ea7f5, 0 0 4px #3ea7f5, 0 0 1px #3ea7f5;
 }
 
 .text-body {

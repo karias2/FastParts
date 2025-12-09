@@ -32,6 +32,7 @@
                         <th>Placa</th>
                         <th>Fecha Cita</th>
                         <th>Estado</th>
+                        <th>Evidencias</th>
                         <th style="width: 180px;">Acciones</th>
                     </tr>
                 </thead>
@@ -44,6 +45,12 @@
                             <td>@item.Placa</td>
                             <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@item.Estado</td>
+                            <td>
+                                <a href="@Url.Action("LlenarEncuesta", "Encuesta", new { IdEncuesta= 2, SessionId = item.Id, IsEdit = true })"
+                                   class="btn btn-sm btn-dark">
+                                    Evidencias
+                                </a>
+                            </td>
                             <td class="text-center">
                                 @if (item.Estado == "Asignada")
                                 {

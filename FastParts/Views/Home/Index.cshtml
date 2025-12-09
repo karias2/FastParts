@@ -20,12 +20,19 @@
 
     <!-- -------- START HEADER 7 w/ text and video ------- -->
     <header class="bg-gradient-dark">
-        <div class="page-header min-vh-75" style="background-image: url('/Content/assets/img/PropartesBanner.png'); background-size: cover; background-position: center top; background-repeat: no-repeat; min-height: 100vh; ">
-            <span class="mask bg-gradient-dark opacity-3"></span>
+        <div>
+            <div class="page-header min-vh-75" style="background-image: url('/Content/assets/img/PropartesBanner_2.png'); background-size: cover; background-position: center top; background-repeat: no-repeat; position: absolute; width: 100%; z-index: 2;">
+
+            </div>
+            <video autoplay muted loop class="min-vh-75" style="position: absolute; width: 100%;">
+                <source src="/Content/assets/img/bmw.mp4" type="video/mp4">
+            </video>
+
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center mx-auto my-auto">
-                        <h1 class="text-white">EN PROPARTES CR DIAGNOSTICAMOS, NO ADIVINAMOS!</h1>
+                <div class="row">
+                    <div class="min-vh-80 pt-6" style="position: relative; z-index: 10;">
+                        <h1 class="text-white">Pro Partes CR</h1>
+                        <h2 class="text-white">Expecialistas en vehículos europeos!</h2>
                         @*<p class="lead mb-4 text-white ">Somos expertos certificados en BMW</p>*@
                         <br />
                         <a href="@Url.Action("Register", "Account")"
@@ -36,10 +43,10 @@
                             Crear cuenta
                         </a>
                         <h6 class="text-white mb-2 mt-5">Encuentranos en:</h6>
-                        <div class="d-flex justify-content-center">
-                            <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-lg text-white me-4"></i></a>
-                            <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-lg text-white me-4"></i></a>
-                            <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg text-white me-4"></i></a>
+                        <div class="d-flex pt-4">
+                            <a href="https://www.facebook.com/p/Pro-Partes-CR-100054389415253/"><i class="bi bi-facebook text-4xl text-white me-4"></i></a>
+                            <a href="https://www.instagram.com/propartescr?igsh=MW8xZHI2ZThqcWl6Zg=="><i class="bi bi-instagram text-4xl text-white me-4"></i></a>
+                            <a href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-4xl text-white me-4"></i></a>
                         </div>
                     </div>
                 </div>
@@ -116,8 +123,7 @@
                                 <p class="mb-0">
                                     Agende una cita o visitenos en nuestro taller para la revision de su vehiculo.
                                 </p>
-                                <button type="button" class="btn bg-gradient-info btn-sm mb-0 mt-3" onclick="window.location.href='/Cita/CrearCliente'">Agendar Cita</button>
-
+                                <a class="btn bg-gradient-info btn-sm mb-0 mt-3" href="https://wa.me/50683737272?text=¡Hola%20FastParts!"><i class="bi bi-whatsapp text-lg me-4"></i> Agendar Cita</a>
                             </div>
                         </div>
                     </div>
