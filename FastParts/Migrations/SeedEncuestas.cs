@@ -64,5 +64,34 @@ namespace FastParts.Migrations
 
             context.SaveChanges();
         }
+
+        public void ListaVerificacion(FastParts.Models.ApplicationDbContext context)
+        {
+            var ListaVerificacion = new EncuestaModel
+            {
+                Nombre = "Lista de verificacion",
+                Descripcion = "",
+                Preguntas = new List<PreguntaModel>()
+            };
+
+            context.Encuestas.Add(ListaVerificacion);
+            context.SaveChanges();
+
+            context.Preguntas.Add(new PreguntaModel
+            {
+                ID_Encuesta = ListaVerificacion.ID_Encuesta,
+                Descripcion = "Comentarios",
+                Tipo = "Texto"
+            });
+
+            context.Preguntas.Add(new PreguntaModel
+            {
+                ID_Encuesta = ListaVerificacion.ID_Encuesta,
+                Descripcion = "Eviencias",
+                Tipo = "Imagen"
+            });
+
+            context.SaveChanges();
+        }
     }
 }
