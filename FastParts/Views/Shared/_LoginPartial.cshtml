@@ -2,160 +2,159 @@
 
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
 
-        <ul class="navbar-nav navbar-right navbar-nav-hover ms-2">
-       @if (User.IsInRole("Admin")) {
-          <li class="nav-item dropdown dropdown-hover mx-2">
-       <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-      id="dropdownAdmin" data-bs-toggle="dropdown" aria-expanded="false">
-       <i class="material-symbols-rounded opacity-6 me-2 text-md">dashboard</i>
-   Admin
-  <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-          class="arrow ms-2 d-lg-block d-none">
-      </a>
-         <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-      aria-labelledby="dropdownAdmin">
-     <a>
- @Html.ActionLink("Panel Administrador", "Index", "Admin", null, new { @class = "dropdown-item border-radius-md" })
-  </a>
-       <a>
-     @Html.ActionLink("Gestionar Cotizaciones", "GestionarCotizaciones", "Cotizacion", null, new { @class = "dropdown-item border-radius-md" })
-    </a>
-  </div>
-    </li>
- }
+        <ul class="navbar-nav ms-auto navbar-nav-hover">
 
- @if (User.IsInRole("Mecanico")) {
-      <li class="nav-item dropdown dropdown-hover mx-2">
- <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-id="dropdownMecanico" data-bs-toggle="dropdown" aria-expanded="false">
-   <i class="material-symbols-rounded opacity-6 me-2 text-md">water_pump</i>
-   Mecánico
-  <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-    class="arrow ms-2 d-lg-block d-none">
-     </a>
-    <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-       aria-labelledby="dropdownMecanico">
-       <a>
-   @Html.ActionLink("Cola Citas", "Cola", "Cita", null, new { @class = "dropdown-item border-radius-md" })
-  </a>
-   <a>
-          @Html.ActionLink("Mis Citas Asignadas", "MisCitasMecanico", "Cita", null, new { @class = "dropdown-item border-radius-md" })
-    </a>
-      </div>
-   </li>
- }
-  
-         @if (User.IsInRole("Cliente"))
-          {
-           <li class="nav-item dropdown dropdown-hover mx-2">
- <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-      id="dropdownCatalogo" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="material-symbols-rounded opacity-6 me-2 text-md">storefront</i>
-  Catálogo
-       <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-      class="arrow ms-2 d-lg-block d-none">
-    </a>
-        <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-     aria-labelledby="dropdownCatalogo">
-    <a>
-   @Html.ActionLink("Repuestos", "CatalogoRepuestos", "Cotizacion", null, new { @class = "dropdown-item border-radius-md" })
-       </a>
-        <a>
-     @Html.ActionLink("Servicios", "CatalogoServicios", "Cotizacion", null, new { @class = "dropdown-item border-radius-md" })
-   </a>
-    </div>
-    </li>
- 
-     <li class="nav-item mx-2">
-<a class="nav-link ps-2 d-flex cursor-pointer align-items-center text-white position-relative"
-   href="@Url.Action("MiCarrito", "Cotizacion")">
- <i class="bi bi-cart3 opacity-6 me-2"></i>
-     Mi Carrito
-         @{
-   var contadorCarrito = Html.Action("ContadorCarrito", "Cotizacion").ToHtmlString();
-    var numItems = int.Parse(contadorCarrito);
-    }
- @if (numItems > 0)
-       {
-     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
-       style="font-size: 0.65rem; margin-left: -10px;">
-       @numItems
-  <span class="visually-hidden">items en carrito</span>
-     </span>
-        }
-       </a>
-             </li>
-   }
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item dropdown dropdown-hover mx-2">
+                    <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
+                       id="dropdownAdmin" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-symbols-rounded opacity-6 me-2 text-md">dashboard</i>
+                        Admin
+                        <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
+                             class="arrow ms-2 d-lg-block d-none" />
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownAdmin">
+                        @Html.ActionLink("Panel Administrador", "Index", "Admin", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                        @Html.ActionLink("Gestionar Cotizaciones", "GestionarCotizaciones", "Cotizacion", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                    </div>
+                </li>
+            }
 
-     <li class="nav-item dropdown dropdown-hover">
-       <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
-       id="dropdownUsuario" href="#" role="button"
-data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="material-symbols-rounded opacity-6 me-2 text-md">person</i>
-       <span class="d-inline-block text-truncate" style="max-width: 200px;"
-     title="@User.Identity.GetUserName()">
-      @User.Identity.GetUserName()
-         </span>
+            @if (User.IsInRole("Mecanico"))
+            {
+                <li class="nav-item dropdown dropdown-hover mx-2">
+                    <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
+                       id="dropdownMecanico" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-symbols-rounded opacity-6 me-2 text-md">water_pump</i>
+                        Mecánico
+                        <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
+                             class="arrow ms-2 d-lg-block d-none" />
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownMecanico">
+                        @Html.ActionLink("Cola Citas", "Cola", "Cita", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                        @Html.ActionLink("Mis Citas Asignadas", "MisCitasMecanico", "Cita", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                    </div>
+                </li>
+            }
 
-              <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
-       class="arrow ms-2 d-lg-block d-none">
-       </a>
+            @if (User.IsInRole("Cliente"))
+            {
+                <li class="nav-item dropdown dropdown-hover mx-2">
+                    <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
+                       id="dropdownCatalogo" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-symbols-rounded opacity-6 me-2 text-md">storefront</i>
+                        Catálogo
+                        <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
+                             class="arrow ms-2 d-lg-block d-none" />
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownCatalogo">
+                        @Html.ActionLink("Repuestos", "CatalogoRepuestos", "Cotizacion", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                        @Html.ActionLink("Servicios", "CatalogoServicios", "Cotizacion", null,
+                                 new { @class = "dropdown-item border-radius-md" })
+                    </div>
+                </li>
 
-     <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
-                aria-labelledby="dropdownUsuario">
-   <a class="dropdown-item border-radius-md" href="@Url.Action("Index", "Manage")">
- Mi cuenta
-    </a>
-      <a class="dropdown-item border-radius-md" href="@Url.Action("Perfil", "Cliente")">
-        Perfil
-     </a>
-         <a class="dropdown-item border-radius-md" href="@Url.Action("EditarPerfil", "Cliente")">
- Editar Perfil
-      </a>
-    @if (User.IsInRole("Cliente"))
-         {
-       <a class="dropdown-item border-radius-md" href="@Url.Action("ListaRecordatorios", "Recordatorio")">
-      Recordatorios
-       </a>
+                <li class="nav-item mx-2">
+                    <a class="nav-link ps-2 d-flex cursor-pointer align-items-center text-white position-relative"
+                       href="@Url.Action("MiCarrito", "Cotizacion")">
+                        <i class="bi bi-cart3 opacity-6 me-2"></i>
+                        Mi Carrito
+                        @{
+                            var contadorCarrito = Html.Action("ContadorCarrito", "Cotizacion").ToHtmlString();
+                            var numItems = int.Parse(contadorCarrito);
+                        }
+                        @if (numItems > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="font-size: 0.65rem; margin-left: -10px;">
+                                @numItems
+                                <span class="visually-hidden">items en carrito</span>
+                            </span>
+                        }
+                    </a>
+                </li>
+            }
 
- <a class="dropdown-item border-radius-md" href="@Url.Action("MisCitas", "Cita")">
-      Mis Citas
-     </a>
-      
- <a class="dropdown-item border-radius-md" href="@Url.Action("MisCotizaciones", "Cotizacion")">
-    Mis Cotizaciones
-      </a>
-  }
+            <li class="nav-item dropdown dropdown-hover mx-2">
+                <a class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center text-white"
+                   id="dropdownUsuario" href="#" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-symbols-rounded opacity-6 me-2 text-md">person</i>
+                    <span class="d-inline-block text-truncate" style="max-width: 200px;"
+                          title="@User.Identity.GetUserName()">
+                        @User.Identity.GetUserName()
+                    </span>
+                    <img src="/Content/assets/img/down-arrow-white.svg" alt="down-arrow"
+                         class="arrow ms-2 d-lg-block d-none" />
+                </a>
 
- </div>
+                <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
+                     aria-labelledby="dropdownUsuario">
+                    <a class="dropdown-item border-radius-md" href="@Url.Action("Index", "Manage")">
+                        Mi cuenta
+                    </a>
+                    <a class="dropdown-item border-radius-md" href="@Url.Action("Perfil", "Cliente")">
+                        Perfil
+                    </a>
+                    <a class="dropdown-item border-radius-md" href="@Url.Action("EditarPerfil", "Cliente")">
+                        Editar Perfil
+                    </a>
+
+                    @if (User.IsInRole("Cliente"))
+                    {
+                        <a class="dropdown-item border-radius-md" href="@Url.Action("ListaRecordatorios", "Recordatorio")">
+                            Recordatorios
+                        </a>
+                        <a class="dropdown-item border-radius-md" href="@Url.Action("MisCitas", "Cita")">
+                            Mis Citas
+                        </a>
+                        <a class="dropdown-item border-radius-md" href="@Url.Action("MisCotizaciones", "Cotizacion")">
+                            Mis Cotizaciones
+                        </a>
+                    }
+
+                    <hr class="dropdown-divider" />
+
+                    <a class="dropdown-item border-radius-md"
+                       href="javascript:document.getElementById('logoutForm').submit()">
+                        Cerrar Sesión <i class="bi bi-box-arrow-right ms-1"></i>
+                    </a>
+                </div>
             </li>
-
-  <li><a class="nav-link text-white" href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion  <i class="bi bi-box-arrow-right"></i></a></li>
-      </ul>
-}
+        </ul>
+    }
 }
 else
 {
-    <ul class="navbar-nav navbar-nav-hover ms-6">
-        <li class="nav-item ms-lg-auto  mx-2">
-    @Html.ActionLink("Registrarse", "Register", "Account", null, new
-  {
-      @class = "nav-link nav-link-icon me-2 text-white",
-   data_bs_toggle = "tooltip",
-data_bs_placement = "bottom"
-          })
-  </li>
-        <li class="nav-item ms-lg-auto">
-         @Html.ActionLink("Iniciar Sesion", "Login", "Account", null, new
-       {
-       @class = "nav-link nav-link-icon me-2 text-white",
-     data_bs_toggle = "tooltip",
-        data_bs_placement = "bottom"
-       })
+    <ul class="navbar-nav ms-auto navbar-nav-hover">
+        <li class="nav-item mx-2">
+            @Html.ActionLink("Registrarse", "Register", "Account", null, new
+            {
+                @class = "nav-link nav-link-icon me-2 text-white",
+                data_bs_toggle = "tooltip",
+                data_bs_placement = "bottom"
+            })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("Iniciar Sesión", "Login", "Account", null, new
+            {
+                @class = "nav-link nav-link-icon me-2 text-white",
+                data_bs_toggle = "tooltip",
+                data_bs_placement = "bottom"
+            })
         </li>
     </ul>
 }

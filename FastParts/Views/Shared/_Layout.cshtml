@@ -48,26 +48,28 @@
 <body class="about-us bg-gray-100">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm w-100">
-        <div class="container-fluid">
+        <div class="container">
 
-            <div class="navbar-toggler-bar mx-10">
-                <a class="navbar-brand text-white" href="/">
-                    <img src="/Content/assets/img/logo.png" alt="logo" style="width: 64px;" /> ProPartes
-                </a>
-                <button class="navbar-toggler shadow-none ms-2" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#navigation">
-                    <span class="navbar-toggler-icon mt-2"></span>
-                </button>
-            </div>
+            <a class="navbar-brand d-flex align-items-center text-white" href="@Url.Action("Index","Home")">
+                <img src="/Content/assets/img/logo.png" alt="logo"
+                     style="width: 64px;" class="me-2" />
+                ProPartes
+            </a>
 
-            <div class="collapse navbar-collapse w-100" id="navigation"></div>
+            <button class="navbar-toggler ms-auto" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon mt-2"></span>
+            </button>
 
-            <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-1 ps-lg-1" id="login">
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto">
+                </ul>
                 @Html.Partial("_LoginPartial")
             </div>
-
         </div>
     </nav>
+
 
     <div class="@(ViewBag.BodyClass ?? "container body-content d-flex flex-column min-vh-70")">
         @RenderBody()
