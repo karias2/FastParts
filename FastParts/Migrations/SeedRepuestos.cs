@@ -15,56 +15,98 @@ namespace FastParts.Migrations
         public void addRepuestos(FastParts.Models.ApplicationDbContext context)
         {
 
-            // Repuestos (idempotente por clave compuesta Nombre+NumeroParte)
             context.Repuestos.AddOrUpdate(
                 r => new { r.Nombre, r.NumeroParte },
                 new RepuestoModel
                 {
-                    Nombre = "Filtro de Aceite",
-                    Marca = "ACME",
-                    NumeroParte = "FA-100",
-                    Precio = 4500,
+                    Nombre = "Bumper Delantero BMW X5",
+                    Marca = "BMW",
+                    NumeroParte = "BMW-0112845",
+                    Precio = 300000,
                     Stock = 5,
-                    StockMinimo = 3,
-                    Proveedor = "Proveedor 1",
-                    OcultarClientes = false,
-                    SinStockForzado = false
-                },
-                new RepuestoModel
-                {
-                    Nombre = "Bujía",
-                    Marca = "SparkX",
-                    NumeroParte = "BX-200",
-                    Precio = 2500,
-                    Stock = 2,
                     StockMinimo = 2,
-                    Proveedor = "Proveedor 2",
+                    Proveedor = "Proveedor 1",
                     OcultarClientes = false,
-                    SinStockForzado = false
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/49b32568-942e-4cd7-a52c-f0564ff07407.jpg"
                 },
                 new RepuestoModel
                 {
-                    Nombre = "Filtro de Combustible",
-                    Marca = "ACME",
-                    NumeroParte = "FC-150",
-                    Precio = 5200,
+                    Nombre = "Pastillas de Freno Delanteras",
+                    Marca = "Mercedes-Benz",
+                    NumeroParte = "MBZ-0078932",
+                    Precio = 45000,
+                    Stock = 10,
+                    StockMinimo = 2,
+                    Proveedor = "Proveedor 3",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/044b589d-396f-4503-81e2-c0f3d500d346.jpeg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Radiador de Motor",
+                    Marca = "Volkswagen",
+                    NumeroParte = "VW-0092317",
+                    Precio = 145000,
                     Stock = 2,
                     StockMinimo = 1,
                     Proveedor = "Proveedor 1",
                     OcultarClientes = false,
-                    SinStockForzado = false
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/f18e27d7-0fcb-4ba8-9bb3-298c29bdf765.png"
                 },
                 new RepuestoModel
                 {
-                    Nombre = "Carburador",
-                    Marca = "SparkX",
-                    NumeroParte = "CB-300",
-                    Precio = 25000,
-                    Stock = 0,
+                    Nombre = "Sensor de Oxígeno (O2)",
+                    Marca = "Volvo",
+                    NumeroParte = "VOL-0035784",
+                    Precio = 35000,
+                    Stock = 4,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 1",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/41022bdc-e486-4c4c-ada6-b1e79b704c0b.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Filtro de Aceite",
+                    Marca = "Audi",
+                    NumeroParte = "AUD-0045129",
+                    Precio = 15000,
+                    Stock = 20,
+                    StockMinimo = 3,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/a593c608-3894-4f55-b985-0e60810c1314.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Espejo Retrovisor Izquierdo BMW X3",
+                    Marca = "BMW",
+                    NumeroParte = "BMW-0145628",
+                    Precio = 215000,
+                    Stock = 2,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 3",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/407f11c7-bc4a-474d-8ad7-6dfc87fd25c2.png"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Amortiguador Trasero Macan 2015",
+                    Marca = "Porsche",
+                    NumeroParte = "POR-0089146",
+                    Precio = 150000,
+                    Stock = 3,
                     StockMinimo = 1,
                     Proveedor = "Proveedor 2",
-                    OcultarClientes = true,
-                    SinStockForzado = true
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/db0138c3-4845-43bd-83b2-da9b0613740b.jpg"
                 }
             );
 

@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace FastParts.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Admin")]
     public class RepuestosController : Controller
     {
 
