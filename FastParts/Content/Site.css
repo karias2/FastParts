@@ -113,10 +113,14 @@ animation: pulse 0.5s ease-in-out;
     text-decoration: none; /* sin subrayado */
 }
 
-/* eliminar subrayado de enlaces en general (excepciones con .btn se preservan) */
-a {
-    text-decoration: none;
+.admin-card-link:hover {
+    color: #000;
 }
+
+    /* eliminar subrayado de enlaces en general (excepciones con .btn se preservan) */
+    a {
+        text-decoration: none;
+    }
 
     a:hover, a:focus {
         text-decoration: none;
