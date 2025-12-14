@@ -227,6 +227,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202512141655452_CrearBaseDeDatos.cs" />
+    <Compile Include="Migrations\202512141655452_CrearBaseDeDatos.Designer.cs">
+      <DependentUpon>202512141655452_CrearBaseDeDatos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedCitas.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
@@ -287,18 +291,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="README.md" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap.esm.js" />
-    <Content Include="Scripts\bootstrap.esm.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.esm.min.js.map" />
-    <Content Include="Scripts\bootstrap.esm.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -315,18 +307,8 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FastParts-web - Web Deploy.pubxml" />
-    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.7.1.js" />
-    <Content Include="Scripts\jquery-3.7.1.min.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.js" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Content\assets\css\material-kit.css" />
     <Content Include="Content\assets\css\material-kit.min.css" />
     <Content Include="Content\assets\css\nucleo-icons.css" />
@@ -390,6 +372,23 @@
     <Content Include="Content\assets\scss\material-kit\bootstrap\tests\jasmine.js" />
     <Content Include="Content\assets\scss\material-kit\bootstrap\tests\sass-true\register.js" />
     <Content Include="Content\assets\scss\material-kit\bootstrap\tests\sass-true\runner.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -678,15 +677,23 @@
     <Content Include="Views\Cotizacion\MisCotizaciones.cshtml" />
     <Content Include="Views\Cotizacion\GestionarCotizaciones.cshtml" />
     <Content Include="Views\Cotizacion\DetalleCotizacion.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\UserRoles\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.7.1.min.map" />
+    <EmbeddedResource Include="Migrations\202512141655452_CrearBaseDeDatos.resx">
+      <DependentUpon>202512141655452_CrearBaseDeDatos.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -720,12 +727,12 @@
     <PropertyGroup>
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
   </Target>
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

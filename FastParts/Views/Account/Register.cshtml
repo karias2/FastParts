@@ -1,63 +1,91 @@
 ﻿@model FastParts.Models.RegisterViewModel
+
 @{
     ViewBag.Title = "Registrarse";
 }
 
-<div class="container body-content">
-    <main aria-labelledby="title">
-        <h2 id="title">@ViewBag.Title</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
 
-        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
-        {
-            @Html.AntiForgeryToken()
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Crear cuenta</h5>
+                </div>
 
-            <hr />
-            @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="card-body">
 
-            <br />
-            <div class="row">
-                @Html.LabelFor(m => m.NombreCompleto, new { @class = "col-md-2 col-form-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre completo</label>
+                            @Html.TextBoxFor(
+                                m => m.NombreCompleto,
+                                new { @class = "form-control", placeholder = "Nombre completo" }
+                            )
+                            @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            @Html.TextBoxFor(
+                                m => m.Direccion,
+                                new { @class = "form-control", placeholder = "Dirección" }
+                            )
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            @Html.TextBoxFor(
+                                m => m.Email,
+                                new { @class = "form-control", type = "email", placeholder = "correo@ejemplo.com" }
+                            )
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            @Html.PasswordFor(
+                                m => m.Password,
+                                new { @class = "form-control", placeholder = "********" }
+                            )
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar contraseña</label>
+                            @Html.PasswordFor(
+                                m => m.ConfirmPassword,
+                                new { @class = "form-control", placeholder = "********" }
+                            )
+                            @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success">
+                                Crear cuenta
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer text-center small">
+                    <p class="mb-0">
+                        ¿Ya tienes cuenta?
+                        @Html.ActionLink("Inicia sesión", "Login", "Account")
+                    </p>
                 </div>
             </div>
-            <br />
-            <div class="row">
-                @Html.LabelFor(m => m.Direccion, new { @class = "col-md-2 col-form-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control" })
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="offset-md-2 col-md-10">
-                    <input type="submit" value="Confirmar" class="btn btn-outline-dark" />
-                </div>
-            </div>
-        }
-    </main>
+
+        </div>
+    </div>
 </div>
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

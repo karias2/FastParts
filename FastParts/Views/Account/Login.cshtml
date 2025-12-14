@@ -1,52 +1,71 @@
-﻿@using FastParts.Models
+﻿
+@using FastParts.Models
 @model LoginViewModel
+
 @{
-    ViewBag.Title = "Iniciar Sesion";
+    ViewBag.Title = "Iniciar sesión";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title</h2>
-    <div class="row">
-        
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="row">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                    </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">Iniciar sesión</h5>
                 </div>
-                <br />
-                <div class="row">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
+
+                <div class="card-body">
+
+                    @using (Html.BeginForm("Login", "Account",
+                        new { ReturnUrl = ViewBag.ReturnUrl },
+                        FormMethod.Post,
+                        new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2" })
+
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            @Html.TextBoxFor(
+                                m => m.Email,
+                                new { @class = "form-control", type = "email", placeholder = "correo@ejemplo.com", autofocus = "autofocus" }
+                            )
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            @Html.PasswordFor(
+                                m => m.Password,
+                                new { @class = "form-control", placeholder = "********" }
+                            )
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Acceder
+                            </button>
+                        </div>
+                    }
                 </div>
-                <br />
-                <div class="row">
-                    <div class="offset-md-2 col-md-10">
-                        <input type="submit" value="Acceder" class="btn btn-outline-dark" />
-                    </div>
+
+                <div class="card-footer text-center small">
+                    <p class="mb-1">
+                        @Html.ActionLink("¿Olvidaste tu contraseña?", "ForgotPassword", "Account")
+                    </p>
+                    <p class="mb-0">
+                        ¿No tienes cuenta?
+                        @Html.ActionLink("Regístrate aquí", "Register", "Account")
+                    </p>
                 </div>
-                <p>
-                    @Html.ActionLink("Registrarse como usuario nuevo", "Register")
-                </p>
-               
-            <p>
-                @Html.ActionLink("Olvidaste tu contraseña?", "ForgotPassword")
-            </p>
-            }
-        </section>
-       
+            </div>
+
+        </div>
     </div>
-</main>
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

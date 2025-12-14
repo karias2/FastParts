@@ -3,6 +3,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FastParts.Models
 {
+
+    public class PerfilViewModel
+    {
+        public string NombreCompleto { get; set; }
+        public string Direccion { get; set; }
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+    }
+
+    public class EditarPerfilViewModel
+    {
+        public string NombreCompleto { get; set; }
+        public string Direccion { get; set; }
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+    }
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
