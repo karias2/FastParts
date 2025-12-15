@@ -107,7 +107,113 @@ namespace FastParts.Migrations
                     OcultarClientes = false,
                     SinStockForzado = false,
                     ImagenUrl = "/Content/uploads/repuestos/db0138c3-4845-43bd-83b2-da9b0613740b.jpg"
-                }
+                }, new RepuestoModel
+                {
+                    Nombre = "Batería AGM 12V 70Ah",
+                    Marca = "Bosch",
+                    NumeroParte = "BOS-070AGM",
+                    Precio = 95000,
+                    Stock = 6,
+                    StockMinimo = 2,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/bateria-agm.jpg"
+                },
+new RepuestoModel
+{
+    Nombre = "Disco de Freno Delantero",
+    Marca = "Toyota",
+    NumeroParte = "TYT-DF34821",
+    Precio = 78000,
+    Stock = 8,
+    StockMinimo = 2,
+    Proveedor = "Proveedor 1",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/disco-freno.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Filtro de Aire Motor",
+    Marca = "Hyundai",
+    NumeroParte = "HYU-AF9012",
+    Precio = 12000,
+    Stock = 25,
+    StockMinimo = 5,
+    Proveedor = "Proveedor 3",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/filtro-aire.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Bomba de Agua",
+    Marca = "Ford",
+    NumeroParte = "FRD-WP5521",
+    Precio = 68000,
+    Stock = 4,
+    StockMinimo = 1,
+    Proveedor = "Proveedor 1",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/bomba-agua.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Kit de Embrague",
+    Marca = "Nissan",
+    NumeroParte = "NIS-CLUT9087",
+    Precio = 185000,
+    Stock = 2,
+    StockMinimo = 1,
+    Proveedor = "Proveedor 2",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/kit-embrague.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Bobina de Encendido",
+    Marca = "Chevrolet",
+    NumeroParte = "CHE-IGN3312",
+    Precio = 42000,
+    Stock = 7,
+    StockMinimo = 2,
+    Proveedor = "Proveedor 3",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/bobina-encendido.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Correa de Distribución",
+    Marca = "Mazda",
+    NumeroParte = "MAZ-TB7721",
+    Precio = 56000,
+    Stock = 5,
+    StockMinimo = 2,
+    Proveedor = "Proveedor 1",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/correa-distribucion.jpg"
+},
+new RepuestoModel
+{
+    Nombre = "Alternador",
+    Marca = "Kia",
+    NumeroParte = "KIA-ALT4490",
+    Precio = 165000,
+    Stock = 3,
+    StockMinimo = 1,
+    Proveedor = "Proveedor 2",
+    OcultarClientes = false,
+    SinStockForzado = false,
+    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+}
+
+
+
             );
 
             try
