@@ -43,14 +43,20 @@
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.FechaCita, new { @class = "form-label" })
                         @Html.TextBoxFor(
-                                      m => m.FechaCita,
-                                      new
-                                      {
-                                          @class = "form-control",
-                                          type = "datetime-local",
-                                          value = Model != null ? Model.FechaCita.ToString("yyyy-MM-ddTHH:mm") : ""
-                                      })
+                                 m => m.FechaCita,
+                                 new
+                                 {
+                                     @class = "form-control",
+                                     type = "datetime-local",
+                                     id = "FechaCita",
+                                     step = "1800", // 30 minutos
+                                     value = Model != null ? Model.FechaCita.ToString("yyyy-MM-ddTHH:mm") : ""
+                                 })
                         @Html.ValidationMessageFor(m => m.FechaCita, "", new { @class = "text-danger" })
+
+                        <small class="text-muted d-block mt-1">
+                            Horario: Lun–Vie 8:00 AM - 6:00 PM, Sáb 8:00 AM – 12:00 PM, Dom cerrado.
+                        </small>
                     </div>
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.Motivo, new { @class = "form-label" })
@@ -72,20 +78,165 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
-        $("#btnGuardarCitaAdmin").on("click", function (e) {
-            e.preventDefault();
-            Swal.fire({
-                title: '¿Crear cita para este cliente?',
-                text: 'La cita será registrada en el sistema.',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, crear',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(e.target).closest("form").off("submit").submit();
+        (function () {
+            const input = document.getElementById("FechaCita");
+            const btn = document.getElementById("btnGuardarCitaAdmin");
+            if (!input || !btn) return;
+
+            // ====== Configuración ======
+            const STEP_MIN = 30;                 // saltos de 30 minutos
+            const MARGEN_MINUTOS = 1;            // evita "ahora mismo"
+            const MINIMO_EN_FUTURO_MIN = 60;     // 1 hora mínimo hacia futuro (alineado con tu GET)
+
+            function pad(n) { return n.toString().padStart(2, "0"); }
+
+            // Date -> "YYYY-MM-DDTHH:mm"
+            function toLocalDatetimeValue(d) {
+                const yyyy = d.getFullYear();
+                const mm = pad(d.getMonth() + 1);
+                const dd = pad(d.getDate());
+                const hh = pad(d.getHours());
+                const mi = pad(d.getMinutes());
+                return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+            }
+
+            // Redondea hacia arriba al próximo bloque de 30 min (00/30)
+            function ceilToStepMinutes(date, stepMin) {
+                const d = new Date(date.getTime());
+                const m = d.getMinutes();
+                const rounded = Math.ceil(m / stepMin) * stepMin;
+                d.setMinutes(rounded, 0, 0);
+
+                // si redondeó a 60, Date ajusta la hora automáticamente
+                return d;
+            }
+
+            // Retorna { openMin, closeMin, mensaje } según día
+            // closeMin = minuto de cierre (la cita NO puede iniciar en o después de closeMin)
+            function getScheduleFor(date) {
+                const day = date.getDay(); // 0=Dom,1=Lun,...6=Sáb
+
+                // Domingo cerrado
+                if (day === 0) {
+                    return { closed: true, mensaje: "Domingos cerrado." };
                 }
+
+                // Sábado: 8:00 - 12:00
+                if (day === 6) {
+                    return { closed: false, openMin: 8 * 60, closeMin: 12 * 60, mensaje: "Sáb 8:00 AM – 12:00 PM" };
+                }
+
+                // Lun–Vie: 8:00 - 18:00
+                return { closed: false, openMin: 8 * 60, closeMin: 18 * 60, mensaje: "Lun–Vie 8:00 AM – 6:00 PM" };
+            }
+
+            function minutosDelDia(d) {
+                return d.getHours() * 60 + d.getMinutes();
+            }
+
+            function actualizarMin() {
+                const ahora = new Date();
+                ahora.setMinutes(ahora.getMinutes() + MARGEN_MINUTOS);
+
+                // mínimo 1 hora en el futuro
+                ahora.setMinutes(ahora.getMinutes() + (MINIMO_EN_FUTURO_MIN - MARGEN_MINUTOS));
+
+                // redondeo a 30 minutos
+                const minDate = ceilToStepMinutes(ahora, STEP_MIN);
+                input.min = toLocalDatetimeValue(minDate);
+            }
+
+            function validarSeleccion(mostrarAlertas = true) {
+                if (!input.value) return true;
+
+                const seleccionado = new Date(input.value);
+                const min = new Date(input.min);
+
+                // 1) No pasado / no menor al min
+                if (seleccionado < min) {
+                    if (mostrarAlertas) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Fecha inválida",
+                            text: "La cita debe ser al menos 1 hora en el futuro."
+                        });
+                    }
+                    input.value = "";
+                    return false;
+                }
+
+                // 2) Saltos de 30 min exactos (00 o 30) + segundos 0
+                if ((seleccionado.getMinutes() % STEP_MIN) !== 0 || seleccionado.getSeconds() !== 0) {
+                    if (mostrarAlertas) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Hora inválida",
+                            text: "Selecciona una hora en intervalos de 30 minutos (por ejemplo 10:00 o 10:30)."
+                        });
+                    }
+                    input.value = "";
+                    return false;
+                }
+
+                // 3) Horario según día
+                const schedule = getScheduleFor(seleccionado);
+
+                if (schedule.closed) {
+                    if (mostrarAlertas) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Taller cerrado",
+                            text: "No se pueden agendar citas los domingos."
+                        });
+                    }
+                    input.value = "";
+                    return false;
+                }
+
+                const minDia = minutosDelDia(seleccionado);
+
+                // permitido si openMin <= minDia < closeMin
+                if (minDia < schedule.openMin || minDia >= schedule.closeMin) {
+                    if (mostrarAlertas) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Fuera de horario",
+                            text: `Horario del taller: ${schedule.mensaje}.`
+                        });
+                    }
+                    input.value = "";
+                    return false;
+                }
+
+                return true;
+            }
+
+            // Set min al cargar + refrescar cada 30s
+            actualizarMin();
+            setInterval(actualizarMin, 30 * 1000);
+
+            // Validar al cambiar el input
+            input.addEventListener("change", () => validarSeleccion(true));
+
+            // Confirmación + validación antes de enviar
+            $("#btnGuardarCitaAdmin").on("click", function (e) {
+                e.preventDefault();
+
+                if (!validarSeleccion(true)) return;
+
+                Swal.fire({
+                    title: '¿Crear cita para este cliente?',
+                    text: 'La cita será registrada en el sistema.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, crear',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(e.target).closest("form").off("submit").submit();
+                    }
+                });
             });
-        });
+        })();
     </script>
 }

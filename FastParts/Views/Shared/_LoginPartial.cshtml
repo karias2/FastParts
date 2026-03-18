@@ -103,9 +103,6 @@
 
                 <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-lg mt-0 mt-lg-3"
                      aria-labelledby="dropdownUsuario">
-                    <a class="dropdown-item border-radius-md" href="@Url.Action("Index", "Manage")">
-                        Mi cuenta
-                    </a>
                     <a class="dropdown-item border-radius-md" href="@Url.Action("Perfil", "Cliente")">
                         Perfil
                     </a>
@@ -115,9 +112,9 @@
 
                     @if (User.IsInRole("Cliente"))
                     {
-                        <a class="dropdown-item border-radius-md" href="@Url.Action("ListaRecordatorios", "Recordatorio")">
+                        @*<a class="dropdown-item border-radius-md" href="@Url.Action("ListaRecordatorios", "Recordatorio")">
                             Recordatorios
-                        </a>
+                        </a>*@
                         <a class="dropdown-item border-radius-md" href="@Url.Action("MisCitas", "Cita")">
                             Mis Citas
                         </a>
@@ -125,7 +122,9 @@
                             Mis Cotizaciones
                         </a>
                     }
-
+                    <a class="dropdown-item border-radius-md" href="@Url.Action("Index", "Manage")">
+                        Cambio Contraseña
+                    </a>
                     <hr class="dropdown-divider" />
 
                     <a class="dropdown-item border-radius-md"

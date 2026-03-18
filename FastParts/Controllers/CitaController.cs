@@ -87,15 +87,59 @@ namespace FastParts.Controllers
         //Agendar Cita Admin 
 
 
+        //[Authorize(Roles = "Admin")]
+        //public ActionResult CrearAdmin()
+        //{
+        //    var model = new CrearCitaAdminViewModel
+        //    {
+        //        FechaCita = DateTime.Now.AddHours(1)
+        //    };
+        //    return View(model);
+        //}
+
         [Authorize(Roles = "Admin")]
         public ActionResult CrearAdmin()
         {
+            var dt = DateTime.Now.AddHours(1);
+
+            // redondear hacia arriba a 00 o 30
+            var minutos = dt.Minute;
+            var siguienteBloque = (int)(Math.Ceiling(minutos / 30.0) * 30);
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, 0, 0).AddMinutes(siguienteBloque);
+
             var model = new CrearCitaAdminViewModel
             {
-                FechaCita = DateTime.Now.AddHours(1)
+                FechaCita = dt
             };
+
             return View(model);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin")]
+        //public ActionResult CrearAdmin(CrearCitaAdminViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return View(model);
+
+        //    var cita = new CitaModel
+        //    {
+        //        UsuarioId = null, 
+        //        NombreCliente = model.NombreCliente,
+        //        TelefonoCliente = model.TelefonoCliente,
+        //        Vehiculo = model.Vehiculo,
+        //        Placa = model.Placa,
+        //        FechaCita = model.FechaCita,
+        //        Motivo = model.Motivo,
+        //        Estado = "Ingresada"
+        //    };
+
+        //    db.CitaModels.Add(cita);
+        //    db.SaveChanges();
+
+        //    return RedirectToAction("ListaAdmin");
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -105,14 +149,94 @@ namespace FastParts.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Normalizar: sin segundos ni milisegundos (evita inconsistencias)
+            model.FechaCita = new DateTime(
+                model.FechaCita.Year,
+                model.FechaCita.Month,
+                model.FechaCita.Day,
+                model.FechaCita.Hour,
+                model.FechaCita.Minute,
+                0
+            );
+
+            // 1) No permitir fechas pasadas (mínimo 1 hora en el futuro)
+            var minimoPermitido = DateTime.Now.AddHours(1);
+            if (model.FechaCita < minimoPermitido)
+            {
+                ModelState.AddModelError(nameof(model.FechaCita),
+                    "La fecha/hora de la cita debe ser al menos 1 hora en el futuro.");
+                return View(model);
+            }
+
+            // 2) No permitir domingos
+            var dia = model.FechaCita.DayOfWeek;
+            if (dia == DayOfWeek.Sunday)
+            {
+                ModelState.AddModelError(nameof(model.FechaCita),
+                    "No se pueden agendar citas los domingos (taller cerrado).");
+                return View(model);
+            }
+
+            // 3) Forzar saltos de 30 min (00 o 30) y segundos en 0
+            if ((model.FechaCita.Minute % 30) != 0 || model.FechaCita.Second != 0)
+            {
+                ModelState.AddModelError(nameof(model.FechaCita),
+                    "La hora debe seleccionarse en intervalos de 30 minutos (por ejemplo 10:00 o 10:30).");
+                return View(model);
+            }
+
+            // 4) Horario del taller (real):
+            //    Lun–Vie 8–18, Sáb 8–12, Dom cerrado
+            int minutosDia = model.FechaCita.Hour * 60 + model.FechaCita.Minute;
+
+            int openMin;
+            int closeMin; // la cita NO puede iniciar en o después de closeMin
+
+            if (dia == DayOfWeek.Saturday)
+            {
+                openMin = 8 * 60;     // 08:00
+                closeMin = 12 * 60;   // 12:00
+                if (minutosDia < openMin || minutosDia >= closeMin)
+                {
+                    ModelState.AddModelError(nameof(model.FechaCita),
+                        "Sábados el horario es de 8:00 AM a 12:00 PM");
+                    return View(model);
+                }
+            }
+            else
+            {
+                // Lun–Vie
+                openMin = 8 * 60;     // 08:00
+                closeMin = 18 * 60;   // 18:00
+                if (minutosDia < openMin || minutosDia >= closeMin)
+                {
+                    ModelState.AddModelError(nameof(model.FechaCita),
+                        "El horario es de lunes a viernes de 8:00 AM a 6:00 PM");
+                    return View(model);
+                }
+            }
+
+            // 5) Capacidad por slot: máximo 2 citas en la misma fecha/hora (no canceladas)
+            int citasEnSlot = db.CitaModels.Count(c =>
+                c.FechaCita == model.FechaCita &&
+                c.Estado != "Cancelada"
+            );
+
+            if (citasEnSlot >= 2)
+            {
+                ModelState.AddModelError(nameof(model.FechaCita),
+                    "Este horario ya alcanzó el máximo de citas. Por favor selecciona otra hora.");
+                return View(model);
+            }
+
             var cita = new CitaModel
             {
-                UsuarioId = null, 
+                UsuarioId = null,
                 NombreCliente = model.NombreCliente,
                 TelefonoCliente = model.TelefonoCliente,
                 Vehiculo = model.Vehiculo,
                 Placa = model.Placa,
-                FechaCita = model.FechaCita,
+                FechaCita = model.FechaCita, // ya normalizada
                 Motivo = model.Motivo,
                 Estado = "Ingresada"
             };
@@ -122,6 +246,8 @@ namespace FastParts.Controllers
 
             return RedirectToAction("ListaAdmin");
         }
+
+
 
         //Listado citas - Admin
         [Authorize(Roles = "Admin")]

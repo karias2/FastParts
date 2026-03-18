@@ -34,7 +34,7 @@ animation: pulse 0.5s ease-in-out;
 }
 
 /* Tarjeta principal */
-.admin-card {
+/*.admin-card {
     border: 0;
     border-radius: 1rem;
     overflow: hidden;
@@ -43,13 +43,26 @@ animation: pulse 0.5s ease-in-out;
     min-height: 140px;
     transition: transform .18s ease, box-shadow .18s ease;
     cursor: pointer;
-    text-decoration: none; /* para anclar el contenedor */
+    text-decoration: none;*/ /* para anclar el contenedor */
+/*}*/
+
+.admin-card {
+    border-radius: 18px;
+    color: #fff;
+    border: 0;
+    box-shadow: 0 14px 28px rgba(0,0,0,.08);
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
     /* efecto hover */
-    .admin-card:hover {
+    /*.admin-card:hover {
         transform: translateY(-6px);
         box-shadow: 0 18px 40px rgba(16,24,40,0.18);
+    }*/
+
+    .admin-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 34px rgba(0,0,0,.12);
     }
 
     /* contenido interno */
@@ -58,7 +71,7 @@ animation: pulse 0.5s ease-in-out;
     }
 
 /* Icono en círculo */
-.icon-circle {
+/*.icon-circle {
     width: 56px;
     height: 56px;
     border-radius: 12px;
@@ -67,11 +80,25 @@ animation: pulse 0.5s ease-in-out;
     justify-content: center;
     font-size: 1.4rem;
     background: rgba(255,255,255,0.12);
-    box-shadow: inset 0 -6px 12px rgba(255,255,255,0.03);
+    box-shadow: inset 0 -6px 12px rgba(255,255,255,0.03);*/
 }
 
+.icon-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+    .icon-circle i {
+        font-size: 1.4rem;
+    }
+
 /* Gradientes */
-.gradient-primary {
+/*.gradient-primary {
     background: linear-gradient(135deg,#4f46e5 0%, #06b6d4 100%);
 }
 
@@ -85,12 +112,32 @@ animation: pulse 0.5s ease-in-out;
 
 .gradient-info {
     background: linear-gradient(135deg,#0ea5e9 0%, #6366f1 100%);
+}*/
+
+.gradient-primary {
+    background: linear-gradient(90deg, var(--fp-teal) 0%, var(--fp-cyan) 100%);
+}
+
+.gradient-success {
+    background: linear-gradient(90deg, var(--fp-dark) 0%, var(--fp-teal) 100%);
+}
+
+.gradient-danger {
+    background: linear-gradient(90deg, var(--fp-red) 0%, var(--fp-dark) 115%);
+}
+
+.gradient-info {
+    background: linear-gradient(90deg, var(--fp-cyan) 0%, var(--fp-dark) 120%);
 }
 
 /* Texto pequeño */
-.small-stat {
+/*.small-stat {
     font-size: 0.85rem;
     opacity: 0.95;
+}*/
+
+.small-stat {
+    opacity: .92;
 }
 
 /* acciones dentro de la tarjeta */
@@ -98,19 +145,75 @@ animation: pulse 0.5s ease-in-out;
     margin-top: .8rem;
 }
 
+
+
+/* Botones dentro de tarjetas: estilo “glass” */
+.admin-card .btn.btn-light {
+    background: rgba(255,255,255,.92);
+    border: 0;
+    color: var(--fp-dark);
+    font-weight: 600;
+}
+
+    .admin-card .btn.btn-light:hover {
+        background: rgba(255,255,255,.98);
+        color: #000;
+    }
+
+/* Badges de marca */
+.badge-fp {
+    background: rgba(255,255,255,.92) !important;
+    color: var(--fp-dark) !important;
+    border: 1px solid rgba(255,255,255,.25);
+}
+
+.badge-fp-cyan {
+    background: var(--fp-cyan) !important;
+    color: var(--fp-dark) !important;
+    font-weight: 700;
+}
+
+.badge-fp-teal {
+    background: var(--fp-teal) !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.badge-fp-red {
+    background: var(--fp-red) !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
 /* chip estilo */
-.chip {
+/*.chip {
     font-size: .8rem;
     padding: .25rem .5rem;
     border-radius: .5rem;
     background: rgba(255,255,255,0.12);
+}*/
+
+.chip {
+    display: inline-block;
+    padding: .25rem .55rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-size: .85rem;
 }
 
 /* enlaces que envuelven tarjetas */
-.admin-card-link {
+/*.admin-card-link {
     display: block;
-    color: inherit; /* hereda color blanco sobre el gradiente */
-    text-decoration: none; /* sin subrayado */
+    color: inherit;*/ /* hereda color blanco sobre el gradiente */
+    /*text-decoration: none;*/ /* sin subrayado */
+/*}*/
+
+
+.admin-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .admin-card-link:hover {
@@ -338,6 +441,11 @@ textarea {
     --bs-link-hover-color: #0a58ca;
     --bs-code-color: #d63384;
     --bs-highlight-bg: #fff3cd;
+    --fp-cyan: #34CCEC;
+    --fp-teal: #487E8A;
+    --fp-dark: #2E3D44;
+    --fp-red: #9B1515;
+    --fp-gray: #BABBBB;
 }
 
 

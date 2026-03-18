@@ -32,7 +32,7 @@ namespace FastParts.Migrations
                     PhoneNumber="1111-1111",
                     Estado = true
                 };
-                var result = userManager.Create(user, "Superadmin123");
+                var result = userManager.Create(user, "EZh2h_ZyGsAoKL!zz3gt");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Admin");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Mecanico");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Cliente");
@@ -48,7 +48,7 @@ namespace FastParts.Migrations
                     PhoneNumber = "2222-2222",
                     Estado = true
                 };
-                var result = userManager.Create(user, "Admin123");
+                var result = userManager.Create(user, "EZh2h_ZyGsAoKL!zz3gt");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Admin");
             }
 
@@ -62,7 +62,7 @@ namespace FastParts.Migrations
                     PhoneNumber = "3333-3333",
                     Estado = true
                 };
-                var result = userManager.Create(user, "Mecanico123");
+                var result = userManager.Create(user, "EZh2h_ZyGsAoKL!zz3gt");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Mecanico");
             }
 
@@ -76,7 +76,7 @@ namespace FastParts.Migrations
                     PhoneNumber = "4444-4444",
                     Estado = true
                 };
-                var result = userManager.Create(user, "Cliente123");
+                var result = userManager.Create(user, "EZh2h_ZyGsAoKL!zz3gt");
                 if (result.Succeeded) userManager.AddToRole(user.Id, "Cliente");
             }
         }
