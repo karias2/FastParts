@@ -237,6 +237,41 @@ namespace FastParts.Controllers
             return View(model);
         }
 
+        //Detalle cita - Cliente
+        [Authorize(Roles = "Cliente")]
+        public ActionResult DetalleCliente(int id)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var cita = db.CitaModels
+                .Include(c => c.Mecanico)
+                .Include(c => c.Usuario)
+                .FirstOrDefault(c => c.Id == id && c.UsuarioId == userId);
+
+            if (cita == null)
+                return HttpNotFound();
+
+            var model = new CitaDetalleViewModel
+            {
+                Id = cita.Id,
+                NombreCliente = cita.NombreCliente,
+                TelefonoCliente = cita.TelefonoCliente,
+                Vehiculo = cita.Vehiculo,
+                Placa = cita.Placa,
+                FechaCita = cita.FechaCita,
+                Estado = cita.Estado,
+                NombreMecanico = cita.Mecanico != null ? cita.Mecanico.NombreCompleto : "(Sin mecánico)",
+                NombreUsuario = cita.Usuario != null ? cita.Usuario.UserName : "",
+                Motivo = cita.Estado == "Terminada" ? cita.Motivo : "",
+                HoraInicio = cita.HoraInicio,
+                HoraFin = cita.HoraFin,
+                TieneFotoAntes = cita.FotoAntes != null,
+                TieneFotoDespues = cita.FotoDespues != null
+            };
+
+            return View(model);
+        }
+
 
 
         // Cola citas sin mecanico asignado
@@ -716,6 +751,9 @@ namespace FastParts.Controllers
 
             return Json(horas, JsonRequestBehavior.AllowGet);
         }
+
+
+
 
     }
 

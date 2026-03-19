@@ -22,7 +22,7 @@
                             <th>Placa</th>
                             <th>Estado</th>
                             <th>Mecánico</th>
-                            <th style="width:140px;">Acciones</th>
+                            <th style="width:220px;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,19 +35,20 @@
                                 <td>@item.Estado</td>
                                 <td>@item.NombreMecanico</td>
                                 <td class="text-center text-nowrap">
+                                    <a href="@Url.Action("DetalleCliente", "Cita", new { id = item.Id })"
+                                       class="btn btn-sm btn-outline-info mb-1">
+                                        Ver detalles
+                                    </a>
+
                                     @if (item.PuedeCancelar)
                                     {
                                         using (Html.BeginForm("CancelarCliente", "Cita", new { id = item.Id }, FormMethod.Post, new { @class = "form-cancelar-cita d-inline" }))
                                         {
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger mb-1">
                                                 Cancelar
                                             </button>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">No disponible</span>
                                     }
                                 </td>
                             </tr>
