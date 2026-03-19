@@ -14,9 +14,15 @@ namespace FastParts.Models
 
     public class EditarPerfilViewModel
     {
+        [Required(ErrorMessage = "El nombre no se puede dejar en blanco")]
         public string NombreCompleto { get; set; }
         public string Direccion { get; set; }
+
+        [Required(ErrorMessage = "El correo electrónico no se puede dejar en blanco")]
+        [EmailAddress(ErrorMessage = "Ingrese un correo electrónico válido")]
         public string Email { get; set; }
+
+        [RegularExpression(@"^\d{8,}$", ErrorMessage = "El teléfono debe tener al menos 8 dígitos")]
         public string Telefono { get; set; }
     }
 
@@ -97,7 +103,7 @@ namespace FastParts.Models
         [Compare("Password", ErrorMessage = "La contraseña y confirmacion no coinciden.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]       
+        [Required]
         [Display(Name = "Nombre Completo")]
         public string NombreCompleto { get; set; }
 

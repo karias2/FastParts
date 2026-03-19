@@ -1,4 +1,3 @@
-
 @model FastParts.Models.EditarPerfilViewModel
 
 @{
@@ -27,35 +26,36 @@
                         <div class="mb-3">
                             <label class="form-label">Nombre completo</label>
                             @Html.TextBoxFor(
-                                m => m.NombreCompleto,
-                                new { @class = "form-control", placeholder = "Nombre completo" }
-                            )
+                                     m => m.NombreCompleto,
+                                     new { @class = "form-control", placeholder = "Nombre completo" }
+                                 )
                             @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger small" })
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>
                             @Html.TextBoxFor(
-                                m => m.Email,
-                                new { @class = "form-control", type = "email", placeholder = "correo@ejemplo.com" }
-                            )
+                                     m => m.Email,
+                                     new { @class = "form-control", type = "email", placeholder = "correo@ejemplo.com" }
+                                 )
                             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Dirección</label>
                             @Html.TextBoxFor(
-                                m => m.Direccion,
-                                new { @class = "form-control", placeholder = "Dirección" }
-                            )
+                                     m => m.Direccion,
+                                     new { @class = "form-control", placeholder = "Dirección" }
+                                 )
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Teléfono</label>
                             @Html.TextBoxFor(
-                                m => m.Telefono,
-                                new { @class = "form-control", placeholder = "Teléfono" }
-                            )
+                                     m => m.Telefono,
+                                     new { @class = "form-control", placeholder = "Teléfono" }
+                                 )
+                            @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger small" })
                         </div>
 
                     </div>
