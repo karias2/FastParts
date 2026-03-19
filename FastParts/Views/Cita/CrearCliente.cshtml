@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Agendar Cita</h2>
 
-    @using (Html.BeginForm("CrearCliente", "Cita", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    @using (Html.BeginForm("CrearCliente", "Cita", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate", id = "formCrearCitaCliente" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -43,14 +43,20 @@
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.FechaCita, new { @class = "form-label" })
                         @Html.TextBoxFor(
-                                      m => m.FechaCita,
-                                      new
-                                      {
-                                          @class = "form-control",
-                                          type = "datetime-local",
-                                          value = Model != null ? Model.FechaCita.ToString("yyyy-MM-ddTHH:mm") : ""
-                                      })
+                                 m => m.FechaCita,
+                                 "{0:yyyy-MM-dd HH:mm}",
+                                 new
+                                 {
+                                     @class = "form-control",
+                                     id = "FechaCitaCliente",
+                                     autocomplete = "off",
+                                     placeholder = "Seleccione fecha y hora"
+                                 })
                         @Html.ValidationMessageFor(m => m.FechaCita, "", new { @class = "text-danger" })
+
+                        <small class="text-muted d-block mt-1">
+                            Horario: Lun–Vie 8:00 AM - 6:00 PM, Sáb 8:00 AM - 12:00 PM, Dom cerrado.
+                        </small>
                     </div>
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.Motivo, new { @class = "form-label" })
@@ -73,8 +79,135 @@
 
     <script>
         $(function () {
-            $("#btnGuardarCitaCliente").on("click", function (e) {               
+            const input = document.getElementById("FechaCitaCliente");
+            const form = document.getElementById("formCrearCitaCliente");
+            const btn = document.getElementById("btnGuardarCitaCliente");
+
+            if (!input || !form || !btn) return;
+
+            let horasDisponiblesPorFecha = {};
+
+            function pad(n) {
+                return n.toString().padStart(2, "0");
+            }
+
+            function formatDateYmd(date) {
+                return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+            }
+
+            function formatTimeHm(date) {
+                return pad(date.getHours()) + ":" + pad(date.getMinutes());
+            }
+
+            function getMinDate() {
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+                now.setSeconds(0);
+                now.setMilliseconds(0);
+
+                const minutos = now.getMinutes();
+                const redondeado = Math.ceil(minutos / 30) * 30;
+                now.setMinutes(redondeado);
+
+                return now;
+            }
+
+            function getHorarioDelDia(date) {
+                const day = date.getDay();
+
+                if (day === 0) {
+                    return null;
+                }
+
+                if (day === 6) {
+                    return { minTime: "08:00", maxTime: "12:00" };
+                }
+
+                return { minTime: "08:00", maxTime: "18:00" };
+            }
+
+            function cargarHorasDisponibles(fecha) {
+                const fechaStr = formatDateYmd(fecha);
+
+                return $.getJSON('@Url.Action("ObtenerHorasDisponibles", "Cita")', { fecha: fechaStr })
+                    .done(function (data) {
+                        horasDisponiblesPorFecha[fechaStr] = data || [];
+                    })
+                    .fail(function () {
+                        horasDisponiblesPorFecha[fechaStr] = [];
+                    });
+            }
+
+            const fp = flatpickr(input, {
+                locale: "es",
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                altInput: true,
+                altFormat: "d/m/Y h:i K",
+                time_24hr: false,
+                minuteIncrement: 30,
+                minDate: getMinDate(),
+                disable: [
+                    function (date) {
+                        return date.getDay() === 0;
+                    }
+                ],
+                onReady: function (selectedDates, dateStr, instance) {
+                    const now = getMinDate();
+                    const horario = getHorarioDelDia(now);
+
+                    if (horario) {
+                        instance.set("minTime", horario.minTime);
+                        instance.set("maxTime", horario.maxTime);
+                    }
+                },
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (!selectedDates || !selectedDates.length) return;
+
+                    const selected = selectedDates[0];
+                    const fechaStr = formatDateYmd(selected);
+                    const horaStr = formatTimeHm(selected);
+                    const horario = getHorarioDelDia(selected);
+
+                    if (!horario) {
+                        instance.clear();
+                        Swal.fire("Taller cerrado", "No se pueden agendar citas los domingos.", "warning");
+                        return;
+                    }
+
+                    instance.set("minTime", horario.minTime);
+                    instance.set("maxTime", horario.maxTime);
+
+                    cargarHorasDisponibles(selected).done(function () {
+                        const disponibles = horasDisponiblesPorFecha[fechaStr] || [];
+
+                        if (disponibles.length === 0) {
+                            instance.clear();
+                            Swal.fire("Sin cupo", "No hay horarios disponibles para esa fecha.", "warning");
+                            return;
+                        }
+
+                        if (horaStr && disponibles.indexOf(horaStr) === -1) {
+                            instance.clear();
+                            Swal.fire("Horario no disponible", "Ese horario ya no está disponible. Selecciona otro.", "warning");
+                        }
+                    });
+                }
+            });
+
+            btn.addEventListener("click", function (e) {
                 e.preventDefault();
+
+                if (!form.checkValidity()) {
+                    form.submit();
+                    return;
+                }
+
+                if (!input.value) {
+                    Swal.fire("Campo requerido", "Debes seleccionar una fecha y hora para la cita.", "warning");
+                    return;
+                }
+
                 Swal.fire({
                     title: '¿Confirmar cita?',
                     text: 'Se registrará la cita con los datos indicados.',
@@ -84,9 +217,9 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $(e.target).closest("form").off("submit").submit();
+                        form.submit();
                     }
-                });              
+                });
             });
         });
     </script>

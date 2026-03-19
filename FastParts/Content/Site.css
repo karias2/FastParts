@@ -7450,3 +7450,56 @@ progress {
 animation: pulse 0.5s ease-in-out;
 }
 
+.table-responsive {
+    overflow-x: auto;
+}
+
+#tablaCitasAdmin,
+#tablaMisCitas {
+    width: 100% !important;
+}
+
+    #tablaCitasAdmin th,
+    #tablaCitasAdmin td,
+    #tablaMisCitas th,
+    #tablaMisCitas td {
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+        #tablaCitasAdmin td:last-child,
+        #tablaMisCitas td:last-child {
+            min-width: 170px;
+        }
+
+    #tablaCitasAdmin .btn,
+    #tablaMisCitas .btn {
+        margin: 2px;
+    }
+
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 10px;
+}
+
+.dataTables_wrapper .dataTables_info {
+    padding-top: 12px;
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 4px !important;
+    background: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    line-height: normal !important;
+    padding: 6px 12px !important;
+}
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #0d6efd !important;
+        color: white !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #e9ecef !important;
+    }
