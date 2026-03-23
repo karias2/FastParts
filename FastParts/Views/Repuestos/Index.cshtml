@@ -1,6 +1,10 @@
-﻿@model IEnumerable<FastParts.Models.RepuestoModel>
+@model IEnumerable<FastParts.Models.RepuestoModel>
 @{
     var placeholder = Url.Content("~/Content/img/placeholder-part.png");
+    var currentPage = ViewBag.Page != null ? (int)ViewBag.Page : 1;
+    var totalPages = ViewBag.TotalPages != null ? (int)ViewBag.TotalPages : 1;
+    var currentSort = (ViewBag.Sort as string) ?? "nombre";
+    var currentQ = (ViewBag.Q as string) ?? string.Empty;
 }
 <h2>Repuestos</h2>
 
@@ -8,10 +12,16 @@
     <div>
         @Html.ActionLink("Crear repuesto", "Create", "Repuestos", null, new { @class = "btn btn-primary" })
     </div>
+    <div class="repuestos-sort">
+        <span>Ordenar:</span>
+        @Html.ActionLink("Nombre", "Index", new { q = currentQ, sort = "nombre", page = 1 }, new { @class = currentSort == "nombre" ? "btn btn-default active-sort" : "btn btn-default" })
+        @Html.ActionLink("Precio", "Index", new { q = currentQ, sort = "precio", page = 1 }, new { @class = currentSort == "precio" ? "btn btn-default active-sort" : "btn btn-default" })
+        @Html.ActionLink("Stock", "Index", new { q = currentQ, sort = "stock", page = 1 }, new { @class = currentSort == "stock" ? "btn btn-default active-sort" : "btn btn-default" })
+    </div>
 
     <div class="repuestos-search">
-        <input type="text" id="searchText" class="form-control" placeholder="Buscar repuestos..." />
-        <button type="button" id="searchBtn" class="btn btn-default">Buscar</button>
+        <input type="text" id="searchText" class="form-control" placeholder="Buscar repuestos..." value="@currentQ" />
+        <button type="button" id="searchBtn" class="btn btn-default">Buscar (servidor)</button>
     </div>
 </div>
 
@@ -25,6 +35,13 @@
             </div>
 
             <h4>@x.Nombre</h4>
+            <p style="margin: 6px 12px; color: #6c757d;">
+                Código único: <strong>RP-@x.Id.ToString("D5")</strong>
+                @if (!string.IsNullOrWhiteSpace(x.NumeroParte))
+                {
+                    <span> | N. parte: @x.NumeroParte</span>
+                }
+            </p>
 
             <div class="meta">
                 <span>@x.Marca</span>
@@ -72,6 +89,18 @@
         </article>
     }
 </div>
+
+@if (totalPages > 1)
+{
+    <div class="pagination-wrap">
+        @for (int p = 1; p <= totalPages; p++)
+        {
+            <a href="@Url.Action("Index", new { q = currentQ, sort = currentSort, page = p })"
+               class="btn btn-sm @(p == currentPage ? "btn-primary" : "btn-default")"
+               style="margin-right:4px; margin-bottom:4px;">@p</a>
+        }
+    </div>
+}
 
 @if (TempData["OkMsg"] != null)
 {<div class="alert alert-success">@TempData["OkMsg"]</div>}
@@ -184,6 +213,21 @@
         max-width: 420px;
         margin-left: auto;
     }
+
+    .repuestos-sort {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .active-sort {
+        border-color: #337ab7;
+    }
+
+    .pagination-wrap {
+        margin-top: 16px;
+    }
 </style>
 
 <script>
@@ -194,12 +238,8 @@
 
         function filtrar() {
             var q = (search.value || '').toLowerCase();
-            var items = cards.querySelectorAll('.card');
-            items.forEach(function (el) {
-                var nombre = (el.getAttribute('data-nombre') || '').toLowerCase();
-                var marca = (el.getAttribute('data-marca') || '').toLowerCase();
-                el.style.display = (nombre.indexOf(q) >= 0 || marca.indexOf(q) >= 0) ? '' : 'none';
-            });
+            var next = '@Url.Action("Index", "Repuestos")' + '?q=' + encodeURIComponent(q) + '&sort=@currentSort&page=1';
+            window.location.href = next;
         }
 
         if (btn) btn.addEventListener('click', function (e) { e.preventDefault(); filtrar(); });

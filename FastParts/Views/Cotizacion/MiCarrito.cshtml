@@ -1,208 +1,129 @@
-@model FastParts.Models.CotizacionesModel
+@model FastParts.Models.MiCarritoViewModel
 @using System.Globalization
 @{
-    ViewBag.Title = "Mi Carrito de Cotización";
+    ViewBag.Title = "Mi Carrito";
     var cr = new CultureInfo("es-CR");
 }
 
 <div class="container mt-4">
-    <h2 class="mb-4">
-  <i class="bi bi-cart3"></i> Mi Carrito de Cotización
-    </h2>
+    <h2><i class="bi bi-cart3"></i> Mi Carrito</h2>
 
     @if (TempData["Success"] != null)
- {
-  <div class="alert alert-success alert-dismissible fade show">
-    @TempData["Success"]
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
- </div>
-    }
-
-    @if (TempData["Error"] != null)
     {
-      <div class="alert alert-danger alert-dismissible fade show">
-        @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-     </div>
+        <div class="alert alert-success">@TempData["Success"]</div>
     }
-
     @if (TempData["Info"] != null)
     {
-   <div class="alert alert-info alert-dismissible fade show">
-    @TempData["Info"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="alert alert-info">@TempData["Info"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (!Model.Repuestos.Any() && !Model.Servicios.Any())
+    {
+        <div class="alert alert-warning">Tu carrito esta vacio.</div>
+        <a class="btn btn-primary" href="@Url.Action("CatalogoRepuestos", "Cotizacion")">Ir al catalogo</a>
+    }
+    else
+    {
+        if (Model.Repuestos.Any())
+        {
+            <h4>Repuestos</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Repuesto</th>
+                            <th>Precio unitario</th>
+                            <th style="width:180px;">Cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Repuestos)
+                        {
+                            <tr>
+                                <td>RP-@item.IdRepuesto.ToString("D5")</td>
+                                <td>@item.Nombre @if (!string.IsNullOrWhiteSpace(item.Marca)) { <small class="text-muted">(@item.Marca)</small> }</td>
+                                <td>@item.PrecioUnitario.ToString("C", cr)</td>
+                                <td>
+                                    <div style="display:flex; gap:6px; align-items:center;">
+                                        @using (Html.BeginForm("DisminuirRepuesto", "Cotizacion", FormMethod.Post, new { style = "display:inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="idRepuesto" value="@item.IdRepuesto" />
+                                            <button type="submit" class="btn btn-default btn-sm">-</button>
+                                        }
+                                        <strong>@item.Cantidad</strong>
+                                        @using (Html.BeginForm("IncrementarRepuesto", "Cotizacion", FormMethod.Post, new { style = "display:inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="idRepuesto" value="@item.IdRepuesto" />
+                                            <button type="submit" class="btn btn-default btn-sm">+</button>
+                                        }
+                                    </div>
+                                </td>
+                                <td>@item.Subtotal.ToString("C", cr)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        if (Model.Servicios.Any())
+        {
+            <h4>Servicios</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio unitario</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Servicios)
+                        {
+                            <tr>
+                                <td>@item.Nombre</td>
+                                <td>@item.PrecioUnitario.ToString("C", cr)</td>
+                                <td>@item.Cantidad</td>
+                                <td>@item.Subtotal.ToString("C", cr)</td>
+                                <td>
+                                    @using (Html.BeginForm("EliminarServicio", "Cotizacion", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="idServicio" value="@item.IdServicio" />
+                                        <button type="submit" class="btn btn-danger btn-xs">Eliminar uno</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="well">
+            <p><strong>Total repuestos:</strong> @Model.TotalRepuestos.ToString("C", cr)</p>
+            <p><strong>Total servicios:</strong> @Model.TotalServicios.ToString("C", cr)</p>
+            <h4><strong>Total general: @Model.Total.ToString("C", cr)</strong></h4>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a class="btn btn-default" href="@Url.Action("CatalogoRepuestos", "Cotizacion")">Seguir comprando</a>
+            @using (Html.BeginForm("SolicitarCotizacion", "Cotizacion", FormMethod.Post, new { style = "display:inline;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary">Solicitar cotizacion</button>
+            }
         </div>
     }
-
-    <div class="row">
-     <div class="col-md-8">
-         <!-- Repuestos -->
-    <div class="card mb-4">
-           <div class="card-header bg-primary text-white">
-       <h5 class="mb-0"><i class="bi bi-gear-fill"></i> Repuestos (@Model.RepuestosCotizados.Count)</h5>
-             </div>
-  <div class="card-body">
-        @if (Model.RepuestosCotizados.Any())
-    {
- <div class="table-responsive">
-      <table class="table table-hover">
-   <thead>
-          <tr>
-         <th>Repuesto</th>
-    <th>Marca</th>
-<th>Número Parte</th>
-        <th class="text-end">Precio</th>
-            <th class="text-center">Acción</th>
-      </tr>
-        </thead>
-   <tbody>
-               @foreach (var repuesto in Model.RepuestosCotizados)
-        {
-     <tr>
-    <td>
- <strong>@repuesto.Nombre</strong>
-     @if (!string.IsNullOrEmpty(repuesto.Descripcion))
-           {
-    <br />
-     <small class="text-muted">@repuesto.Descripcion</small>
-  }
-    </td>
-     <td>@(repuesto.Marca ?? "-")</td>
-     <td>@(repuesto.NumeroParte ?? "-")</td>
-             <td class="text-end"><strong>@repuesto.Precio.ToString("C", cr)</strong></td>
-   <td class="text-center">
-  @using (Html.BeginForm("EliminarRepuesto", "Cotizacion", FormMethod.Post, new { @class = "d-inline" }))
-     {
-     @Html.AntiForgeryToken()
-   <input type="hidden" name="idRepuesto" value="@repuesto.Id" />
-       <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este repuesto?')">
-         <i class="bi bi-trash"></i>
-       </button>
-   }
- </td>
-     </tr>
-     }
-      </tbody>
-         </table>
-             </div>
-     }
-       else
-        {
-      <p class="text-muted mb-0">No has agregado repuestos a tu cotización.</p>
-    <a href="@Url.Action("CatalogoRepuestos", "Cotizacion")" class="btn btn-sm btn-primary mt-2">
-           <i class="bi bi-plus-circle"></i> Agregar Repuestos
-      </a>
-      }
-</div>
-  </div>
-
-       <!-- Servicios -->
-            <div class="card mb-4">
-    <div class="card-header bg-success text-white">
-     <h5 class="mb-0"><i class="bi bi-wrench"></i> Servicios (@Model.ServiciosCotizados.Count)</h5>
-   </div>
-    <div class="card-body">
-         @if (Model.ServiciosCotizados.Any())
-      {
- <div class="table-responsive">
-  <table class="table table-hover">
-           <thead>
-<tr>
-    <th>Servicio</th>
-    <th>Descripción</th>
-        <th class="text-end">Precio</th>
-     <th class="text-center">Acción</th>
-  </tr>
-    </thead>
-   <tbody>
-     @foreach (var servicio in Model.ServiciosCotizados)
-   {
-     <tr>
-        <td><strong>@servicio.Nombre</strong></td>
- <td>@(servicio.Descripcion ?? "-")</td>
-  <td class="text-end"><strong>@servicio.PrecioServicio.ToString("C", cr)</strong></td>
-         <td class="text-center">
-     @using (Html.BeginForm("EliminarServicio", "Cotizacion", FormMethod.Post, new { @class = "d-inline" }))
-    {
-      @Html.AntiForgeryToken()
-   <input type="hidden" name="idServicio" value="@servicio.IdServicio" />
-       <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este servicio?')">
-  <i class="bi bi-trash"></i>
-   </button>
-    }
-</td>
-        </tr>
-  }
-     </tbody>
-          </table>
-</div>
-      }
-    else
-   {
-     <p class="text-muted mb-0">No has agregado servicios a tu cotización.</p>
-    <a href="@Url.Action("CatalogoServicios", "Cotizacion")" class="btn btn-sm btn-success mt-2">
-    <i class="bi bi-plus-circle"></i> Agregar Servicios
-  </a>
-       }
-       </div>
-      </div>
- </div>
-
-   <!-- Resumen -->
-        <div class="col-md-4">
-  <div class="card sticky-top" style="top: 20px;">
-       <div class="card-header bg-dark text-white">
-         <h5 class="mb-0">Resumen</h5>
-          </div>
-    <div class="card-body">
-  <div class="d-flex justify-content-between mb-2">
-  <span>Repuestos:</span>
-    <strong>@Model.RepuestosCotizados.Sum(r => r.Precio).ToString("C", cr)</strong>
-       </div>
-     <div class="d-flex justify-content-between mb-2">
-        <span>Servicios:</span>
-       <strong>@Model.ServiciosCotizados.Sum(s => s.PrecioServicio).ToString("C", cr)</strong>
- </div>
-   <hr />
-    <div class="d-flex justify-content-between mb-3">
-   <span class="h5">Total:</span>
-            <span class="h5 text-primary"><strong>@Model.MontoTotal.ToString("C", cr)</strong></span>
- </div>
-
-        @if (Model.RepuestosCotizados.Any() || Model.ServiciosCotizados.Any())
-  {
-        using (Html.BeginForm("SolicitarCotizacion", "Cotizacion", FormMethod.Post))
-        {
-    @Html.AntiForgeryToken()
-     <button type="submit" class="btn btn-primary w-100 btn-lg" onclick="return confirm('¿Enviar cotización para revisión?')">
-           <i class="bi bi-send"></i> Solicitar Cotización
-        </button>
-    }
-     <small class="text-muted d-block mt-2">
-  Al solicitar, tu cotización será revisada por un administrador.
-           </small>
-     }
-   else
- {
-      <div class="alert alert-info mb-0">
-       <i class="bi bi-info-circle"></i> Agrega repuestos o servicios para continuar.
-          </div>
-         }
-
-          <hr />
-      <div class="d-grid gap-2">
-      <a href="@Url.Action("CatalogoRepuestos", "Cotizacion")" class="btn btn-outline-primary">
-        <i class="bi bi-gear"></i> Ver Repuestos
-    </a>
-         <a href="@Url.Action("CatalogoServicios", "Cotizacion")" class="btn btn-outline-success">
-          <i class="bi bi-wrench"></i> Ver Servicios
-    </a>
-          <a href="@Url.Action("MisCotizaciones", "Cotizacion")" class="btn btn-outline-secondary">
-       <i class="bi bi-clock-history"></i> Mis Cotizaciones
-        </a>
-   </div>
- </div>
-          </div>
-</div>
-    </div>
 </div>

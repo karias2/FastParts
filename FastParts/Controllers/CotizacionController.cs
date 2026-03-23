@@ -1,4 +1,4 @@
-﻿using FastParts.Models;
+using FastParts.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -37,54 +37,58 @@ namespace FastParts.Controllers
             var userId = User.Identity.GetUserId();
 
             var cotizacion = db.Cotizaciones
-                         .Include(c => c.RepuestosCotizados)
-             .Include(c => c.ServiciosCotizados)
                 .Where(c => c.IdCliente == userId && c.Estado == "ACTIVA")
                 .FirstOrDefault();
 
+            var vm = new MiCarritoViewModel();
+
             if (cotizacion == null)
             {
-                cotizacion = new CotizacionesModel
+                return View(vm);
+            }
+
+            vm.IdCotizacion = cotizacion.IdCotizacion;
+
+            vm.Repuestos = db.RepuestosCotizados
+                .Where(rc => rc.IdCotizacion == cotizacion.IdCotizacion)
+                .Join(db.Repuestos, rc => rc.IdRepuesto, r => r.Id, (rc, r) => new { rc, r })
+                .GroupBy(x => new { x.r.Id, x.r.Nombre, x.r.Marca, x.r.Precio })
+                .Select(g => new CarritoItemRepuestoVM
                 {
-                    IdCliente = userId,
-                    Estado = "ACTIVA",
-                    FechaCreacion = DateTime.Now,
-                    MontoTotal = 0
-                };
-            }
-            else
-            {
-                // Cargar los repuestos completos
-                var repuestoIds = db.RepuestosCotizados
-                  .Where(rc => rc.IdCotizacion == cotizacion.IdCotizacion)
-                .Select(rc => rc.IdRepuesto)
-                          .ToList();
+                    IdRepuesto = g.Key.Id,
+                    Nombre = g.Key.Nombre,
+                    Marca = g.Key.Marca,
+                    PrecioUnitario = g.Key.Precio,
+                    Cantidad = g.Count()
+                })
+                .OrderBy(x => x.Nombre)
+                .ToList();
 
-                cotizacion.RepuestosCotizados = db.Repuestos
-                      .Where(r => repuestoIds.Contains(r.Id))
-                       .ToList();
+            vm.Servicios = db.ServiciosCotizados
+                .Where(sc => sc.IdCotizacion == cotizacion.IdCotizacion)
+                .Join(db.ServicioModels, sc => sc.IdServicio, s => s.IdServicio, (sc, s) => new { sc, s })
+                .GroupBy(x => new { x.s.IdServicio, x.s.Nombre, x.s.PrecioServicio })
+                .Select(g => new CarritoItemServicioVM
+                {
+                    IdServicio = g.Key.IdServicio,
+                    Nombre = g.Key.Nombre,
+                    PrecioUnitario = g.Key.PrecioServicio,
+                    Cantidad = g.Count()
+                })
+                .OrderBy(x => x.Nombre)
+                .ToList();
 
-                // Cargar los servicios completos
-                var servicioIds = db.ServiciosCotizados
-                     .Where(sc => sc.IdCotizacion == cotizacion.IdCotizacion)
-                         .Select(sc => sc.IdServicio)
-                     .ToList();
+            vm.TotalRepuestos = vm.Repuestos.Sum(x => x.Subtotal);
+            vm.TotalServicios = vm.Servicios.Sum(x => x.Subtotal);
+            cotizacion.MontoTotal = vm.Total;
+            db.SaveChanges();
 
-                cotizacion.ServiciosCotizados = db.ServicioModels
-                 .Where(s => servicioIds.Contains(s.IdServicio))
-                  .ToList();
-
-                // Calcular el monto total
-                decimal totalRepuestos = cotizacion.RepuestosCotizados.Sum(r => r.Precio);
-                decimal totalServicios = cotizacion.ServiciosCotizados.Sum(s => s.PrecioServicio);
-                cotizacion.MontoTotal = totalRepuestos + totalServicios;
-            }
-
-            return View(cotizacion);
+            return View(vm);
         }
 
         // Agregar repuesto al carrito
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cliente")]
         public ActionResult AgregarRepuesto(int idRepuesto)
         {
@@ -116,11 +120,14 @@ namespace FastParts.Controllers
                 db.SaveChanges();
             }
 
-            // Verificar si ya existe en la cotización
-            var yaExiste = db.RepuestosCotizados
-                     .Any(rc => rc.IdCotizacion == cotizacion.IdCotizacion && rc.IdRepuesto == idRepuesto);
+            var cantidadActual = db.RepuestosCotizados
+                .Count(rc => rc.IdCotizacion == cotizacion.IdCotizacion && rc.IdRepuesto == idRepuesto);
 
-            if (!yaExiste)
+            if (cantidadActual >= repuesto.Stock)
+            {
+                TempData["Error"] = $"No puedes agregar más unidades de {repuesto.Nombre}. Stock disponible: {repuesto.Stock}.";
+            }
+            else
             {
                 var repuestoCotizado = new RepuestosCotizadosModel
                 {
@@ -129,12 +136,7 @@ namespace FastParts.Controllers
                 };
                 db.RepuestosCotizados.Add(repuestoCotizado);
                 db.SaveChanges();
-
-                TempData["Success"] = $"Se agregó {repuesto.Nombre} a tu cotización.";
-            }
-            else
-            {
-                TempData["Info"] = "Este repuesto ya está en tu cotización.";
+                TempData["Success"] = $"Se agregó una unidad de {repuesto.Nombre} a tu cotización.";
             }
 
             string referer = Request.UrlReferrer?.ToString();
@@ -212,6 +214,7 @@ namespace FastParts.Controllers
 
         // Eliminar repuesto del carrito
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cliente")]
         public ActionResult EliminarRepuesto(int idRepuesto)
         {
@@ -236,8 +239,25 @@ namespace FastParts.Controllers
             return RedirectToAction("MiCarrito");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cliente")]
+        public ActionResult IncrementarRepuesto(int idRepuesto)
+        {
+            return AgregarRepuesto(idRepuesto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cliente")]
+        public ActionResult DisminuirRepuesto(int idRepuesto)
+        {
+            return EliminarRepuesto(idRepuesto);
+        }
+
         // Eliminar servicio del carrito
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cliente")]
         public ActionResult EliminarServicio(int idServicio)
         {
@@ -347,23 +367,41 @@ namespace FastParts.Controllers
             }
 
 
-            var repuestoIds = db.RepuestosCotizados
-                 .Where(rc => rc.IdCotizacion == cotizacion.IdCotizacion)
-            .Select(rc => rc.IdRepuesto)
+            var repuestosAgrupados = db.RepuestosCotizados
+                .Where(rc => rc.IdCotizacion == cotizacion.IdCotizacion)
+                .GroupBy(rc => rc.IdRepuesto)
+                .Select(g => new { IdRepuesto = g.Key, Cantidad = g.Count() })
                 .ToList();
 
-            var servicioIds = db.ServiciosCotizados
-             .Where(sc => sc.IdCotizacion == cotizacion.IdCotizacion)
-               .Select(sc => sc.IdServicio)
-                  .ToList();
+            var serviciosAgrupados = db.ServiciosCotizados
+                .Where(sc => sc.IdCotizacion == cotizacion.IdCotizacion)
+                .GroupBy(sc => sc.IdServicio)
+                .Select(g => new { IdServicio = g.Key, Cantidad = g.Count() })
+                .ToList();
 
-            decimal totalRepuestos = db.Repuestos
-                  .Where(r => repuestoIds.Contains(r.Id))
-         .Sum(r => (decimal?)r.Precio) ?? 0;
+            decimal totalRepuestos = 0;
+            foreach (var item in repuestosAgrupados)
+            {
+                var rep = db.Repuestos.Find(item.IdRepuesto);
+                if (rep == null || rep.IsDeleted || rep.OcultarClientes || rep.SinStockForzado || rep.Stock < item.Cantidad)
+                {
+                    TempData["Error"] = "Hay repuestos no disponibles o sin stock suficiente en tu carrito. Actualiza tu carrito e intenta de nuevo.";
+                    return RedirectToAction("MiCarrito");
+                }
+                totalRepuestos += rep.Precio * item.Cantidad;
+            }
 
-            decimal totalServicios = db.ServicioModels
-                    .Where(s => servicioIds.Contains(s.IdServicio))
-              .Sum(s => (decimal?)s.PrecioServicio) ?? 0;
+            decimal totalServicios = 0;
+            foreach (var item in serviciosAgrupados)
+            {
+                var serv = db.ServicioModels.Find(item.IdServicio);
+                if (serv == null || !serv.Activo)
+                {
+                    TempData["Error"] = "Hay servicios no disponibles en tu carrito. Actualiza tu carrito e intenta de nuevo.";
+                    return RedirectToAction("MiCarrito");
+                }
+                totalServicios += serv.PrecioServicio * item.Cantidad;
+            }
 
             cotizacion.MontoTotal = totalRepuestos + totalServicios;
 
@@ -388,20 +426,29 @@ namespace FastParts.Controllers
             return View(cotizaciones);
         }
 
-        // Lista de cotizaciones en revisión - Admin
+        // Lista de cotizaciones - Admin
         [Authorize(Roles = "Admin")]
-        public ActionResult GestionarCotizaciones(string estado = "REVICION")
+        public ActionResult GestionarCotizaciones(string estado = "TODAS", int page = 1)
         {
+            const int pageSize = 20;
             var query = db.Cotizaciones.AsQueryable();
 
-            if (!string.IsNullOrEmpty(estado))
+            var estadoNormalizado = (estado ?? "TODAS").Trim().ToUpperInvariant();
+            if (estadoNormalizado != "TODAS")
             {
-                query = query.Where(c => c.Estado == estado);
+                query = query.Where(c => c.Estado == estadoNormalizado);
             }
 
+            var safePage = page < 1 ? 1 : page;
+            var total = query.Count();
+            var totalPages = Math.Max(1, (int)Math.Ceiling((double)total / pageSize));
+            if (safePage > totalPages) safePage = totalPages;
+
             var cotizaciones = query
-              .OrderByDescending(c => c.FechaCreacion)
-         .ToList();
+                .OrderByDescending(c => c.FechaCreacion)
+                .Skip((safePage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
 
             var viewModel = new List<CotizacionListadoViewModel>();
@@ -426,7 +473,9 @@ namespace FastParts.Controllers
                 });
             }
 
-            ViewBag.EstadoFiltro = estado;
+            ViewBag.EstadoFiltro = estadoNormalizado;
+            ViewBag.Page = safePage;
+            ViewBag.TotalPages = totalPages;
             return View(viewModel);
         }
 
@@ -445,6 +494,10 @@ namespace FastParts.Controllers
            .Where(rc => rc.IdCotizacion == id)
             .Select(rc => rc.IdRepuesto)
                  .ToList();
+            var repuestoCantidades = db.RepuestosCotizados
+                .Where(rc => rc.IdCotizacion == id)
+                .GroupBy(rc => rc.IdRepuesto)
+                .ToDictionary(g => g.Key, g => g.Count());
 
             cotizacion.RepuestosCotizados = db.Repuestos
       .Where(r => repuestoIds.Contains(r.Id))
@@ -455,6 +508,10 @@ namespace FastParts.Controllers
            .Where(sc => sc.IdCotizacion == id)
        .Select(sc => sc.IdServicio)
      .ToList();
+            var servicioCantidades = db.ServiciosCotizados
+                .Where(sc => sc.IdCotizacion == id)
+                .GroupBy(sc => sc.IdServicio)
+                .ToDictionary(g => g.Key, g => g.Count());
 
             cotizacion.ServiciosCotizados = db.ServicioModels
      .Where(s => servicioIds.Contains(s.IdServicio))
@@ -462,127 +519,27 @@ namespace FastParts.Controllers
 
             // Cargar información del cliente
             ViewBag.Cliente = db.Users.Find(cotizacion.IdCliente);
+            ViewBag.RepuestoCantidades = repuestoCantidades;
+            ViewBag.ServicioCantidades = servicioCantidades;
 
             return View(cotizacion);
         }
-
-        // Aprobar cotización y descontar stock - Admin
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult AprobarCotizacion(int id)
         {
-            var cotizacion = db.Cotizaciones.Find(id);
-            if (cotizacion == null)
-            {
-                TempData["Error"] = "Cotización no encontrada.";
-                return RedirectToAction("GestionarCotizaciones");
-            }
-
-            if (cotizacion.Estado != "REVICION")
-            {
-                TempData["Error"] = "Solo se pueden aprobar cotizaciones en revisión.";
-                return RedirectToAction("DetalleCotizacion", new { id });
-            }
-
-            // Obtener repuestos de la cotización
-            var repuestosIds = db.RepuestosCotizados
-         .Where(rc => rc.IdCotizacion == id)
-                .Select(rc => rc.IdRepuesto)
-                .ToList();
-
-            var repuestos = db.Repuestos
-             .Where(r => repuestosIds.Contains(r.Id))
-        .ToList();
-
-            // Verificar que hay suficiente stock
-            var stockInsuficiente = new List<string>();
-            foreach (var repuesto in repuestos)
-            {
-                if (repuesto.Stock < 1)
-                {
-                    stockInsuficiente.Add($"{repuesto.Nombre} (Stock: {repuesto.Stock})");
-                }
-            }
-
-            if (stockInsuficiente.Any())
-            {
-                TempData["Error"] = $"Stock insuficiente para: {string.Join(", ", stockInsuficiente)}";
-                return RedirectToAction("DetalleCotizacion", new { id });
-            }
-
-            // Descontar stock de repuestos
-            foreach (var repuesto in repuestos)
-            {
-                repuesto.Stock -= 1; // Descontar 1 unidad
-
-                // Registrar movimiento de inventario
-                var movimiento = new MovimientoInventarioModel
-                {
-                    RepuestoId = repuesto.Id,
-                    Tipo = TipoMovimiento.Salida,
-                    Cantidad = 1,
-                    Fecha = DateTime.Now,
-                    UsuarioId = User.Identity.GetUserId()
-                };
-                db.Movimientos.Add(movimiento);
-
-                // Crear alerta si el stock está bajo mínimo
-                if (repuesto.Stock <= repuesto.StockMinimo)
-                {
-                    var alertaExistente = db.Alertas
-                             .Any(a => a.RepuestoId == repuesto.Id && !a.Atendida);
-
-                    if (!alertaExistente)
-                    {
-                        var alerta = new AlertaInventarioModel
-                        {
-                            RepuestoId = repuesto.Id,
-                            Fecha = DateTime.Now,
-                            Mensaje = $"Stock bajo: {repuesto.Nombre} (Stock actual: {repuesto.Stock}, Mínimo: {repuesto.StockMinimo})",
-                            Atendida = false
-                        };
-                        db.Alertas.Add(alerta);
-                    }
-                }
-            }
-
-            // Cambiar estado de la cotización
-            cotizacion.Estado = "COMPLETADA";
-            cotizacion.IdResponsable = User.Identity.GetUserId();
-
-            db.SaveChanges();
-
-            TempData["Success"] = $"Cotización #{id} aprobada exitosamente. Stock actualizado.";
-            return RedirectToAction("GestionarCotizaciones");
+            TempData["Info"] = "La aprobación/rechazo de cotizaciones fue deshabilitada. Este flujo ya no modifica inventario.";
+            return RedirectToAction("DetalleCotizacion", new { id });
         }
 
-        // Rechazar cotización - Admin
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult RechazarCotizacion(int id, string motivo)
         {
-            var cotizacion = db.Cotizaciones.Find(id);
-            if (cotizacion == null)
-            {
-                TempData["Error"] = "Cotización no encontrada.";
-                return RedirectToAction("GestionarCotizaciones");
-            }
-
-            if (cotizacion.Estado != "REVICION")
-            {
-                TempData["Error"] = "Solo se pueden rechazar cotizaciones en revisión.";
-                return RedirectToAction("DetalleCotizacion", new { id });
-            }
-
-            cotizacion.Estado = "INACTIVA";
-            cotizacion.IdResponsable = User.Identity.GetUserId();
-
-            db.SaveChanges();
-
-            TempData["Success"] = $"Cotización #{id} rechazada.";
-            return RedirectToAction("GestionarCotizaciones");
+            TempData["Info"] = "La aprobación/rechazo de cotizaciones fue deshabilitada. Este flujo ya no está disponible.";
+            return RedirectToAction("DetalleCotizacion", new { id });
         }
 
 

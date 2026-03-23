@@ -1,4 +1,4 @@
-﻿@model FastParts.Models.RepuestoModel
+@model FastParts.Models.RepuestoModel
 @{
     ViewBag.Title = "Crear repuesto";
 }
@@ -40,7 +40,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Precio, new { @class = "form-control", type = "number", step = "0.01", min = "0" })
+            @Html.TextBoxFor(m => m.Precio, new { @class = "form-control", type = "number", step = "0.01", min = "0.01" })
             @Html.ValidationMessageFor(m => m.Precio, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -48,7 +48,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Stock, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Stock, new { @class = "form-control", type = "number", min = "0" })
+            @Html.TextBoxFor(m => m.Stock, new { @class = "form-control", type = "number", min = "1" })
             @Html.ValidationMessageFor(m => m.Stock, "", new { @class = "text-danger" })
         </div>
     </div>

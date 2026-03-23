@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
@@ -37,12 +37,12 @@ namespace FastParts.Models
         [Display(Name = "Número de Parte")]
         public string NumeroParte { get; set; }
 
-        [Range(0, 999999)]
+        [Range(typeof(decimal), "0.01", "999999")]
         [Display(Name = "Precio")]
         [DataType(DataType.Currency)]
         public decimal Precio { get; set; }
 
-        [Range(0, int.MaxValue)]
+        [Range(1, int.MaxValue)]
         [Display(Name = "Stock")]
         public int Stock { get; set; }
 

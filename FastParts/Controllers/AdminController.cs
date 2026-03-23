@@ -1,4 +1,4 @@
-﻿using FastParts.Models;
+using FastParts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,9 +58,11 @@ namespace FastParts.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult MarcarAlertaAtendida(int id)
         {
             var a = db.Alertas.Find(id);
+            if (a == null) return HttpNotFound();
             a.Atendida = true;
             db.SaveChanges();
             return RedirectToAction("AlertasInventario");
