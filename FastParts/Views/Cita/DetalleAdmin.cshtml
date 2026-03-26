@@ -1,20 +1,70 @@
 ﻿@model FastParts.Models.CitaDetalleViewModel
 @{
     ViewBag.Title = "Detalle de Cita";
+
+    Func<string, string, string> obtenerClasePaso = (estadoActual, paso) =>
+    {
+        var actual = (estadoActual ?? "").Trim().ToLowerInvariant();
+        var actualNormalizado = actual == "en proceso" ? "En Proceso"
+                             : actual == "terminada" ? "Terminada"
+                             : actual == "asignada" ? "Asignada"
+                             : actual == "ingresada" ? "Ingresada"
+                             : "";
+
+        var orden = new[] { "Ingresada", "Asignada", "En Proceso", "Terminada" };
+        var idxActual = Array.IndexOf(orden, actualNormalizado);
+        var idxPaso = Array.IndexOf(orden, paso);
+
+        if (idxActual == -1 || idxPaso == -1) return "cita-step";
+
+        if (actualNormalizado == "Terminada" && paso == "Terminada")
+            return "cita-step terminada";
+
+        if (idxPaso < idxActual) return "cita-step completado";
+        if (idxPaso == idxActual) return "cita-step activo";
+        return "cita-step";
+    };
+
+    var claseIngresada = obtenerClasePaso(Model.Estado, "Ingresada");
+    var claseAsignada = obtenerClasePaso(Model.Estado, "Asignada");
+    var claseEnProceso = obtenerClasePaso(Model.Estado, "En Proceso");
+    var claseTerminada = obtenerClasePaso(Model.Estado, "Terminada");
 }
 
 <div class="container mt-4">
     <div class="col mb-3">
         <a href="@Url.Action("ListaAdmin", "Cita")"
-           class="btn btn-outline-secondary"> ← Volver al listado de citas</a>
+           class="btn btn-outline-secondary">← Volver al listado de citas</a>
     </div>
 
     <h2 class="mb-4">Detalle de Cita #@Model.Id</h2>
 
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <h5 class="mb-3 text-uppercase fw-bold" style="color:#1F2A30;">
+                Progreso del servicio
+            </h5>
+            <div class="cita-timeline">
+                <div class="@claseIngresada">
+                   Cita Ingresada
+                </div>
+                <div class="@claseAsignada">
+                    Mecánico Asignado
+                </div>
+                <div class="@claseEnProceso">
+                    Trabajo Iniciado
+                </div>
+                <div class="@claseTerminada">
+                    Trabajo Terminado
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-dark text-white">
+                <div class="card-header text-white" style="background-color:#1F2A30;">
                     Información general
                 </div>
                 <div class="card-body">
@@ -40,7 +90,7 @@
             </div>
 
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-secondary text-white">
+                <div class="card-header text-white" style="background-color:#2E3A40;">
                     Comentarios / Motivo
                 </div>
                 <div class="card-body">
@@ -55,7 +105,7 @@
 
         <div class="col-md-6">
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-info text-white">
+                <div class="card-header text-white" style="background-color:#20B2D6;">
                     Fotos del servicio
                 </div>
                 <div class="card-body">
@@ -65,7 +115,8 @@
                             @if (Model.TieneFotoAntes)
                             {
                                 <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "antes" })"
-                                     class="img-fluid rounded shadow-sm" />
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-height:220px; object-fit:contain;" />
                             }
                             else
                             {
@@ -77,7 +128,8 @@
                             @if (Model.TieneFotoDespues)
                             {
                                 <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "despues" })"
-                                     class="img-fluid rounded shadow-sm" />
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-height:220px; object-fit:contain;" />
                             }
                             else
                             {
@@ -87,7 +139,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -1,6 +1,34 @@
 ﻿@model FastParts.Models.CitaDetalleViewModel
 @{
     ViewBag.Title = "Detalle de mi cita";
+
+    Func<string, string, string> obtenerClasePaso = (estadoActual, paso) =>
+    {
+        var actual = (estadoActual ?? "").Trim().ToLowerInvariant();
+        var actualNormalizado = actual == "en proceso" ? "En Proceso"
+                             : actual == "terminada" ? "Terminada"
+                             : actual == "asignada" ? "Asignada"
+                             : actual == "ingresada" ? "Ingresada"
+                             : "";
+
+        var orden = new[] { "Ingresada", "Asignada", "En Proceso", "Terminada" };
+        var idxActual = Array.IndexOf(orden, actualNormalizado);
+        var idxPaso = Array.IndexOf(orden, paso);
+
+        if (idxActual == -1 || idxPaso == -1) return "cita-step";
+
+        if (actualNormalizado == "Terminada" && paso == "Terminada")
+            return "cita-step terminada";
+
+        if (idxPaso < idxActual) return "cita-step completado";
+        if (idxPaso == idxActual) return "cita-step activo";
+        return "cita-step";
+    };
+
+    var claseIngresada = obtenerClasePaso(Model.Estado, "Ingresada");
+    var claseAsignada = obtenerClasePaso(Model.Estado, "Asignada");
+    var claseEnProceso = obtenerClasePaso(Model.Estado, "En Proceso");
+    var claseTerminada = obtenerClasePaso(Model.Estado, "Terminada");
 }
 
 <div class="container mt-4">
@@ -11,11 +39,33 @@
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h3 class="mb-0">Detalle de la cita</h3>
-        </div>
         <div class="card-body">
+            <div class="mb-4">
+                <h5 class="mb-3 text-uppercase fw-bold" style="color:#1F2A30;">
+                    Progreso del servicio
+                </h5>
+                <div class="cita-timeline">
+                    <div class="@claseIngresada">
+                        Cita Ingresada
+                    </div>
+                    <div class="@claseAsignada">
+                        Mecánico Asignado
+                    </div>
+                    <div class="@claseEnProceso">
+                        Trabajo Iniciado
+                    </div>
+                    <div class="@claseTerminada">
+                        Trabajo Terminado
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
             <div class="row mb-3">
+                <h5 class="mb-3 text-uppercase fw-bold" style="color:#1F2A30;">
+                    Detalles de la cita
+                </h5>
                 <div class="col-md-6">
                     <strong>Cliente:</strong> @Model.NombreCliente
                 </div>
@@ -61,7 +111,7 @@
 
             <hr />
 
-            <h5>Resumen del trabajo realizado</h5>
+            <h5 class="text-uppercase fw-bold" style="color:#1F2A30;">Resumen del trabajo realizado</h5>
 
             @if (Model.Estado == "Terminada")
             {
@@ -77,11 +127,60 @@
                         No se registró un resumen del trabajo realizado.
                     </div>
                 }
+
+                <hr />
+
+                <h5 class="text-uppercase fw-bold" style="color:#1F2A30;">Fotos del servicio</h5>
+
+                if (Model.TieneFotoAntes || Model.TieneFotoDespues)
+                {
+                    <div class="row g-3 mt-1">
+                        @if (Model.TieneFotoAntes)
+                        {
+                            <div class="col-md-6">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <strong>Foto antes</strong>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "antes" })"
+                                             alt="Foto antes"
+                                             class="img-fluid rounded border"
+                                             style="max-height: 350px; object-fit: contain;" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.TieneFotoDespues)
+                        {
+                            <div class="col-md-6">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <strong>Foto después</strong>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="@Url.Action("ObtenerFoto", "Cita", new { id = Model.Id, tipo = "despues" })"
+                                             alt="Foto después"
+                                             class="img-fluid rounded border"
+                                             style="max-height: 350px; object-fit: contain;" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-secondary mb-0">
+                        No se adjuntaron fotos en esta cita.
+                    </div>
+                }
             }
             else
             {
                 <div class="alert alert-warning mb-0">
-                    El resumen estará disponible cuando la cita haya sido finalizada.
+                    El resumen y las fotos estarán disponibles cuando la cita haya sido finalizada.
                 </div>
             }
         </div>

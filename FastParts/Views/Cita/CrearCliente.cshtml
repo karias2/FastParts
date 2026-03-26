@@ -16,12 +16,12 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.NombreCliente, new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.NombreCliente, "", new { @class = "text-danger" })
+                        <input type="text" class="form-control bg-light" value="@Model.NombreCliente" readonly />
+                        @Html.HiddenFor(m => m.NombreCliente)
                     </div>
                     <div class="col-md-6">
                         @Html.LabelFor(m => m.TelefonoCliente, new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", placeholder = "8888-8888" })
+                        @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.TelefonoCliente, "", new { @class = "text-danger" })
                     </div>
                 </div>

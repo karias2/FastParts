@@ -231,6 +231,14 @@
     <Compile Include="Migrations\202603230246058_localDatabase.Designer.cs">
       <DependentUpon>202603230246058_localDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603190507343_CrearEncuestaServicio.cs" />
+    <Compile Include="Migrations\202603190507343_CrearEncuestaServicio.Designer.cs">
+      <DependentUpon>202603190507343_CrearEncuestaServicio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202603190542397_AjustarEncuestaServicioNullable.cs" />
+    <Compile Include="Migrations\202603190542397_AjustarEncuestaServicioNullable.Designer.cs">
+      <DependentUpon>202603190542397_AjustarEncuestaServicioNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\SeedCitas.cs" />
     <Compile Include="Migrations\SeedEncuestas.cs" />
@@ -248,6 +256,7 @@
     <Compile Include="Models\CotizacionesModel.cs" />
     <Compile Include="Models\CitaModel.cs" />
     <Compile Include="Models\CotizacionListadoViewModel.cs" />
+    <Compile Include="Models\EncuestaServicioModel.cs" />
     <Compile Include="Models\EncuestaModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -444,8 +453,6 @@
     <Content Include="Views\Cotizacions\Details.cshtml" />
     <Content Include="Views\Cotizacions\Edit.cshtml" />
     <Content Include="Views\Cotizacions\Index.cshtml" />
-    <Content Include="Views\Encuesta\CrearEncuesta.cshtml" />
-    <Content Include="Views\Encuesta\AdministrarEncuestas.cshtml" />
     <Content Include="Views\Servicio\Create.cshtml" />
     <Content Include="Views\Servicio\Delete.cshtml" />
     <Content Include="Views\Servicio\Details.cshtml" />
@@ -657,12 +664,9 @@
     <Content Include="Content\assets\scss\material-kit\_utilities-extend.scss" />
     <Content Include="Content\assets\scss\material-kit\_utilities.scss" />
     <Content Include="Content\assets\scss\material-kit\_variables.scss" />
-    <Content Include="Views\Encuesta\_LlenarEncuesta.cshtml" />
-    <Content Include="Views\Encuesta\Formulario.cshtml" />
     <Content Include="Services\AlertasInventario.cshtml" />
     <Content Include="Views\Admin\AlertasInventario.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Encuesta\Historial.cshtml" />
     <Content Include="Views\Cita\CrearCliente.cshtml" />
     <Content Include="Views\Cita\FinalizarServicio.cshtml" />
     <Content Include="Views\Cita\MisCitasMecanico.cshtml" />
@@ -687,6 +691,8 @@
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
     <Content Include="Views\Cita\DetalleCliente.cshtml" />
+    <Content Include="Views\Encuesta\Responder.cshtml" />
+    <Content Include="Views\Encuesta\ResultadosAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -695,6 +701,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202603230246058_localDatabase.resx">
       <DependentUpon>202603230246058_localDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603190507343_CrearEncuestaServicio.resx">
+      <DependentUpon>202603190507343_CrearEncuestaServicio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603190542397_AjustarEncuestaServicioNullable.resx">
+      <DependentUpon>202603190542397_AjustarEncuestaServicioNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

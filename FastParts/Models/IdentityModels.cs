@@ -61,6 +61,8 @@ namespace FastParts.Models
         public DbSet<CotizacionesModel> Cotizaciones { get; set; }
         public DbSet<RepuestosCotizadosModel> RepuestosCotizados { get; set; }
         public DbSet<ServiciosCotizadosModel> ServiciosCotizados { get; set; }
+        public DbSet<EncuestaServicioModel> EncuestaServicios { get; set; }
+
 
         public System.Data.Entity.DbSet<FastParts.Models.ServicioModel> ServicioModels { get; set; }
 

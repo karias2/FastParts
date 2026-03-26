@@ -7477,6 +7477,16 @@ animation: pulse 0.5s ease-in-out;
         margin: 2px;
     }
 
+
+    #tablaResultadosEncuesta {
+        width: 100% !important;
+    }
+
+    #tablaResultadosEncuesta th,
+    #tablaResultadosEncuesta td {
+        vertical-align: middle;
+    }
+
 .dataTables_wrapper .dataTables_paginate {
     margin-top: 10px;
 }
@@ -7502,4 +7512,73 @@ animation: pulse 0.5s ease-in-out;
 
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
         background: #e9ecef !important;
+    }
+/* ===========================
+   TIMELINE FASTPARTS BRAND
+=========================== */
+
+.cita-timeline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin: 30px 0;
+    padding: 0 20px;
+}
+
+    .cita-timeline::before {
+        content: '';
+        position: absolute;
+        top: 18px;
+        left: 40px;
+        right: 40px;
+        height: 4px;
+        background: #dcdcdc;
+        z-index: 1;
+        border-radius: 10px;
+    }
+
+.cita-step {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    border: 3px solid #dcdcdc;
+    color: #6c757d;
+    padding: 10px 14px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 120px;
+    text-align: center;
+    transition: all .3s ease;
+}
+
+    /* PASOS COMPLETADOS */
+    .cita-step.completado {
+        background: #20B2D6;
+        border-color: #20B2D6;
+        color: white;
+        box-shadow: 0 0 12px rgba(32,178,214,0.6);
+    }
+
+    /* PASO ACTUAL */
+    .cita-step.activo {
+        background: #1F2A30;
+        border-color: #20B2D6;
+        color: #20B2D6;
+        transform: scale(1.08);
+        box-shadow: 0 0 16px rgba(32,178,214,0.7);
+    }
+
+    /* TERMINADA ESPECIAL */
+    .cita-step.terminada {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+        box-shadow: 0 0 12px rgba(40,167,69,0.6);
+    }
+
+    /* HOVER UX */
+    .cita-step:hover {
+        transform: scale(1.05);
     }

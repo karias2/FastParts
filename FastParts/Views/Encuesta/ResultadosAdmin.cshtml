@@ -1,0 +1,217 @@
+﻿@model IEnumerable<FastParts.Models.ResultadoEncuestaAdminViewModel>
+@{
+    ViewBag.Title = "Resultados de Encuestas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">Resultados de Encuestas</h2>
+            <small class="text-muted">Resumen de satisfacción de clientes.</small>
+        </div>
+
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary">
+            Volver al panel
+        </a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-1">Respuestas</h6>
+                    <h3 class="mb-0">@ViewBag.TotalRespuestas</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-1">Promedio general</h6>
+                    <h3 class="mb-0">@ViewBag.PromedioGeneral</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-1">Promedio mecánico</h6>
+                    <h3 class="mb-0">@ViewBag.PromedioMecanico</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-1">Recomendarían</h6>
+                    <h3 class="mb-0">@ViewBag.Recomendacion</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle mb-0" id="tablaResultadosEncuesta">
+                    <thead>
+                        <tr>
+                            <th>Fecha / hora</th>
+                            <th>Cliente</th>
+                            <th>Mecánico</th>
+                            <th>Calif. servicio</th>
+                            <th>Calif. mecánico</th>
+                            <th>¿Recomienda?</th>
+                            <th style="width:140px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var modalId = "modalDetalleEncuesta_" + item.Id;
+
+                            <tr>
+                                <td>
+                                    @(item.FechaRespuesta.HasValue
+                                        ? item.FechaRespuesta.Value.ToString("dd/MM/yyyy HH:mm")
+                                        : "-")
+                                </td>
+                                <td>@item.Cliente</td>
+                                <td>@item.Mecanico</td>
+                                <td>
+                                    @(item.CalificacionGeneral.HasValue
+                                        ? item.CalificacionGeneral.Value.ToString()
+                                        : "-")
+                                </td>
+                                <td>
+                                    @(item.CalificacionMecanico.HasValue
+                                        ? item.CalificacionMecanico.Value.ToString()
+                                        : "-")
+                                </td>
+                                <td>
+                                    @if (item.RecomendariaTaller == true)
+                                    {
+                                        <span>Sí</span>
+                                    }
+                                    else if (item.RecomendariaTaller == false)
+                                    {
+                                        <span>No</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-info"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#@modalId">
+                                        Ver detalles
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal Detalle -->
+                            <div class="modal fade" id="@modalId" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Detalle de encuesta</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <strong>Cliente:</strong> @item.Cliente
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Mecánico:</strong> @item.Mecanico
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <strong>Fecha de la cita:</strong> @item.FechaCita.ToString("dd/MM/yyyy HH:mm")
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Fecha de respuesta:</strong>
+                                                    @(item.FechaRespuesta.HasValue
+                                                        ? item.FechaRespuesta.Value.ToString("dd/MM/yyyy HH:mm")
+                                                        : "-")
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <strong>Vehículo:</strong> @item.Vehiculo
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>¿Recomendaría el taller?:</strong>
+                                                    @(item.RecomendariaTaller.HasValue
+                                                        ? (item.RecomendariaTaller.Value ? "Sí" : "No")
+                                                        : "-")
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <strong>Calificación del servicio:</strong>
+                                                    @(item.CalificacionGeneral.HasValue ? item.CalificacionGeneral.Value.ToString() : "-")
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Calificación del mecánico:</strong>
+                                                    @(item.CalificacionMecanico.HasValue ? item.CalificacionMecanico.Value.ToString() : "-")
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <strong>Comentario:</strong>
+                                                <div class="border rounded p-3 bg-light mt-2">
+                                                    @(!string.IsNullOrWhiteSpace(item.Comentario) ? item.Comentario : "Sin comentario.")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Cerrar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $("#tablaResultadosEncuesta").DataTable({
+                order: [[0, "desc"]],
+                autoWidth: false,
+                responsive: false,
+                scrollX: true,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                },
+                columnDefs: [
+                    { targets: 0, width: "18%" },
+                    { targets: 1, width: "20%" },
+                    { targets: 2, width: "20%" },
+                    { targets: 3, width: "12%", className: "text-center" },
+                    { targets: 4, width: "12%", className: "text-center" },
+                    { targets: 5, width: "10%", className: "text-center" },
+                    { targets: 6, width: "8%", orderable: false, searchable: false, className: "text-center" }
+                ]
+            });
+        });
+    </script>
+}

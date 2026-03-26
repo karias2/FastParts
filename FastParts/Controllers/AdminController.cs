@@ -1,37 +1,30 @@
 using FastParts.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace FastParts.Controllers
 {
-
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         public ActionResult Index()
         {
-            int totalUsuarios = db.Users.Count();
-            ViewBag.TotalUsuarios = totalUsuarios;
+            ViewBag.TotalUsuarios = db.Users.Count();
+            ViewBag.TotalUsuariosActivos = db.Users.Count(u => u.Estado == true);
 
-            int totalUsuariosActivos = db.Users.Count(u => u.Estado == true);
-            ViewBag.TotalUsuariosActivos = totalUsuariosActivos;
+            ViewBag.TotalRepuestos = db.Repuestos.Count();
+            ViewBag.TotalServicios = db.ServicioModels.Count();
 
-            int totalRepuestos = db.Repuestos.Count();
-            ViewBag.TotalRepuestos = totalRepuestos;
+            ViewBag.TotalCitasIngresadas = db.CitaModels.Count(c => c.Estado == "Ingresada");
 
-            int totalCitasIngresadas = db.CitaModels.Count(c => c.Estado == "Ingresada");
-            ViewBag.TotalCitasIngresadas = totalCitasIngresadas;
+            ViewBag.AlertasPendientes = db.Alertas.Count(a => !a.Atendida);
+            ViewBag.RepuestosBajoMinimo = db.Repuestos.Count(r => !r.IsDeleted && r.Stock <= r.StockMinimo);
 
-            int alertasPendientes = db.Alertas.Count(a => !a.Atendida);
-            ViewBag.AlertasPendientes = alertasPendientes;
-
-            int repuestosBajoMinimo = db.Repuestos.Count(r => !r.IsDeleted && r.Stock <= r.StockMinimo);
-            ViewBag.RepuestosBajoMinimo = repuestosBajoMinimo;
+            ViewBag.TotalEncuestas = db.EncuestaServicios.Count(e => e.Respondida);
+            ViewBag.EncuestasPendientes = db.EncuestaServicios.Count(e => !e.Respondida);
 
             return View();
         }
@@ -56,16 +49,26 @@ namespace FastParts.Controllers
             return View(vm);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult MarcarAlertaAtendida(int id)
         {
-            var a = db.Alertas.Find(id);
-            if (a == null) return HttpNotFound();
-            a.Atendida = true;
+            var alerta = db.Alertas.Find(id);
+            if (alerta == null)
+                return HttpNotFound();
+
+            alerta.Atendida = true;
             db.SaveChanges();
+
             return RedirectToAction("AlertasInventario");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                db.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

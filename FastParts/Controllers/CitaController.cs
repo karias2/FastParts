@@ -22,18 +22,12 @@ namespace FastParts.Controllers
             var userId = User.Identity.GetUserId();
             var user = db.Users.Find(userId);
 
-            var dt = DateTime.Now.AddHours(1);
-
-            // Redondear hacia arriba al siguiente bloque de 30 minutos
-            var minutos = dt.Minute;
-            var siguienteBloque = (int)(Math.Ceiling(minutos / 30.0) * 30);
-            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, 0, 0).AddMinutes(siguienteBloque);
-
             var model = new CrearCitaClienteViewModel
             {
                 NombreCliente = user?.NombreCompleto,
-                TelefonoCliente = "8888-8888",
-                FechaCita = dt
+                TelefonoCliente = !string.IsNullOrWhiteSpace(user?.PhoneNumber)
+                ? user.PhoneNumber : "",
+                FechaCita = ObtenerSiguienteDiaHabil8AM()
             };
 
             return View(model);
@@ -45,6 +39,15 @@ namespace FastParts.Controllers
         [Authorize(Roles = "Cliente")]
         public ActionResult CrearCliente(CrearCitaClienteViewModel model)
         {
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.Find(userId);
+
+            if (user == null)
+                return new HttpUnauthorizedResult();
+
+            // Reforzar el nombre desde el usuario autenticado
+            model.NombreCliente = user.NombreCompleto;
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -60,12 +63,10 @@ namespace FastParts.Controllers
             if (!ValidarReglasCita(model.FechaCita, nameof(model.FechaCita)))
                 return View(model);
 
-            var userId = User.Identity.GetUserId();
-
             var cita = new CitaModel
             {
                 UsuarioId = userId,
-                NombreCliente = model.NombreCliente,
+                NombreCliente = user.NombreCompleto,
                 TelefonoCliente = model.TelefonoCliente,
                 Vehiculo = model.Vehiculo,
                 Placa = model.Placa,
@@ -81,7 +82,7 @@ namespace FastParts.Controllers
             return RedirectToAction("MisCitas");
         }
 
-
+        // Listado de citas del cliente
         [Authorize(Roles = "Cliente")]
         public ActionResult MisCitas()
         {
@@ -102,11 +103,31 @@ namespace FastParts.Controllers
                     Estado = c.Estado,
                     NombreMecanico = c.Mecanico != null ? c.Mecanico.NombreCompleto : "",
                     PuedeCancelar = c.FechaCita > ahora
-                            && c.MecanicoId == null
-                            && c.HoraInicio == null
-                            && c.Estado == "Ingresada"
+                                    && c.MecanicoId == null
+                                    && c.HoraInicio == null
+                                    && c.Estado == "Ingresada",
+
+                    TieneEncuestaPendiente = db.EncuestaServicios.Any(e =>
+                        e.CitaId == c.Id &&
+                        e.ClienteId == userId &&
+                        !e.Respondida),
+
+                    EncuestaPendienteId = db.EncuestaServicios
+                        .Where(e => e.CitaId == c.Id &&
+                                    e.ClienteId == userId &&
+                                    !e.Respondida)
+                        .Select(e => (int?)e.Id)
+                        .FirstOrDefault()
                 })
                 .ToList();
+
+            ViewBag.TotalCitas = citas.Count;
+            ViewBag.CitasPendientes = citas.Count(c => c.Estado == "Ingresada" || c.Estado == "Asignada" || c.Estado == "En Proceso");
+            ViewBag.CitasTerminadas = citas.Count(c => c.Estado == "Terminada");
+            ViewBag.ProximaCita = citas
+                .Where(c => c.FechaCita > ahora && c.Estado != "Terminada")
+                .OrderBy(c => c.FechaCita)
+                .FirstOrDefault();
 
             return View(citas);
         }
@@ -116,16 +137,10 @@ namespace FastParts.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult CrearAdmin()
         {
-            var dt = DateTime.Now.AddHours(1);
-
-            // redondear hacia arriba a 00 o 30
-            var minutos = dt.Minute;
-            var siguienteBloque = (int)(Math.Ceiling(minutos / 30.0) * 30);
-            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, 0, 0).AddMinutes(siguienteBloque);
 
             var model = new CrearCitaAdminViewModel
             {
-                FechaCita = dt
+                FechaCita = ObtenerSiguienteDiaHabil8AM()
             };
 
             return View(model);
@@ -324,6 +339,7 @@ namespace FastParts.Controllers
         public ActionResult MisCitasMecanico()
         {
             var userId = User.Identity.GetUserId();
+            var ahora = DateTime.Now;
 
             var citas = db.CitaModels
                 .Where(c => c.MecanicoId == userId)
@@ -337,7 +353,10 @@ namespace FastParts.Controllers
                     Placa = c.Placa,
                     FechaCita = c.FechaCita,
                     Estado = c.Estado,
-                    NombreMecanico = c.Mecanico.NombreCompleto
+                    NombreMecanico = c.Mecanico.NombreCompleto,
+                    PuedeEditar = c.Estado == "Terminada"
+                                  && c.HoraFin.HasValue
+                                  && DbFunctions.AddHours(c.HoraFin.Value, 24) >= ahora
                 })
                 .ToList();
 
@@ -365,6 +384,7 @@ namespace FastParts.Controllers
             return RedirectToAction("MisCitasMecanico");
         }
 
+        // Accion finaluzr servicio mecanico
         [Authorize(Roles = "Mecanico")]
         public ActionResult FinalizarServicio(int id)
         {
@@ -415,6 +435,21 @@ namespace FastParts.Controllers
                 cita.FotoDespuesContentType = despuesType;
             }
 
+            bool yaExisteEncuesta = db.EncuestaServicios.Any(e => e.CitaId == cita.Id);
+
+            if (!yaExisteEncuesta && !string.IsNullOrEmpty(cita.UsuarioId))
+            {
+                var encuesta = new EncuestaServicioModel
+                {
+                    CitaId = cita.Id,
+                    ClienteId = cita.UsuarioId,
+                    MecanicoId = cita.MecanicoId,
+                    Respondida = false
+                };
+
+                db.EncuestaServicios.Add(encuesta);
+            }
+
             db.SaveChanges();
 
             return RedirectToAction("MisCitasMecanico");
@@ -452,9 +487,8 @@ namespace FastParts.Controllers
 
         //Editar Citas Mecanico
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Mecanico")]
-        [ValidateAntiForgeryToken]
         public ActionResult EditarServicio(int id)
         {
             var userId = User.Identity.GetUserId();
@@ -465,6 +499,9 @@ namespace FastParts.Controllers
 
             if (cita.Estado != "Terminada")
                 return new HttpStatusCodeResult(400, "Solo se pueden editar citas terminadas.");
+
+            if (!cita.HoraFin.HasValue || cita.HoraFin.Value.AddHours(24) < DateTime.Now)
+                return new HttpStatusCodeResult(400, "La edición solo está permitida durante las primeras 24 horas después de finalizar la cita.");
 
             var model = new CitaEditarMecanicoViewModel
             {
@@ -491,6 +528,9 @@ namespace FastParts.Controllers
 
             if (cita.Estado != "Terminada")
                 return new HttpStatusCodeResult(400, "Solo se pueden editar citas terminadas.");
+
+            if (!cita.HoraFin.HasValue || cita.HoraFin.Value.AddHours(24) < DateTime.Now)
+                return new HttpStatusCodeResult(400, "La edición solo está permitida durante las primeras 24 horas después de finalizar la cita.");
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -535,11 +575,29 @@ namespace FastParts.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Mecanico,Cliente")]
         public FileContentResult ObtenerFoto(int id, string tipo)
         {
-            var cita = db.CitaModels.Find(id);
+            var cita = db.CitaModels
+                .Include(c => c.Usuario)
+                .FirstOrDefault(c => c.Id == id);
+
             if (cita == null)
                 return null;
+
+            if (User.IsInRole("Cliente"))
+            {
+                var userId = User.Identity.GetUserId();
+                if (cita.UsuarioId != userId)
+                    return null;
+            }
+
+            if (User.IsInRole("Mecanico"))
+            {
+                var userId = User.Identity.GetUserId();
+                if (cita.MecanicoId != userId)
+                    return null;
+            }
 
             if (tipo == "antes" && cita.FotoAntes != null)
                 return File(cita.FotoAntes, cita.FotoAntesContentType);
@@ -714,6 +772,27 @@ namespace FastParts.Controllers
             }
 
             return true;
+        }
+
+        private DateTime ObtenerSiguienteDiaHabil8AM()
+        {
+            var hoy = DateTime.Today;
+            DateTime siguiente = hoy.AddDays(1);
+
+            // Si cae domingo → lunes
+            if (siguiente.DayOfWeek == DayOfWeek.Sunday)
+                siguiente = siguiente.AddDays(1);
+
+            // Si hoy es sábado → lunes
+            if (hoy.DayOfWeek == DayOfWeek.Saturday)
+                siguiente = hoy.AddDays(2);
+
+            return new DateTime(
+                siguiente.Year,
+                siguiente.Month,
+                siguiente.Day,
+                8, 0, 0
+            );
         }
 
 

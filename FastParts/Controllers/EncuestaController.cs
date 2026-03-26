@@ -1,303 +1,159 @@
 ﻿using FastParts.Models;
+using Microsoft.AspNet.Identity;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-
 
 namespace FastParts.Controllers
 {
     public class EncuestaController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        [HttpGet]
-        public ActionResult AdministrarEncuestas()
+        // Get responder encuesta
+        [Authorize(Roles = "Cliente")]
+        public ActionResult Responder(int id)
         {
-            var model = db.Encuestas
-                    .Where(e => e.Activa == true)
-                    .ToList();
+            var userId = User.Identity.GetUserId();
+
+            var encuesta = db.EncuestaServicios
+                .Include(e => e.Cita)
+                .Include(e => e.Mecanico)
+                .FirstOrDefault(e => e.Id == id && e.ClienteId == userId);
+
+            if (encuesta == null)
+                return HttpNotFound();
+
+            if (encuesta.Respondida)
+            {
+                TempData["EncuestaRespondida"] = "Esta encuesta ya fue respondida.";
+                return RedirectToAction("MisCitas", "Cita");
+            }
+
+            if (encuesta.Cita == null || encuesta.Cita.Estado != "Terminada")
+                return new HttpStatusCodeResult(400, "Solo se pueden responder encuestas de citas terminadas.");
+
+            var model = new ResponderEncuestaViewModel
+            {
+                EncuestaId = encuesta.Id,
+                CitaId = encuesta.CitaId,
+                FechaCita = encuesta.Cita.FechaCita,
+                Vehiculo = encuesta.Cita.Vehiculo,
+                Placa = encuesta.Cita.Placa,
+                NombreMecanico = encuesta.Mecanico != null ? encuesta.Mecanico.NombreCompleto : "(Sin mecánico)"
+            };
+
             return View(model);
-        }
- 
-        [HttpGet]
-        public async Task<ActionResult> CrearEncuesta(int? IdEncuesta, int? IdPregunta)
-        {
-            if (IdEncuesta == null)
-            {
-                var encuesta = new EncuestaModel
-                {
-                    Preguntas = new List<PreguntaModel>()
-                };
-
-                db.Encuestas.Add(encuesta);
-                db.SaveChanges();
-                return RedirectToAction("CrearEncuesta", new { IdEncuesta = encuesta.ID_Encuesta });
-            }
-            else
-            {
-                var viewModel = new EncuestaViewModel();
-                var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
-                encuesta.Preguntas = await db.Preguntas
-                    .Where(p => p.ID_Encuesta == IdEncuesta && p.Activa == true)
-                    .ToListAsync();
-
-                var TiposDePregunta = new List<System.Web.Mvc.SelectListItem>();
-                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "Rango", Text = "Rango" });
-                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "Texto", Text = "Párrafo" });
-                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "OpcionMultiple", Text = "Opcion multiple" });
-                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "CasillasVerificacion", Text = "Casillas de merificacion" });
-                TiposDePregunta.Add(new System.Web.Mvc.SelectListItem { Value = "Imagen", Text = "Imagen" });
-
-                viewModel.ID_Encuesta = encuesta.ID_Encuesta;
-                viewModel.Encuesta = encuesta;
-                viewModel.Pregunta = new PreguntaModel();
-                viewModel.TiposDePregunta = TiposDePregunta;
-
-                if (IdPregunta != null)
-                {
-                    var pregunta = db.Preguntas.Find(IdPregunta);
-                    viewModel.ID_Pregunta = pregunta.ID_Pregunta;
-                    viewModel.Pregunta = pregunta;
-                }
-
-                return View(viewModel);
-            }
-        }
-
-
-        [HttpGet]
-        public async Task<ActionResult> LlenarEncuesta(int? IdEncuesta, String SessionId, bool? IsEdit)
-        {
-            if (IdEncuesta != null)
-            {
-                var viewModel = new EncuestaViewModel();
-                var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
-                encuesta.Preguntas = await db.Preguntas
-                        .Where(p => p.ID_Encuesta == IdEncuesta && p.Activa == true)
-                        //.Include(p => p.Respuestas)
-                        .ToListAsync();
-
-                if (SessionId != null)
-                {
-                    var respuestasPrevias = db.Respuestas
-                        .Where(r => r.ID_Encuesta == IdEncuesta && r.Session_Id == SessionId)
-                        .ToList();
-
-                    foreach (var pregunta in encuesta.Preguntas)
-                    {
-                        var respuestaEncontrada = respuestasPrevias
-                            .OrderByDescending(r => r.ID_Respuesta)
-                            .FirstOrDefault(r => r.ID_Pregunta == pregunta.ID_Pregunta);
-
-                        if (respuestaEncontrada != null && respuestaEncontrada.ValorRespuesta != null)
-                        {
-                            pregunta.ValorRespuesta = respuestaEncontrada.ValorRespuesta;
-                        }
-
-                        if (respuestaEncontrada != null && respuestaEncontrada.TextoRespuesta != null)
-                        {
-                            pregunta.TextoRespuesta = respuestaEncontrada.TextoRespuesta;
-                        }
-                    }
-                }
-
-                viewModel.ID_Encuesta = encuesta.ID_Encuesta;
-                viewModel.Encuesta = encuesta;
-                viewModel.Pregunta = new PreguntaModel();
-                viewModel.Session_Id = SessionId != null ? SessionId : DateTime.Now.Ticks.ToString();
-                viewModel.IsEdit = IsEdit != null ? true : false;
-
-                //return PartialView("_LlenarEncuesta", viewModel);
-                return View("Formulario", viewModel);
-            } else
-            {
-                return RedirectToAction("Index");
-            }
-        }
-
-        public ActionResult ActualizarEncuesta(EncuestaViewModel viewModel)
-        {
-            var encuestaModel = viewModel.Encuesta;
-            var encuesta = db.Encuestas.Find(viewModel.ID_Encuesta);
-            if (encuesta != null)
-            {
-                encuesta.Nombre = encuestaModel.Nombre;
-                encuesta.Descripcion = encuestaModel.Descripcion;
-                db.SaveChanges();
-                TempData["Ok"] = "Encuesta actualizada.";
-                return RedirectToAction("CrearEncuesta", new { IdEncuesta = viewModel.ID_Encuesta });
-            }
-            else
-            {
-                TempData["Error"] = "No se encontró la Encuesta.";
-                return RedirectToAction("CrearEncuesta");
-            }
-        }
-
-        public ActionResult EliminarEncuesta(EncuestaViewModel viewModel)
-        {
-            var encuesta = db.Encuestas.Find(viewModel.ID_Encuesta);
-            if (encuesta != null)
-            {
-                //db.Preguntas.Remove(pregunta);
-                encuesta.Activa = false;
-                db.SaveChanges();
-                TempData["Ok"] = "Se ha eliminado la Encuesta correctamente.";
-                return RedirectToAction("AdministrarEncuestas");
-            }
-            else
-            {
-                TempData["Error"] = "No se encontró la Pregunta a eliminar.";
-                return RedirectToAction("AdministrarEncuestas", new { IdEncuesta = viewModel.ID_Encuesta });
-            }
-        }
-
-        public ActionResult CrearPregunta(EncuestaViewModel viewModel)
-        {
-            var preguntaModel = viewModel.Pregunta;
-            if (preguntaModel != null && viewModel.ID_Encuesta != null)
-            {
-                var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
-
-                if (pregunta != null)
-                {
-                    pregunta.Descripcion = viewModel.Pregunta.Descripcion;
-                    pregunta.Tipo = viewModel.Pregunta.Tipo;
-                    pregunta.Minimo = viewModel.Pregunta.Minimo;
-                    pregunta.Maximo = viewModel.Pregunta.Maximo;
-                    pregunta.Opciones = viewModel.Pregunta.Opciones;
-                    db.SaveChanges();
-                    return RedirectToAction("CrearEncuesta", new { IdEncuesta = viewModel.ID_Encuesta });
-                } 
-                else
-                {
-                    preguntaModel.ID_Encuesta = viewModel.ID_Encuesta;
-                    preguntaModel.Activa = true;
-                    db.Preguntas.Add(preguntaModel);
-                    db.SaveChanges();
-                    return RedirectToAction("CrearEncuesta", new { IdEncuesta = viewModel.ID_Encuesta });
-                }
-            }
-            else
-            {
-                return RedirectToAction("CrearEncuesta", new { IdEncuesta = viewModel.ID_Encuesta });
-            }
-        }
-
-        public ActionResult EditarPregunta(EncuestaViewModel viewModel)
-        {
-            var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
-            if (pregunta != null)
-            {
-                TempData["Ok"] = "Encuesta actualizada.";
-                return RedirectToAction("CrearEncuesta", new { IdEncuesta = pregunta.ID_Encuesta, IdPregunta = pregunta.ID_Pregunta });
-            }
-            else
-            {
-                TempData["Error"] = "No se encontró la Encuesta.";
-                return RedirectToAction("CrearEncuesta");
-            }
-        }
-
-        public ActionResult EliminarPregunta(EncuestaViewModel viewModel)
-        {
-            var pregunta = db.Preguntas.Find(viewModel.ID_Pregunta);
-            if (pregunta != null)
-            {
-                //db.Preguntas.Remove(pregunta);
-                pregunta.Activa = false;
-                db.SaveChanges();
-                TempData["Ok"] = "Se ha eliminado la pregunta correctamente.";
-                return RedirectToAction("CrearEncuesta", new { IdEncuesta = pregunta.ID_Encuesta, IdPregunta = pregunta.ID_Pregunta });
-            }
-            else
-            {
-                TempData["Error"] = "No se encontró la Pregunta a eliminar.";
-                return RedirectToAction("CrearEncuesta");
-            }
         }
 
         [HttpPost]
-        public ActionResult RespoderPregunta(EncuestaViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cliente")]
+        public ActionResult Responder(ResponderEncuestaViewModel model)
         {
-            try
+            var userId = User.Identity.GetUserId();
+
+            var encuesta = db.EncuestaServicios
+                .Include(e => e.Cita)
+                .Include(e => e.Mecanico)
+                .FirstOrDefault(e => e.Id == model.EncuestaId && e.ClienteId == userId);
+
+            if (encuesta == null)
+                return HttpNotFound();
+
+            if (encuesta.Respondida)
             {
-                var encuestaModel = viewModel.Encuesta;
-                if (viewModel.ID_Encuesta != null && viewModel.ID_Pregunta != null)
-                {
-                    var respuesta = new RespuestasModel();
-                    respuesta.ID_Encuesta = viewModel.ID_Encuesta;
-                    respuesta.ID_Pregunta = viewModel.ID_Pregunta;
-                    respuesta.Session_Id = viewModel.Session_Id;
-                    respuesta.Tipo = viewModel.Tipo;
-
-                    if (viewModel.ValorRespuesta != null)
-                    {
-                        respuesta.ValorRespuesta = viewModel.ValorRespuesta;
-                    }
-
-                    if (viewModel.Pregunta != null && viewModel.Pregunta.ValorRespuesta != null)
-                    {
-                        respuesta.ValorRespuesta = viewModel.Pregunta.ValorRespuesta;
-                    }
-
-                    if (viewModel.TextoRespuesta != null)
-                    {
-                        respuesta.TextoRespuesta = viewModel.TextoRespuesta;
-                    }
-
-                    if (viewModel.Pregunta != null && viewModel.Pregunta.TextoRespuesta != null)
-                    {
-                        respuesta.TextoRespuesta = viewModel.Pregunta.TextoRespuesta;
-                    }
-
-                    db.Respuestas.Add(respuesta);
-                    db.SaveChanges();
-                    return RedirectToAction("LlenarEncuesta", new { 
-                        IdEncuesta = viewModel.ID_Encuesta, 
-                        IdPregunta = viewModel.ID_Pregunta, 
-                        SessionId = viewModel.Session_Id,
-                        IsEdit = true
-                    });
-                }
-                else
-                {
-                    TempData["Error"] = "No se encontró la Encuesta.";
-                    return Json(new { success = false, message = $"error: No se encontró Encuesta." });
-                }
+                TempData["EncuestaRespondida"] = "Esta encuesta ya fue respondida.";
+                return RedirectToAction("MisCitas", "Cita");
             }
-            catch (Exception ex)
+
+            if (encuesta.Cita == null || encuesta.Cita.Estado != "Terminada")
+                return new HttpStatusCodeResult(400, "Solo se pueden responder encuestas de citas terminadas.");
+
+            if (!ModelState.IsValid)
             {
-                return Json(new { success = false, message = $"error: {ex.Message}" });
+                model.CitaId = encuesta.CitaId;
+                model.FechaCita = encuesta.Cita.FechaCita;
+                model.Vehiculo = encuesta.Cita.Vehiculo;
+                model.Placa = encuesta.Cita.Placa;
+                model.NombreMecanico = encuesta.Mecanico != null ? encuesta.Mecanico.NombreCompleto : "(Sin mecánico)";
+                return View(model);
             }
+
+            encuesta.CalificacionGeneral = model.CalificacionGeneral;
+            encuesta.CalificacionMecanico = model.CalificacionMecanico;
+            encuesta.RecomendariaTaller = model.RecomendariaTaller;
+            encuesta.Comentario = model.Comentario;
+            encuesta.FechaRespuesta = DateTime.Now;
+            encuesta.Respondida = true;
+
+            db.SaveChanges();
+
+            TempData["EncuestaRespondida"] = "Gracias por completar la encuesta.";
+            return RedirectToAction("MisCitas", "Cita");
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult> HistorialEncuesta(int? IdEncuesta)
+        //Get resultados encuestas Admin
+        [Authorize(Roles = "Admin")]
+        public ActionResult ResultadosAdmin()
         {
-            if (IdEncuesta != null)
-            {
-                var viewModel = new EncuestaViewModel();
-                var encuesta = await db.Encuestas.FindAsync(IdEncuesta);
-                var respuestasPrevias = db.Respuestas
-                        .Where(r => r.ID_Encuesta == IdEncuesta)
-                        .ToList();
-                viewModel.Respuestas = respuestasPrevias;
-                viewModel.Encuesta = encuesta;
-                viewModel.ID_Encuesta = encuesta.ID_Encuesta;
+            var resultados = db.EncuestaServicios
+                .AsNoTracking()
+                .Include(e => e.Cita)
+                .Include(e => e.Cliente)
+                .Include(e => e.Mecanico)
+                .Where(e => e.Respondida)
+                .OrderByDescending(e => e.FechaRespuesta)
+                .Select(e => new ResultadoEncuestaAdminViewModel
+                {
+                    Id = e.Id,
+                    CitaId = e.CitaId,
+                    Cliente = e.Cliente != null ? e.Cliente.NombreCompleto : e.Cita.NombreCliente,
+                    Mecanico = e.Mecanico != null ? e.Mecanico.NombreCompleto : "(Sin mecánico)",
+                    Vehiculo = e.Cita.Vehiculo,
+                    FechaCita = e.Cita.FechaCita,
+                    CalificacionGeneral = e.CalificacionGeneral,
+                    CalificacionMecanico = e.CalificacionMecanico,
+                    RecomendariaTaller = e.RecomendariaTaller,
+                    Comentario = e.Comentario,
+                    FechaRespuesta = e.FechaRespuesta
+                })
+                .ToList();
 
-                return View("Historial", viewModel);
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            ViewBag.TotalRespuestas = resultados.Count;
+
+            var calificacionesGenerales = resultados
+                .Where(r => r.CalificacionGeneral.HasValue)
+                .Select(r => r.CalificacionGeneral.Value)
+                .ToList();
+
+            var calificacionesMecanico = resultados
+                .Where(r => r.CalificacionMecanico.HasValue)
+                .Select(r => r.CalificacionMecanico.Value)
+                .ToList();
+
+            ViewBag.PromedioGeneral = calificacionesGenerales.Any()
+                ? calificacionesGenerales.Average().ToString("0.0")
+                : "0.0";
+
+            ViewBag.PromedioMecanico = calificacionesMecanico.Any()
+                ? calificacionesMecanico.Average().ToString("0.0")
+                : "0.0";
+
+            ViewBag.Recomendacion = resultados.Any()
+                ? ((double)resultados.Count(r => r.RecomendariaTaller == true) / resultados.Count * 100).ToString("0") + "%"
+                : "0%";
+
+            return View(resultados);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                db.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
 }

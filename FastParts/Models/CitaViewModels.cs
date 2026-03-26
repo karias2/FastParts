@@ -15,6 +15,7 @@ namespace FastParts.Models
 
         [Required]
         [Display(Name = "Teléfono")]
+        [RegularExpression(@"^\d{4}-\d{4}$", ErrorMessage = "El teléfono debe tener el formato ####-####.")]
         public string TelefonoCliente { get; set; }
 
         [Required]
@@ -40,6 +41,7 @@ namespace FastParts.Models
 
         [Required]
         [Display(Name = "Teléfono")]
+        [RegularExpression(@"^\d{4}-\d{4}$", ErrorMessage = "El teléfono debe tener el formato ####-####.")]
         public string TelefonoCliente { get; set; }
 
         [Required]
@@ -78,6 +80,9 @@ namespace FastParts.Models
         [Display(Name = "Mecánico")]
         public string NombreMecanico { get; set; }
         public bool PuedeCancelar { get; set; }
+        public bool PuedeEditar { get; set; }
+        public bool TieneEncuestaPendiente { get; set; }
+        public int? EncuestaPendienteId { get; set; }
     }
 
     public class CitaDetalleViewModel

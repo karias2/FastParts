@@ -22,64 +22,73 @@
             </select>
         </div>
     </div>
+
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-striped table-bordered" id="tablaMisCitasMecanico">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Vehículo</th>
-                        <th>Placa</th>
-                        <th>Fecha Cita</th>
-                        <th>Estado</th>
-                        <th style="width: 180px;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle mb-0" id="tablaMisCitasMecanico">
+                    <thead>
                         <tr>
-                            <td>@item.NombreCliente</td>
-                            <td>@item.Vehiculo</td>
-                            <td>@item.Placa</td>
-                            <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@item.Estado</td>
-                            <td class="text-center">
-                                @if (item.Estado == "Asignada")
-                                {
-                                    using (Html.BeginForm("IniciarServicio", "Cita", FormMethod.Post, new { @class = "formIniciar d-inline" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.Hidden("id", item.Id)
-                                        <button type="submit" class="btn btn-sm btn-success btnIniciar">
-                                            Iniciar servicio
-                                        </button>
-                                    }
-                                }
-                                else if (item.Estado == "En Proceso")
-                                {
-                                    <a href="@Url.Action("FinalizarServicio", "Cita", new { id = item.Id })"
-                                       class="btn btn-sm btn-primary btnFinalizar">
-                                        Finalizar servicio
-                                    </a>
-                                }
-                                else if (item.Estado == "Terminada")
-                                {
-                                    <a href="@Url.Action("EditarServicio", "Cita", new { id = item.Id })"
-                                       class="btn btn-sm btn-warning btnEditar">
-                                        Editar
-                                    </a>
-                                }
-
-                                else
-                                {
-                                    <span>-</span>
-                                }
-                            </td>
+                            <th>Cliente</th>
+                            <th>Vehículo</th>
+                            <th>Placa</th>
+                            <th>Fecha Cita</th>
+                            <th>Estado</th>
+                            <th style="width: 180px;">Acciones</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.NombreCliente</td>
+                                <td>@item.Vehiculo</td>
+                                <td>@item.Placa</td>
+                                <td>@item.FechaCita.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@item.Estado</td>
+                                <td class="text-center text-nowrap">
+                                    @if (item.Estado == "Asignada")
+                                    {
+                                        using (Html.BeginForm("IniciarServicio", "Cita", FormMethod.Post, new { @class = "formIniciar d-inline" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("id", item.Id)
+                                            <button type="submit" class="btn btn-sm btn-success btnIniciar">
+                                                Iniciar servicio
+                                            </button>
+                                        }
+                                    }
+                                    else if (item.Estado == "En Proceso")
+                                    {
+                                        <a href="@Url.Action("FinalizarServicio", "Cita", new { id = item.Id })"
+                                           class="btn btn-sm btn-primary btnFinalizar">
+                                            Finalizar servicio
+                                        </a>
+                                    }
+                                    else if (item.Estado == "Terminada")
+                                    {
+                                        if (item.PuedeEditar)
+                                        {
+                                            <a href="@Url.Action("EditarServicio", "Cita", new { id = item.Id })"
+                                               class="btn btn-sm btn-warning btnEditar">
+                                                Editar
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Edición bloqueada</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -89,10 +98,24 @@
         $(function () {
             var tabla = $("#tablaMisCitasMecanico").DataTable({
                 order: [[3, "desc"]],
+                autoWidth: false,
+                responsive: false,
+                scrollX: true,
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                }
+                },
+                columnDefs: [
+                    { targets: 0, width: "22%" },
+                    { targets: 1, width: "22%" }, 
+                    { targets: 2, width: "12%" }, 
+                    { targets: 3, width: "18%" }, 
+                    { targets: 4, width: "12%" }, 
+                    { targets: 5, width: "14%", orderable: false, searchable: false } 
+                ]
             });
+
+            $('#filtroEstado').val('Asignada');
+            tabla.column(4).search('^Asignada$', true, false).draw();
 
             $(".btnIniciar").on("click", function (e) {
                 e.preventDefault();
@@ -144,4 +167,3 @@
         });
     </script>
 }
-
