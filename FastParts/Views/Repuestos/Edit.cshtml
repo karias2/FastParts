@@ -75,7 +75,10 @@
                 @if (!string.IsNullOrWhiteSpace(Model.ImagenUrl))
                 {
                     <div style="margin-bottom:8px">
-                        <img src="@Url.Content(Model.ImagenUrl)" alt="imagen actual" style="max-width:220px;max-height:160px;object-fit:contain;border:1px solid #eee;padding:4px" />
+                        <img src="@Url.Content(Model.ImagenUrl)"
+                             onerror="this.onerror=null;this.src='@Url.Content("~/Content/assets/img/favicon.png")';"
+                             alt="imagen actual"
+                             style="max-width:220px;max-height:160px;object-fit:contain;border:1px solid #eee;padding:4px" />
                     </div>
                 }
                 <input type="file" name="ImagenFile" accept="image/*" class="form-control" />

@@ -14,10 +14,103 @@ namespace FastParts.Controllers
     {
         private const int PageSize = 20;
         private const int MaxImageBytes = 10 * 1024 * 1024; // 10 MB
+        private const string LegacyUploadsPrefix = "/Content/uploads/repuestos/";
 
         // TODO: ALLOW ONLY ADMIN USERS TO CREATE, MODIFY AND DELETE THIS RESOURCE
 
         private readonly ApplicationDbContext db = new ApplicationDbContext();
+
+        private string GetRepuestosStorageDirectory()
+        {
+            // In Azure App Service, D:\home is persistent across deployments.
+            var basePath = Environment.GetEnvironmentVariable("HOME");
+            if (!string.IsNullOrWhiteSpace(basePath))
+            {
+                return Path.Combine(basePath, "data", "FastParts", "uploads", "repuestos");
+            }
+
+            // Local dev fallback.
+            return Server.MapPath("~/App_Data/uploads/repuestos");
+        }
+
+        private string BuildImageUrl(string fileName)
+        {
+            return Url.Action("Imagen", "Repuestos", new { fileName = fileName });
+        }
+
+        private string GetImageFileNameFromUrl(string imageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                return null;
+            }
+
+            if (imageUrl.StartsWith(LegacyUploadsPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.GetFileName(imageUrl);
+            }
+
+            var uriPart = imageUrl;
+            var queryIdx = uriPart.IndexOf("?", StringComparison.Ordinal);
+            if (queryIdx >= 0)
+            {
+                uriPart = uriPart.Substring(0, queryIdx);
+            }
+
+            var segment = uriPart.Split('/').LastOrDefault();
+            if (string.IsNullOrWhiteSpace(segment))
+            {
+                return null;
+            }
+
+            return segment;
+        }
+
+        private string NormalizeImageUrl(string imageUrl)
+        {
+            var fileName = GetImageFileNameFromUrl(imageUrl);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return imageUrl;
+            }
+
+            return BuildImageUrl(fileName);
+        }
+
+        private string SaveUploadedImage(System.Web.HttpPostedFileBase imageFile, string extension)
+        {
+            var storageDir = GetRepuestosStorageDirectory();
+            Directory.CreateDirectory(storageDir);
+
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var fullPath = Path.Combine(storageDir, fileName);
+            imageFile.SaveAs(fullPath);
+            return fileName;
+        }
+
+        private void TryDeleteImageByUrl(string imageUrl)
+        {
+            var fileName = GetImageFileNameFromUrl(imageUrl);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return;
+            }
+
+            var storageFile = Path.Combine(GetRepuestosStorageDirectory(), fileName);
+            if (System.IO.File.Exists(storageFile))
+            {
+                System.IO.File.Delete(storageFile);
+                return;
+            }
+
+            // Legacy fallback path.
+            var legacyVirtualPath = $"{LegacyUploadsPrefix}{fileName}";
+            var legacyFile = Server.MapPath(legacyVirtualPath);
+            if (System.IO.File.Exists(legacyFile))
+            {
+                System.IO.File.Delete(legacyFile);
+            }
+        }
 
         // GET: /Repuesto
         public async Task<ActionResult> Index(string q, string sort = "nombre", int page = 1)
@@ -59,6 +152,11 @@ namespace FastParts.Controllers
                 .Skip((safePage - 1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
+
+            foreach (var repuesto in list)
+            {
+                repuesto.ImagenUrl = NormalizeImageUrl(repuesto.ImagenUrl);
+            }
 
             ViewBag.Page = safePage;
             ViewBag.TotalPages = totalPages;
@@ -121,21 +219,16 @@ namespace FastParts.Controllers
                     return View(model);
                 }
 
-                var dir = Server.MapPath("~/Content/uploads/repuestos");
-                Directory.CreateDirectory(dir);
-                var fileName = $"{System.Guid.NewGuid()}{ext}";
-                var fullPath = Path.Combine(dir, fileName);
                 try
                 {
-                    model.ImagenFile.SaveAs(fullPath);
+                    var fileName = SaveUploadedImage(model.ImagenFile, ext);
+                    model.ImagenUrl = BuildImageUrl(fileName);
                 }
                 catch (Exception)
                 {
                     ModelState.AddModelError("ImagenFile", "No fue posible guardar la imagen. Intente con otro archivo.");
                     return View(model);
                 }
-
-                model.ImagenUrl = $"/Content/uploads/repuestos/{fileName}";
             }
 
             db.Repuestos.Add(model);
@@ -149,6 +242,7 @@ namespace FastParts.Controllers
         {
             var repuesto = await db.Repuestos.FindAsync(id);
             if (repuesto == null) return HttpNotFound();
+            repuesto.ImagenUrl = NormalizeImageUrl(repuesto.ImagenUrl);
             return View(repuesto);
         }
 
@@ -207,27 +301,17 @@ namespace FastParts.Controllers
                         return View(entity);
                     }
 
-                    var dir = Server.MapPath("~/Content/uploads/repuestos");
-                    Directory.CreateDirectory(dir);
-                    var fileName = $"{System.Guid.NewGuid()}{ext}";
-                    var fullPath = Path.Combine(dir, fileName);
                     try
                     {
-                        form.ImagenFile.SaveAs(fullPath);
+                        var fileName = SaveUploadedImage(form.ImagenFile, ext);
+                        TryDeleteImageByUrl(entity.ImagenUrl);
+                        entity.ImagenUrl = BuildImageUrl(fileName);
                     }
                     catch (Exception)
                     {
                         ModelState.AddModelError("ImagenFile", "No fue posible guardar la imagen. Intente con otro archivo.");
                         return View(entity);
                     }
-
-                    if (!string.IsNullOrWhiteSpace(entity.ImagenUrl))
-                    {
-                        var old = Server.MapPath(entity.ImagenUrl);
-                        if (System.IO.File.Exists(old)) System.IO.File.Delete(old);
-                    }
-
-                    entity.ImagenUrl = $"/Content/uploads/repuestos/{fileName}";
                 }
 
                 await db.SaveChangesAsync();
@@ -244,8 +328,53 @@ namespace FastParts.Controllers
             var repuesto = await db.Repuestos
                                    .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
             if (repuesto == null) return HttpNotFound();
+            repuesto.ImagenUrl = NormalizeImageUrl(repuesto.ImagenUrl);
 
             return View(repuesto);
+        }
+
+        [AllowAnonymous]
+        public ActionResult Imagen(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return HttpNotFound();
+            }
+
+            fileName = Path.GetFileName(fileName);
+            var storageFile = Path.Combine(GetRepuestosStorageDirectory(), fileName);
+            if (!System.IO.File.Exists(storageFile))
+            {
+                // Legacy fallback.
+                var legacyFile = Server.MapPath($"{LegacyUploadsPrefix}{fileName}");
+                if (!System.IO.File.Exists(legacyFile))
+                {
+                    return HttpNotFound();
+                }
+
+                storageFile = legacyFile;
+            }
+
+            var extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+            var contentType = "application/octet-stream";
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    contentType = "image/jpeg";
+                    break;
+                case ".png":
+                    contentType = "image/png";
+                    break;
+                case ".gif":
+                    contentType = "image/gif";
+                    break;
+                case ".webp":
+                    contentType = "image/webp";
+                    break;
+            }
+
+            return File(storageFile, contentType);
         }
 
         [HttpPost]

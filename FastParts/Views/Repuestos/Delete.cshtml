@@ -10,7 +10,10 @@
     <div class="col-md-4">
         @if (!string.IsNullOrWhiteSpace(Model.ImagenUrl))
         {
-            <img src="@Url.Content(Model.ImagenUrl)" alt="@Model.Nombre" style="max-width:100%;border:1px solid #eee;padding:4px" />
+            <img src="@Url.Content(Model.ImagenUrl)"
+                 onerror="this.onerror=null;this.src='@Url.Content("~/Content/assets/img/favicon.png")';"
+                 alt="@Model.Nombre"
+                 style="max-width:100%;border:1px solid #eee;padding:4px" />
         }
     </div>
     <div class="col-md-8">

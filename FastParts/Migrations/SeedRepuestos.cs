@@ -172,6 +172,188 @@ namespace FastParts.Migrations
                     OcultarClientes = false,
                     SinStockForzado = false,
                     ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
+                },
+                new RepuestoModel
+                {
+                    Nombre = "Alternador",
+                    Marca = "Kia",
+                    NumeroParte = "KIA-ALT4490",
+                    Precio = 165000,
+                    Stock = 3,
+                    StockMinimo = 1,
+                    Proveedor = "Proveedor 2",
+                    OcultarClientes = false,
+                    SinStockForzado = false,
+                    ImagenUrl = "/Content/uploads/repuestos/alternador.jpg"
                 }
 
             );

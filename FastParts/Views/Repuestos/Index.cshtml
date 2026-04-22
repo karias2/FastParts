@@ -1,6 +1,6 @@
 @model IEnumerable<FastParts.Models.RepuestoModel>
 @{
-    var placeholder = Url.Content("~/Content/img/placeholder-part.png");
+    var placeholder = Url.Content("~/Content/assets/img/favicon.png");
     var currentPage = ViewBag.Page != null ? (int)ViewBag.Page : 1;
     var totalPages = ViewBag.TotalPages != null ? (int)ViewBag.TotalPages : 1;
     var currentSort = (ViewBag.Sort as string) ?? "nombre";
@@ -31,7 +31,9 @@
         <article class="card" data-nombre="@x.Nombre" data-marca="@x.Marca">
             <div class="img-wrap">
                 <img src="@Url.Content(string.IsNullOrWhiteSpace(x.ImagenUrl) ? placeholder : x.ImagenUrl)"
-                     alt="@x.Nombre" />
+                     onerror="this.onerror=null;this.src='@placeholder';"
+                     alt="@x.Nombre"
+                     style="width:100%;height:100%;object-fit:contain;" />
             </div>
 
             <h4>@x.Nombre</h4>
@@ -131,8 +133,8 @@
     }
 
         .img-wrap img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: contain
         }
 
